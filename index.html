@@ -227,27 +227,170 @@ const DILATE_R = 3;
 const MAX_HISTORY = 30;
 
 const TOPICS = [
-  {word:'Kucing', emoji:'🐱'}, {word:'Rumah', emoji:'🏠'}, {word:'Mobil', emoji:'🚗'},
-  {word:'Pohon', emoji:'🌳'}, {word:'Matahari', emoji:'☀️'}, {word:'Bunga', emoji:'🌸'},
-  {word:'Ikan', emoji:'🐟'}, {word:'Burung', emoji:'🐦'}, {word:'Kue Ulang Tahun', emoji:'🎂'},
-  {word:'Pesawat', emoji:'✈️'}, {word:'Sepeda', emoji:'🚲'}, {word:'Gunung', emoji:'⛰️'},
-  {word:'Pantai', emoji:'🏖️'}, {word:'Bintang', emoji:'⭐'}, {word:'Bulan', emoji:'🌙'},
-  {word:'Awan', emoji:'☁️'}, {word:'Pisang', emoji:'🍌'}, {word:'Apel', emoji:'🍎'},
-  {word:'Robot', emoji:'🤖'}, {word:'Dinosaurus', emoji:'🦖'}, {word:'Naga', emoji:'🐉'},
-  {word:'Kastil', emoji:'🏰'}, {word:'Topi', emoji:'🎩'}, {word:'Sepatu', emoji:'👟'},
-  {word:'Jam Tangan', emoji:'⌚'}, {word:'Kacamata', emoji:'👓'}, {word:'Payung', emoji:'☂️'},
-  {word:'Kursi', emoji:'🪑'}, {word:'Pintu', emoji:'🚪'}, {word:'Gelas', emoji:'🥛'},
-  {word:'Pizza', emoji:'🍕'}, {word:'Es Krim', emoji:'🍦'}, {word:'Donat', emoji:'🍩'},
-  {word:'Pensil', emoji:'✏️'}, {word:'Buku', emoji:'📖'}, {word:'Balon', emoji:'🎈'},
-  {word:'Kupu-kupu', emoji:'🦋'}, {word:'Semut', emoji:'🐜'}, {word:'Gajah', emoji:'🐘'},
-  {word:'Singa', emoji:'🦁'}, {word:'Harimau', emoji:'🐯'}, {word:'Jerapah', emoji:'🦒'},
-  {word:'Kura-kura', emoji:'🐢'}, {word:'Katak', emoji:'🐸'}, {word:'Ular', emoji:'🐍'},
-  {word:'Kepiting', emoji:'🦀'}, {word:'Pelangi', emoji:'🌈'}, {word:'Bebek', emoji:'🦆'},
-  {word:'Ayam', emoji:'🐔'}, {word:'Sapi', emoji:'🐮'}, {word:'Gitar', emoji:'🎸'},
-  {word:'Drum', emoji:'🥁'}, {word:'Terompet', emoji:'🎺'}, {word:'Roket', emoji:'🚀'},
-  {word:'Bola Basket', emoji:'🏀'}, {word:'Bola Sepak', emoji:'⚽'}, {word:'Mahkota', emoji:'👑'},
-  {word:'Kunci', emoji:'🔑'}, {word:'Lampu', emoji:'💡'}, {word:'TV', emoji:'📺'}
+  // === HEWAN DARAT ===
+  {word:'Kucing', emoji:'🐱'}, {word:'Anjing', emoji:'🐶'}, {word:'Kelinci', emoji:'🐰'},
+  {word:'Hamster', emoji:'🐹'}, {word:'Tikus', emoji:'🐭'}, {word:'Sapi', emoji:'🐮'},
+  {word:'Kerbau', emoji:'🐃'}, {word:'Kambing', emoji:'🐐'}, {word:'Domba', emoji:'🐑'},
+  {word:'Kuda', emoji:'🐴'}, {word:'Babi', emoji:'🐷'}, {word:'Gajah', emoji:'🐘'},
+  {word:'Singa', emoji:'🦁'}, {word:'Harimau', emoji:'🐯'}, {word:'Macan Tutul', emoji:'🐆'},
+  {word:'Cheetah', emoji:'🐆'}, {word:'Serigala', emoji:'🐺'}, {word:'Rubah', emoji:'🦊'},
+  {word:'Beruang', emoji:'🐻'}, {word:'Panda', emoji:'🐼'}, {word:'Koala', emoji:'🐨'},
+  {word:'Monyet', emoji:'🐵'}, {word:'Gorila', emoji:'🦍'}, {word:'Jerapah', emoji:'🦒'},
+  {word:'Zebra', emoji:'🦓'}, {word:'Rusa', emoji:'🦌'}, {word:'Unta', emoji:'🐪'},
+  {word:'Badak', emoji:'🦏'}, {word:'Kuda Nil', emoji:'🦛'}, {word:'Kanguru', emoji:'🦘'},
+  {word:'Sloth', emoji:'🦥'}, {word:'Landak', emoji:'🦔'}, {word:'Kelelawar', emoji:'🦇'},
+  {word:'Tupai', emoji:'🐿️'}, {word:'Berang-berang', emoji:'🦫'}, {word:'Sigung', emoji:'🦨'},
+  {word:'Luwak', emoji:'🦡'}, {word:'Kucing Hitam', emoji:'🐈‍⬛'}, {word:'Kucing Oren', emoji:'🐈'},
+
+  // === HEWAN AIR ===
+  {word:'Ikan', emoji:'🐟'}, {word:'Ikan Tropis', emoji:'🐠'}, {word:'Ikan Hiu', emoji:'🦈'},
+  {word:'Paus', emoji:'🐋'}, {word:'Dolphin', emoji:'🐬'}, {word:'Gurita', emoji:'🐙'},
+  {word:'Cumi-cumi', emoji:'🦑'}, {word:'Kepiting', emoji:'🦀'}, {word:'Lobster', emoji:'🦞'},
+  {word:'Udang', emoji:'🦐'}, {word:'Kerang', emoji:'🐚'}, {word:'Siput', emoji:'🐌'},
+  {word:'Kura-kura', emoji:'🐢'}, {word:'Buaya', emoji:'🐊'},
+
+  // === HEWAN TERBANG ===
+  {word:'Burung', emoji:'🐦'}, {word:'Ayam', emoji:'🐔'}, {word:'Ayam Jago', emoji:'🐓'},
+  {word:'Bebek', emoji:'🦆'}, {word:'Angsa', emoji:'🦢'}, {word:'Kalkun', emoji:'🦃'},
+  {word:'Merak', emoji:'🦚'}, {word:'Burung Hantu', emoji:'🦉'}, {word:'Elang', emoji:'🦅'},
+  {word:'Penguin', emoji:'🐧'}, {word:'Flamingo', emoji:'🦩'}, {word:'Beo', emoji:'🦜'},
+  {word:'Merpati', emoji:'🕊️'},
+
+  // === SERANGGA ===
+  {word:'Kupu-kupu', emoji:'🦋'}, {word:'Lebah', emoji:'🐝'}, {word:'Semut', emoji:'🐜'},
+  {word:'Laba-laba', emoji:'🕷️'}, {word:'Kalajengking', emoji:'🦂'}, {word:'Kumbang', emoji:'🪲'},
+  {word:'Belalang', emoji:'🦗'}, {word:'Kecoak', emoji:'🪳'}, {word:'Nyamuk', emoji:'🦟'},
+  {word:'Cacing', emoji:'🪱'},
+
+  // === MAKANAN ===
+  {word:'Pizza', emoji:'🍕'}, {word:'Burger', emoji:'🍔'}, {word:'Hot Dog', emoji:'🌭'},
+  {word:'Sandwich', emoji:'🥪'}, {word:'Taco', emoji:'🌮'}, {word:'Burrito', emoji:'🌯'},
+  {word:'Kentang Goreng', emoji:'🍟'}, {word:'Nasi', emoji:'🍚'}, {word:'Sushi', emoji:'🍣'},
+  {word:'Ramen', emoji:'🍜'}, {word:'Spaghetti', emoji:'🍝'}, {word:'Curry', emoji:'🍛'},
+  {word:'Bento', emoji:'🍱'}, {word:'Dumpling', emoji:'🥟'}, {word:'Sup', emoji:'🍲'},
+  {word:'Salad', emoji:'🥗'}, {word:'Keju', emoji:'🧀'}, {word:'Telur', emoji:'🥚'},
+  {word:'Roti', emoji:'🍞'}, {word:'Croissant', emoji:'🥐'}, {word:'Bagel', emoji:'🥯'},
+  {word:'Pretzel', emoji:'🥨'}, {word:'Wafel', emoji:'🧇'}, {word:'Pancake', emoji:'🥞'},
+  {word:'Daging', emoji:'🥩'}, {word:'Ayam Goreng', emoji:'🍗'}, {word:'Bacon', emoji:'🥓'},
+
+  // === BUAH ===
+  {word:'Apel', emoji:'🍎'}, {word:'Apel Hijau', emoji:'🍏'}, {word:'Pisang', emoji:'🍌'},
+  {word:'Jeruk', emoji:'🍊'}, {word:'Lemon', emoji:'🍋'}, {word:'Semangka', emoji:'🍉'},
+  {word:'Anggur', emoji:'🍇'}, {word:'Stroberi', emoji:'🍓'}, {word:'Blueberry', emoji:'🫐'},
+  {word:'Melon', emoji:'🍈'}, {word:'Ceri', emoji:'🍒'}, {word:'Persik', emoji:'🍑'},
+  {word:'Mangga', emoji:'🥭'}, {word:'Nanas', emoji:'🍍'}, {word:'Kelapa', emoji:'🥥'},
+  {word:'Kiwi', emoji:'🥝'}, {word:'Tomat', emoji:'🍅'}, {word:'Alpukat', emoji:'🥑'},
+  {word:'Terong', emoji:'🍆'}, {word:'Kentang', emoji:'🥔'}, {word:'Wortel', emoji:'🥕'},
+  {word:'Jagung', emoji:'🌽'}, {word:'Cabai', emoji:'🌶️'}, {word:'Brokoli', emoji:'🥦'},
+  {word:'Mentimun', emoji:'🥒'}, {word:'Selada', emoji:'🥬'}, {word:'Bawang', emoji:'🧄'},
+  {word:'Bawang Bombay', emoji:'🧅'}, {word:'Jamur', emoji:'🍄'}, {word:'Kacang', emoji:'🥜'},
+
+  // === MINUMAN & DESSERT ===
+  {word:'Es Krim', emoji:'🍦'}, {word:'Es Serut', emoji:'🍧'}, {word:'Es Krim Sundae', emoji:'🍨'},
+  {word:'Donat', emoji:'🍩'}, {word:'Kue', emoji:'🍰'}, {word:'Kue Ulang Tahun', emoji:'🎂'},
+  {word:'Cupcake', emoji:'🧁'}, {word:'Pie', emoji:'🥧'}, {word:'Coklat', emoji:'🍫'},
+  {word:'Permen', emoji:'🍬'}, {word:'Lollipop', emoji:'🍭'}, {word:'Puding', emoji:'🍮'},
+  {word:'Madu', emoji:'🍯'}, {word:'Kopi', emoji:'☕'}, {word:'Teh', emoji:'🍵'},
+  {word:'Susu', emoji:'🥛'}, {word:'Jus', emoji:'🧃'}, {word:'Soda', emoji:'🥤'},
+  {word:'Bir', emoji:'🍺'}, {word:'Anggur Merah', emoji:'🍷'}, {word:'Koktail', emoji:'🍹'},
+
+  // === ALAM ===
+  {word:'Matahari', emoji:'☀️'}, {word:'Bulan', emoji:'🌙'}, {word:'Bintang', emoji:'⭐'},
+  {word:'Bintang Jatuh', emoji:'🌟'}, {word:'Awan', emoji:'☁️'}, {word:'Hujan', emoji:'🌧️'},
+  {word:'Badai Petir', emoji:'⛈️'}, {word:'Salju', emoji:'❄️'}, {word:'Pelangi', emoji:'🌈'},
+  {word:'Api', emoji:'🔥'}, {word:'Air', emoji:'💧'}, {word:'Gunung', emoji:'⛰️'},
+  {word:'Gunung Berapi', emoji:'🌋'}, {word:'Pantai', emoji:'🏖️'}, {word:'Pulau', emoji:'🏝️'},
+  {word:'Pohon', emoji:'🌳'}, {word:'Pohon Palem', emoji:'🌴'}, {word:'Kaktus', emoji:'🌵'},
+  {word:'Bunga', emoji:'🌸'}, {word:'Bunga Matahari', emoji:'🌻'}, {word:'Mawar', emoji:'🌹'},
+  {word:'Tulip', emoji:'🌷'}, {word:'Daisy', emoji:'🌼'}, {word:'Daun', emoji:'🍃'},
+  {word:'Daun Maple', emoji:'🍁'}, {word:'Rumput', emoji:'🌾'}, {word:'Bambu', emoji:'🎋'},
+  {word:'Semanggi', emoji:'🍀'}, {word:'Batu', emoji:'🪨'}, {word:'Kayu', emoji:'🪵'},
+
+  // === TRANSPORTASI ===
+  {word:'Mobil', emoji:'🚗'}, {word:'Taksi', emoji:'🚕'}, {word:'Bus', emoji:'🚌'},
+  {word:'Truk', emoji:'🚚'}, {word:'Traktor', emoji:'🚜'}, {word:'Motor', emoji:'🏍️'},
+  {word:'Sepeda', emoji:'🚲'}, {word:'Skuter', emoji:'🛴'}, {word:'Kereta', emoji:'🚂'},
+  {word:'Kereta Cepat', emoji:'🚄'}, {word:'Trem', emoji:'🚊'}, {word:'Pesawat', emoji:'✈️'},
+  {word:'Helikopter', emoji:'🚁'}, {word:'Roket', emoji:'🚀'}, {word:'Kapal', emoji:'🚢'},
+  {word:'Perahu', emoji:'⛵'}, {word:'Kapal Selam', emoji:'🚤'}, {word:'UFO', emoji:'🛸'},
+  {word:'Balon Udara', emoji:'🎈'}, {word:'Parasut', emoji:'🪂'},
+
+  // === BENDA RUMAH ===
+  {word:'Rumah', emoji:'🏠'}, {word:'Apartemen', emoji:'🏢'}, {word:'Kastil', emoji:'🏰'},
+  {word:'Tenda', emoji:'⛺'}, {word:'Pintu', emoji:'🚪'}, {word:'Jendela', emoji:'🪟'},
+  {word:'Kursi', emoji:'🪑'}, {word:'Sofa', emoji:'🛋️'}, {word:'Tempat Tidur', emoji:'🛏️'},
+  {word:'Meja', emoji:'🪑'}, {word:'Lampu', emoji:'💡'}, {word:'Lilin', emoji:'🕯️'},
+  {word:'Cermin', emoji:'🪞'}, {word:'Jam', emoji:'⏰'}, {word:'Jam Pasir', emoji:'⏳'},
+  {word:'Kunci', emoji:'🔑'}, {word:'Gembok', emoji:'🔒'}, {word:'Palu', emoji:'🔨'},
+  {word:'Obeng', emoji:'🔧'}, {word:'Kunci Inggris', emoji:'🔧'}, {word:'Gunting', emoji:'✂️'},
+  {word:'Pisau', emoji:'🔪'}, {word:'Sendok', emoji:'🥄'}, {word:'Garpu', emoji:'🍴'},
+  {word:'Piring', emoji:'🍽️'}, {word:'Gelas', emoji:'🥛'}, {word:'Cangkir', emoji:'☕'},
+  {word:'Teko', emoji:'🫖'}, {word:'Botol', emoji:'🍾'}, {word:'Payung', emoji:'☂️'},
+  {word:'Tas', emoji:'👜'}, {word:'Koper', emoji:'🧳'}, {word:'Ransel', emoji:'🎒'},
+  {word:'Topi', emoji:'🎩'}, {word:'Topi Pantai', emoji:'👒'}, {word:'Sepatu', emoji:'👟'},
+  {word:'Sepatu Bot', emoji:'👢'}, {word:'Sandal', emoji:'🩴'}, {word:'Kaus Kaki', emoji:'🧦'},
+  {word:'Kacamata', emoji:'👓'}, {word:'Jam Tangan', emoji:'⌚'}, {word:'Cincin', emoji:'💍'},
+  {word:'Kalung', emoji:'📿'}, {word:'Mahkota', emoji:'👑'}, {word:'Buku', emoji:'📖'},
+  {word:'Pensil', emoji:'✏️'}, {word:'Pulpen', emoji:'🖊️'}, {word:'Kuas', emoji:'🖌️'},
+  {word:'Krayon', emoji:'🖍️'}, {word:'Penghapus', emoji:'🧽'}, {word:'Penggaris', emoji:'📏'},
+  {word:'Kalkulator', emoji:'🧮'}, {word:'TV', emoji:'📺'}, {word:'Radio', emoji:'📻'},
+  {word:'Telepon', emoji:'📱'}, {word:'Komputer', emoji:'💻'}, {word:'Kamera', emoji:'📷'},
+  {word:'Video Kamera', emoji:'📹'}, {word:'Mikrofon', emoji:'🎤'}, {word:'Headphone', emoji:'🎧'},
+  {word:'Baterai', emoji:'🔋'}, {word:'Lampu Bohlam', emoji:'💡'}, {word:'Senter', emoji:'🔦'},
+  {word:'Peta', emoji:'🗺️'}, {word:'Kompas', emoji:'🧭'}, {word:'Teleskop', emoji:'🔭'},
+  {word:'Mikroskop', emoji:'🔬'}, {word:'Bom', emoji:'💣'}, {word:'Pistol', emoji:'🔫'},
+  {word:'Pedang', emoji:'⚔️'}, {word:'Perisai', emoji:'🛡️'}, {word:'Panah', emoji:'🏹'},
+  {word:'Tombak', emoji:'🔱'},
+
+  // === OLAHRAGA ===
+  {word:'Bola Sepak', emoji:'⚽'}, {word:'Bola Basket', emoji:'🏀'}, {word:'Bola Voli', emoji:'🏐'},
+  {word:'Baseball', emoji:'⚾'}, {word:'Tenis', emoji:'🎾'}, {word:'Bulu Tangkis', emoji:'🏸'},
+  {word:'Bowling', emoji:'🎳'}, {word:'Biliar', emoji:'🎱'}, {word:'Ping Pong', emoji:'🏓'},
+  {word:'Golf', emoji:'⛳'}, {word:'Hoki', emoji:'🏒'}, {word:'Kriket', emoji:'🏏'},
+  {word:'Rugby', emoji:'🏉'}, {word:'Tinju', emoji:'🥊'}, {word:'Karate', emoji:'🥋'},
+  {word:'Angkat Beban', emoji:'🏋️'}, {word:'Berenang', emoji:'🏊'}, {word:'Bersepeda', emoji:'🚴'},
+  {word:'Ski', emoji:'🎿'}, {word:'Skateboard', emoji:'🛹'}, {word:'Selancar', emoji:'🏄'},
+  {word:'Panahan', emoji:'🏹'}, {word:'Lari', emoji:'🏃'}, {word:'Yoga', emoji:'🧘'},
+
+  // === MUSIK & SENI ===
+  {word:'Gitar', emoji:'🎸'}, {word:'Drum', emoji:'🥁'}, {word:'Piano', emoji:'🎹'},
+  {word:'Biola', emoji:'🎻'}, {word:'Terompet', emoji:'🎺'}, {word:'Saksofon', emoji:'🎷'},
+  {word:'Harmonika', emoji:'🪗'}, {word:'Banjor', emoji:'🪕'}, {word:'Lonceng', emoji:'🔔'},
+  {word:'Not Musik', emoji:'🎵'}, {word:'Palet Lukis', emoji:'🎨'}, {word:'Topeng Teater', emoji:'🎭'},
+
+  // === ORANG & PROFESI ===
+  {word:'Bayi', emoji:'👶'}, {word:'Anak', emoji:'🧒'}, {word:'Orang Dewasa', emoji:'🧑'},
+  {word:'Orang Tua', emoji:'🧓'}, {word:'Polisi', emoji:'👮'}, {word:'Dokter', emoji:'👨‍⚕️'},
+  {word:'Guru', emoji:'👨‍🏫'}, {word:'Koki', emoji:'👨‍🍳'}, {word:'Petani', emoji:'👨‍🌾'},
+  {word:'Pilot', emoji:'👨‍✈️'}, {word:'Astronaut', emoji:'👨‍🚀'}, {word:'Pemadam Kebakaran', emoji:'👨‍🚒'},
+  {word:'Ilmuwan', emoji:'👨‍🔬'}, {word:'Programmer', emoji:'👨‍💻'}, {word:'Penyanyi', emoji:'🎤'},
+  {word:'Penari', emoji:'💃'}, {word:'Superhero', emoji:'🦸'}, {word:'Ninja', emoji:'🥷'},
+  {word:'Penyihir', emoji:'🧙'}, {word:'Vampir', emoji:'🧛'}, {word:'Zombie', emoji:'🧟'},
+  {word:'Fairy', emoji:'🧚'}, {word:'Mermaid', emoji:'🧜'}, {word:'Raksasa', emoji:'🧞'},
+  {word:'Hantu', emoji:'👻'}, {word:'Alien', emoji:'👽'}, {word:'Robot', emoji:'🤖'},
+  {word:'Boneka Salju', emoji:'☃️'}, {word:'Sinterklas', emoji:'🎅'},
+
+  // === FANTASI ===
+  {word:'Naga', emoji:'🐉'}, {word:'Unicorn', emoji:'🦄'}, {word:'Dinosaurus', emoji:'🦖'},
+  {word:'T-Rex', emoji:'🦖'}, {word:'Brontosaurus', emoji:'🦕'}, {word:'Mammoth', emoji:'🦣'},
+  {word:'Harta Karun', emoji:'💰'}, {word:'Permata', emoji:'💎'}, {word:'Koin Emas', emoji:'🪙'},
+  {word:'Bola Kristal', emoji:'🔮'}, {word:'Bintang Keberuntungan', emoji:'🌟'},
+
+  // === SIMBOL & LAINNYA ===
+  {word:'Hati Cinta', emoji:'❤️'}, {word:'Hati Pink', emoji:'💖'}, {word:'Hati Pecah', emoji:'💔'},
+  {word:'Pita', emoji:'🎀'}, {word:'Hadiah', emoji:'🎁'}, {word:'Balon', emoji:'🎈'},
+  {word:'Balon Terbang', emoji:'🎈'}, {word:'Kembang Api', emoji:'🎆'}, {word:'Petasan', emoji:'🧨'},
+  {word:'Konfeti', emoji:'🎉'}, {word:'Bendera', emoji:'🏁'}, {word:'Trofi', emoji:'🏆'},
+  {word:'Medali', emoji:'🥇'}, {word:'Pesta Topi', emoji:'🥳'}, {word:'Kotak Surat', emoji:'📬'},
+  {word:'Surat Cinta', emoji:'💌'}, {word:'Pesan', emoji:'💬'}, {word:'Tanda Tanya', emoji:'❓'},
+  {word:'Tanda Seru', emoji:'❗'}, {word:'Centang', emoji:'✅'}, {word:'Silang', emoji:'❌'},
+  {word:'Bintang Emas', emoji:'🌠'}, {word:'Kuburan', emoji:'🪦'}, {word:'Tengkorak', emoji:'💀'},
+  {word:'Hantu Imut', emoji:'👻'}, {word:'Iblis', emoji:'😈'}, {word:'Topi Ulang Tahun', emoji:'🎂'},
+  {word:'Kereta Bayi', emoji:'👶'}, {word:'Kursi Roda', emoji:'♿'}, {word:'Tongkat Sihir', emoji:'🪄'},
+  {word:'Kotak Musik', emoji:'🎵'}, {word:'Kotak Amal', emoji:'📦'}, {word:'Peta Harta', emoji:'🗺️'},
+  {word:'Jam Alarm', emoji:'⏰'}, {word:'Kembang Api Merah', emoji:'🎇'}
 ];
+
 
 /* ================== STATE ================== */
 let peer=null, conn=null, isHost=false, roomCode='';
