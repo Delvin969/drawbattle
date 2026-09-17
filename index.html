@@ -64,7 +64,7 @@
   canvas{display:block;width:100%;height:auto;aspect-ratio:1/1;background:#fff;
          touch-action:none;cursor:crosshair}
   canvas.bucket-mode{cursor:cell}
-  .colors{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:12px;
+  .colors{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:12px;
     background:rgba(0,0,0,.25);padding:8px;border-radius:14px;}
   .color{aspect-ratio:1/1;border-radius:10px;cursor:pointer;
     border:3px solid transparent;transition:.15s;position:relative;
@@ -73,6 +73,22 @@
   .color.sel{border-color:#fff;transform:scale(1.1);box-shadow:0 0 12px rgba(255,255,255,.5)}
   .color.sel::after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;
     color:#fff;font-weight:900;font-size:.85rem;text-shadow:0 0 4px #000;}
+  /* Custom color picker */
+  .custom-color{
+    background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red) !important;
+    display:grid;place-items:center;position:relative;overflow:hidden;
+  }
+  .custom-color span{
+    font-size:1.2rem;font-weight:900;color:#fff;
+    text-shadow:0 0 6px #000,0 0 3px #000;pointer-events:none;
+    position:relative;z-index:1;
+  }
+  .custom-color input{
+    position:absolute;inset:0;width:100%;height:100%;
+    opacity:0;cursor:pointer;border:none;padding:0;
+    margin:0;letter-spacing:0;text-transform:none;
+  }
+  .custom-color.sel::after{content:'✓' !important;z-index:2;}
   .tools-row{display:flex;gap:8px;align-items:center;margin-top:8px;justify-content:center;flex-wrap:wrap}
   .tool{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);
     border:2px solid transparent;display:grid;place-items:center;cursor:pointer;
@@ -159,30 +175,42 @@
     <div class="timer" id="timerEl"><span id="timerNum">3:00</span></div>
   </div>
   <div class="canvas-wrap"><canvas id="canvas" width="600" height="600"></canvas></div>
-<div class="colors" id="colorsRow">
-  <div class="color sel" data-color="#111111" style="background:#111111"></div>
-  <div class="color" data-color="#ef4444" style="background:#ef4444"></div>
-  <div class="color" data-color="#f97316" style="background:#f97316"></div>
-  <div class="color" data-color="#facc15" style="background:#facc15"></div>
-  <div class="color" data-color="#22c55e" style="background:#22c55e"></div>
-  <div class="color" data-color="#3b82f6" style="background:#3b82f6"></div>
-  <div class="color" data-color="#8b5cf6" style="background:#8b5cf6"></div>
-  <div class="color" data-color="#ec4899" style="background:#ec4899"></div>
-  <div class="color" data-color="#a16207" style="background:#a16207"></div>
-  <div class="color" data-color="#ffffff" style="background:#ffffff"></div>
-  <div class="color" data-color="#94a3b8" style="background:#94a3b8"></div>
-  <div class="color" data-color="#78350f" style="background:#78350f"></div>
-  <div class="color" data-color="#0ea5e9" style="background:#0ea5e9"></div>
-  <div class="color" data-color="#14b8a6" style="background:#14b8a6"></div>
-  <div class="color" data-color="#f43f5e" style="background:#f43f5e"></div>
-  <div class="color" data-color="#a855f7" style="background:#a855f7"></div>
-  <div class="color" data-color="#84cc16" style="background:#84cc16</div>
-  <div class="color" data-color="#fb923c" style="background:#fb923c"></div>
-  <!-- 🎨 CUSTOM COLOR PICKER -->
-  <label class="color custom-color" id="customColorBtn" title="Pilih warna sendiri">
-    <input type="color" id="customColorInput" value="#111111">
-    <span>+</span>
-  </label>
+  <div class="colors" id="colorsRow">
+    <div class="color sel" data-color="#111111" style="background:#111111"></div>
+    <div class="color" data-color="#ef4444" style="background:#ef4444"></div>
+    <div class="color" data-color="#f97316" style="background:#f97316"></div>
+    <div class="color" data-color="#facc15" style="background:#facc15"></div>
+    <div class="color" data-color="#22c55e" style="background:#22c55e"></div>
+    <div class="color" data-color="#3b82f6" style="background:#3b82f6"></div>
+    <div class="color" data-color="#8b5cf6" style="background:#8b5cf6"></div>
+    <div class="color" data-color="#ec4899" style="background:#ec4899"></div>
+    <div class="color" data-color="#a16207" style="background:#a16207"></div>
+    <div class="color" data-color="#ffffff" style="background:#ffffff"></div>
+    <div class="color" data-color="#94a3b8" style="background:#94a3b8"></div>
+    <div class="color" data-color="#78350f" style="background:#78350f"></div>
+    <div class="color" data-color="#0ea5e9" style="background:#0ea5e9"></div>
+    <div class="color" data-color="#14b8a6" style="background:#14b8a6"></div>
+    <div class="color" data-color="#f43f5e" style="background:#f43f5e"></div>
+    <div class="color" data-color="#a855f7" style="background:#a855f7"></div>
+    <div class="color" data-color="#84cc16" style="background:#84cc16"></div>
+    <div class="color" data-color="#fb923c" style="background:#fb923c"></div>
+    <div class="color" data-color="#1e293b" style="background:#1e293b"></div>
+    <label class="color custom-color" id="customColorBtn" title="Pilih warna sendiri">
+      <input type="color" id="customColorInput" value="#111111">
+      <span>+</span>
+    </label>
+  </div>
+  <div class="tools-row">
+    <div class="tool undo disabled" id="undoBtn" onclick="undo()" title="Undo (Ctrl+Z)">↶</div>
+    <div class="tool redo disabled" id="redoBtn" onclick="redo()" title="Redo (Ctrl+Y)">↷</div>
+    <div class="tool sel" data-size="3"><div class="dot" style="width:5px;height:5px"></div></div>
+    <div class="tool" data-size="9"><div class="dot" style="width:11px;height:11px"></div></div>
+    <div class="tool" data-size="20"><div class="dot" style="width:20px;height:20px"></div></div>
+    <div class="tool eraser" id="eraserBtn" onclick="toggleEraser()" title="Penghapus">🩹</div>
+    <div class="tool bucket" id="bucketBtn" onclick="toggleBucket()" title="Isi Warna">🪣</div>
+    <div class="tool clear" onclick="clearCanvas()">🗑 Hapus</div>
+  </div>
+  <button class="green" style="margin-top:14px" onclick="submitDrawing()">✅ Selesai &amp; Kirim</button>
 </div>
 
 <div id="waiting" class="screen">
@@ -224,9 +252,29 @@
 /* ================== KONFIG ================== */
 const $ = id => document.getElementById(id);
 const GRID = 128;
-const DRAW_TIME = 180;
+const DRAW_TIME = 180; // 3 menit
 const DILATE_R = 3;
 const MAX_HISTORY = 30;
+
+/* ICE servers buat tembus NAT (WiFi beda / kuota) */
+const PEER_CONFIG = {
+  debug: 2,
+  config: {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun3.l.google.com:19302' },
+      { urls: 'stun:stun4.l.google.com:19302' },
+      { urls: 'stun:global.stun.twilio.com:3478' },
+      { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+      { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+      { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
+    ],
+    iceCandidatePoolSize: 10,
+    sdpSemantics: 'unified-plan'
+  }
+};
 
 const TOPICS = [
   // === HEWAN DARAT ===
@@ -275,7 +323,7 @@ const TOPICS = [
   {word:'Pretzel', emoji:'🥨'}, {word:'Wafel', emoji:'🧇'}, {word:'Pancake', emoji:'🥞'},
   {word:'Daging', emoji:'🥩'}, {word:'Ayam Goreng', emoji:'🍗'}, {word:'Bacon', emoji:'🥓'},
 
-  // === BUAH ===
+  // === BUAH & SAYUR ===
   {word:'Apel', emoji:'🍎'}, {word:'Apel Hijau', emoji:'🍏'}, {word:'Pisang', emoji:'🍌'},
   {word:'Jeruk', emoji:'🍊'}, {word:'Lemon', emoji:'🍋'}, {word:'Semangka', emoji:'🍉'},
   {word:'Anggur', emoji:'🍇'}, {word:'Stroberi', emoji:'🍓'}, {word:'Blueberry', emoji:'🫐'},
@@ -321,28 +369,26 @@ const TOPICS = [
   {word:'Rumah', emoji:'🏠'}, {word:'Apartemen', emoji:'🏢'}, {word:'Kastil', emoji:'🏰'},
   {word:'Tenda', emoji:'⛺'}, {word:'Pintu', emoji:'🚪'}, {word:'Jendela', emoji:'🪟'},
   {word:'Kursi', emoji:'🪑'}, {word:'Sofa', emoji:'🛋️'}, {word:'Tempat Tidur', emoji:'🛏️'},
-  {word:'Meja', emoji:'🪑'}, {word:'Lampu', emoji:'💡'}, {word:'Lilin', emoji:'🕯️'},
-  {word:'Cermin', emoji:'🪞'}, {word:'Jam', emoji:'⏰'}, {word:'Jam Pasir', emoji:'⏳'},
-  {word:'Kunci', emoji:'🔑'}, {word:'Gembok', emoji:'🔒'}, {word:'Palu', emoji:'🔨'},
-  {word:'Obeng', emoji:'🔧'}, {word:'Kunci Inggris', emoji:'🔧'}, {word:'Gunting', emoji:'✂️'},
-  {word:'Pisau', emoji:'🔪'}, {word:'Sendok', emoji:'🥄'}, {word:'Garpu', emoji:'🍴'},
-  {word:'Piring', emoji:'🍽️'}, {word:'Gelas', emoji:'🥛'}, {word:'Cangkir', emoji:'☕'},
-  {word:'Teko', emoji:'🫖'}, {word:'Botol', emoji:'🍾'}, {word:'Payung', emoji:'☂️'},
-  {word:'Tas', emoji:'👜'}, {word:'Koper', emoji:'🧳'}, {word:'Ransel', emoji:'🎒'},
-  {word:'Topi', emoji:'🎩'}, {word:'Topi Pantai', emoji:'👒'}, {word:'Sepatu', emoji:'👟'},
-  {word:'Sepatu Bot', emoji:'👢'}, {word:'Sandal', emoji:'🩴'}, {word:'Kaus Kaki', emoji:'🧦'},
-  {word:'Kacamata', emoji:'👓'}, {word:'Jam Tangan', emoji:'⌚'}, {word:'Cincin', emoji:'💍'},
-  {word:'Kalung', emoji:'📿'}, {word:'Mahkota', emoji:'👑'}, {word:'Buku', emoji:'📖'},
-  {word:'Pensil', emoji:'✏️'}, {word:'Pulpen', emoji:'🖊️'}, {word:'Kuas', emoji:'🖌️'},
-  {word:'Krayon', emoji:'🖍️'}, {word:'Penghapus', emoji:'🧽'}, {word:'Penggaris', emoji:'📏'},
+  {word:'Lampu', emoji:'💡'}, {word:'Lilin', emoji:'🕯️'}, {word:'Cermin', emoji:'🪞'},
+  {word:'Jam', emoji:'⏰'}, {word:'Jam Pasir', emoji:'⏳'}, {word:'Kunci', emoji:'🔑'},
+  {word:'Gembok', emoji:'🔒'}, {word:'Palu', emoji:'🔨'}, {word:'Obeng', emoji:'🔧'},
+  {word:'Gunting', emoji:'✂️'}, {word:'Pisau', emoji:'🔪'}, {word:'Sendok', emoji:'🥄'},
+  {word:'Garpu', emoji:'🍴'}, {word:'Piring', emoji:'🍽️'}, {word:'Gelas', emoji:'🥛'},
+  {word:'Cangkir', emoji:'☕'}, {word:'Teko', emoji:'🫖'}, {word:'Botol', emoji:'🍾'},
+  {word:'Payung', emoji:'☂️'}, {word:'Tas', emoji:'👜'}, {word:'Koper', emoji:'🧳'},
+  {word:'Ransel', emoji:'🎒'}, {word:'Topi', emoji:'🎩'}, {word:'Topi Pantai', emoji:'👒'},
+  {word:'Sepatu', emoji:'👟'}, {word:'Sepatu Bot', emoji:'👢'}, {word:'Sandal', emoji:'🩴'},
+  {word:'Kaus Kaki', emoji:'🧦'}, {word:'Kacamata', emoji:'👓'}, {word:'Jam Tangan', emoji:'⌚'},
+  {word:'Cincin', emoji:'💍'}, {word:'Kalung', emoji:'📿'}, {word:'Mahkota', emoji:'👑'},
+  {word:'Buku', emoji:'📖'}, {word:'Pensil', emoji:'✏️'}, {word:'Pulpen', emoji:'🖊️'},
+  {word:'Kuas', emoji:'🖌️'}, {word:'Krayon', emoji:'🖍️'}, {word:'Penggaris', emoji:'📏'},
   {word:'Kalkulator', emoji:'🧮'}, {word:'TV', emoji:'📺'}, {word:'Radio', emoji:'📻'},
   {word:'Telepon', emoji:'📱'}, {word:'Komputer', emoji:'💻'}, {word:'Kamera', emoji:'📷'},
   {word:'Video Kamera', emoji:'📹'}, {word:'Mikrofon', emoji:'🎤'}, {word:'Headphone', emoji:'🎧'},
-  {word:'Baterai', emoji:'🔋'}, {word:'Lampu Bohlam', emoji:'💡'}, {word:'Senter', emoji:'🔦'},
-  {word:'Peta', emoji:'🗺️'}, {word:'Kompas', emoji:'🧭'}, {word:'Teleskop', emoji:'🔭'},
-  {word:'Mikroskop', emoji:'🔬'}, {word:'Bom', emoji:'💣'}, {word:'Pistol', emoji:'🔫'},
-  {word:'Pedang', emoji:'⚔️'}, {word:'Perisai', emoji:'🛡️'}, {word:'Panah', emoji:'🏹'},
-  {word:'Tombak', emoji:'🔱'},
+  {word:'Baterai', emoji:'🔋'}, {word:'Senter', emoji:'🔦'}, {word:'Peta', emoji:'🗺️'},
+  {word:'Kompas', emoji:'🧭'}, {word:'Teleskop', emoji:'🔭'}, {word:'Mikroskop', emoji:'🔬'},
+  {word:'Bom', emoji:'💣'}, {word:'Pistol', emoji:'🔫'}, {word:'Pedang', emoji:'⚔️'},
+  {word:'Perisai', emoji:'🛡️'}, {word:'Panah', emoji:'🏹'}, {word:'Tombak', emoji:'🔱'},
 
   // === OLAHRAGA ===
   {word:'Bola Sepak', emoji:'⚽'}, {word:'Bola Basket', emoji:'🏀'}, {word:'Bola Voli', emoji:'🏐'},
@@ -381,18 +427,16 @@ const TOPICS = [
   // === SIMBOL & LAINNYA ===
   {word:'Hati Cinta', emoji:'❤️'}, {word:'Hati Pink', emoji:'💖'}, {word:'Hati Pecah', emoji:'💔'},
   {word:'Pita', emoji:'🎀'}, {word:'Hadiah', emoji:'🎁'}, {word:'Balon', emoji:'🎈'},
-  {word:'Balon Terbang', emoji:'🎈'}, {word:'Kembang Api', emoji:'🎆'}, {word:'Petasan', emoji:'🧨'},
+  {word:'Kembang Api', emoji:'🎆'}, {word:'Petasan', emoji:'🧨'},
   {word:'Konfeti', emoji:'🎉'}, {word:'Bendera', emoji:'🏁'}, {word:'Trofi', emoji:'🏆'},
-  {word:'Medali', emoji:'🥇'}, {word:'Pesta Topi', emoji:'🥳'}, {word:'Kotak Surat', emoji:'📬'},
+  {word:'Medali', emoji:'🥇'}, {word:'Kotak Surat', emoji:'📬'},
   {word:'Surat Cinta', emoji:'💌'}, {word:'Pesan', emoji:'💬'}, {word:'Tanda Tanya', emoji:'❓'},
   {word:'Tanda Seru', emoji:'❗'}, {word:'Centang', emoji:'✅'}, {word:'Silang', emoji:'❌'},
   {word:'Bintang Emas', emoji:'🌠'}, {word:'Kuburan', emoji:'🪦'}, {word:'Tengkorak', emoji:'💀'},
-  {word:'Hantu Imut', emoji:'👻'}, {word:'Iblis', emoji:'😈'}, {word:'Topi Ulang Tahun', emoji:'🎂'},
-  {word:'Kereta Bayi', emoji:'👶'}, {word:'Kursi Roda', emoji:'♿'}, {word:'Tongkat Sihir', emoji:'🪄'},
-  {word:'Kotak Musik', emoji:'🎵'}, {word:'Kotak Amal', emoji:'📦'}, {word:'Peta Harta', emoji:'🗺️'},
-  {word:'Jam Alarm', emoji:'⏰'}, {word:'Kembang Api Merah', emoji:'🎇'}
+  {word:'Iblis', emoji:'😈'}, {word:'Tongkat Sihir', emoji:'🪄'},
+  {word:'Kotak Musik', emoji:'🎵'}, {word:'Kotak Amal', emoji:'📦'},
+  {word:'Peta Harta', emoji:'🗺️'}, {word:'Jam Alarm', emoji:'⏰'}
 ];
-
 
 /* ================== STATE ================== */
 let peer=null, conn=null, isHost=false, roomCode='';
@@ -403,6 +447,7 @@ let isEraser = false;
 let isBucket = false;
 let brushSize = 3;
 let resultShown = false;
+let connectTimeout = null;
 
 /* History untuk Undo/Redo */
 let history = [];
@@ -448,10 +493,12 @@ function renderEmojiGrid(emoji){
 /* ================== ROOM ================== */
 let hostRetry = 0;
 function createRoom(){ isHost=true; hostRetry=0; openHost(); }
+
 function openHost(){
   roomCode = genCode();
   setStatus('menuStatus','Membuat room...');
-  peer = new Peer('dbattle-'+roomCode, {debug:1});
+  try { if (peer) peer.destroy(); } catch(_){}
+  peer = new Peer('dbattle-'+roomCode, PEER_CONFIG);
 
   peer.on('open', ()=>{
     setStatus('menuStatus','');
@@ -467,13 +514,21 @@ function openHost(){
   });
 
   peer.on('error', e=>{
+    console.error('Host error:', e);
     if (e.type==='unavailable-id' && hostRetry<5){
       hostRetry++;
       try{ peer.destroy(); }catch(_){}
       openHost();
+    } else if (e.type==='network'){
+      setStatus('menuStatus','Jaringan bermasalah. Refresh & coba lagi.', true);
     } else {
       setStatus('menuStatus','Gagal membuat room: '+e.type, true);
     }
+  });
+
+  peer.on('disconnected', () => {
+    console.warn('Peer disconnected, reconnecting...');
+    try { peer.reconnect(); } catch(_){}
   });
 }
 
@@ -488,15 +543,40 @@ function joinRoom(){
   if (code.length!==6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
   roomCode = code; isHost = false;
   setStatus('menuStatus','Menghubungkan ke room...');
-  peer = new Peer({debug:1});
+
+  try { if (peer) peer.destroy(); } catch(_){}
+  peer = new Peer(PEER_CONFIG);
 
   peer.on('open', ()=>{
-    conn = peer.connect('dbattle-'+code, {reliable:true});
+    setStatus('menuStatus','Mencari host...');
+    conn = peer.connect('dbattle-'+code, { reliable: true });
+
+    clearTimeout(connectTimeout);
+    connectTimeout = setTimeout(() => {
+      if (!conn || !conn.open){
+        setStatus('menuStatus','Gagal terhubung (timeout 20s). Cek kode / jaringan.', true);
+        try { conn && conn.close(); peer.destroy(); } catch(_){}
+      }
+    }, 20000);
+
+    conn.on('open', ()=>{
+      clearTimeout(connectTimeout);
+      setStatus('menuStatus','Terhubung! ✅');
+    });
+
     setupConn();
   });
+
   peer.on('error', e=>{
-    if (e.type==='peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢',true);
+    console.error('Join error:', e);
+    clearTimeout(connectTimeout);
+    if (e.type==='peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢 Cek kodenya!',true);
+    else if (e.type==='network') setStatus('menuStatus','Jaringan bermasalah. Coba refresh.',true);
     else setStatus('menuStatus','Error: '+e.type, true);
+  });
+
+  peer.on('disconnected', () => {
+    try { peer.reconnect(); } catch(_){}
   });
 }
 
@@ -506,10 +586,25 @@ function setupConn(){
     if (isHost){
       const t = randomTopic();
       const rg = renderEmojiGrid(t.emoji);
-      safeSend({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)});
-      startGame(t.word, t.emoji, rg);
+      // Retry kirim sampai berhasil
+      let attempts = 0;
+      const sendStart = () => {
+        attempts++;
+        if (safeSend({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)})){
+          startGame(t.word, t.emoji, rg);
+        } else if (attempts < 10){
+          setTimeout(sendStart, 300);
+        }
+      };
+      setTimeout(sendStart, 150);
     } else {
       setStatus('menuStatus','Terhubung! Menunggu host...');
+      // Fallback: kalau 8 detik nggak dapet 'start', minta ulang
+      setTimeout(() => {
+        if ($('menu').classList.contains('active')){
+          safeSend({ type:'need-start' });
+        }
+      }, 8000);
     }
   });
 
@@ -534,6 +629,7 @@ function safeSend(obj){
 function handleData(data){
   if (!data) return;
   if (data.type === 'start'){
+    clearTimeout(connectTimeout);
     const rg = unpackGrid(data.refGrid);
     startGame(data.word, data.emoji, rg);
   }
@@ -554,6 +650,16 @@ function handleData(data){
       startGame(t.word, t.emoji, rg);
     }
   }
+  else if (data.type === 'need-start'){
+    if (isHost && promptTopic && refGrid){
+      safeSend({
+        type:'start',
+        word: promptTopic.word,
+        emoji: promptTopic.emoji,
+        refGrid: packGrid(refGrid)
+      });
+    }
+  }
 }
 
 function copyCode(){
@@ -569,20 +675,13 @@ const ctx = canvas.getContext('2d', {willReadFrequently:true});
 let drawing=false, lastPt=null;
 
 /* ---------- HISTORY / UNDO-REDO ---------- */
-function snapshot(){
-  return canvas.toDataURL('image/png');
-}
+function snapshot(){ return canvas.toDataURL('image/png'); }
 
 function pushHistory(){
   if (isRestoring) return;
-  // Buang redo branch kalau ada
   history = history.slice(0, historyIndex + 1);
   history.push(snapshot());
-  if (history.length > MAX_HISTORY){
-    history.shift();
-  } else {
-    historyIndex++;
-  }
+  if (history.length > MAX_HISTORY) history.shift();
   historyIndex = history.length - 1;
   updateUndoRedoUI();
 }
@@ -606,17 +705,14 @@ function undo(){
   historyIndex--;
   restoreFromHistory();
 }
-
 function redo(){
   if (historyIndex >= history.length - 1) return;
   historyIndex++;
   restoreFromHistory();
 }
-
 function updateUndoRedoUI(){
-  const u = $('undoBtn'), r = $('redoBtn');
-  u.classList.toggle('disabled', historyIndex <= 0);
-  r.classList.toggle('disabled', historyIndex >= history.length - 1);
+  $('undoBtn').classList.toggle('disabled', historyIndex <= 0);
+  $('redoBtn').classList.toggle('disabled', historyIndex >= history.length - 1);
 }
 
 /* ---------- CANVAS DASAR ---------- */
@@ -640,7 +736,6 @@ canvas.addEventListener('pointerdown', e=>{
   if (!gameActive) return;
   e.preventDefault();
 
-  // 🪣 MODE ISI WARNA
   if (isBucket){
     pushHistory();
     const p = getPos(e);
@@ -648,8 +743,7 @@ canvas.addEventListener('pointerdown', e=>{
     return;
   }
 
-  // ✏️ MODE GAMBAR BIASA
-  pushHistory(); // simpan state SEBELUM mulai coret
+  pushHistory();
   drawing = true;
   canvas.setPointerCapture(e.pointerId);
   const p = getPos(e);
@@ -687,7 +781,8 @@ document.querySelectorAll('.tool[data-size]').forEach(t=>{
   });
 });
 
-document.querySelectorAll('.color').forEach(c=>{
+// Warna preset
+document.querySelectorAll('.color[data-color]').forEach(c=>{
   c.addEventListener('click', ()=>{
     document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
     c.classList.add('sel');
@@ -700,6 +795,21 @@ document.querySelectorAll('.color').forEach(c=>{
       canvas.classList.remove('bucket-mode');
     }
   });
+});
+
+// Custom color picker
+$('customColorInput').addEventListener('input', e=>{
+  currentColor = e.target.value;
+  document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
+  $('customColorBtn').classList.add('sel');
+  $('customColorBtn').style.background = currentColor;
+  isEraser = false;
+  $('eraserBtn').classList.remove('sel');
+  if (isBucket){
+    isBucket = false;
+    $('bucketBtn').classList.remove('sel');
+    canvas.classList.remove('bucket-mode');
+  }
 });
 
 function toggleEraser(){
@@ -732,13 +842,12 @@ function toggleBucket(){
   }
 }
 
-/* Keyboard shortcut: Ctrl+Z, Ctrl+Y */
+// Keyboard shortcut
 document.addEventListener('keydown', e => {
   if (!gameActive) return;
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){
     e.preventDefault();
-    if (e.shiftKey) redo();
-    else undo();
+    if (e.shiftKey) redo(); else undo();
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y'){
     e.preventDefault();
@@ -754,7 +863,6 @@ function floodFill(startX, startY, fillColor){
 
   const imgData = ctx.getImageData(0, 0, w, h);
   const data = imgData.data;
-
   const startIdx = (sy * w + sx) * 4;
   const targetR = data[startIdx];
   const targetG = data[startIdx+1];
@@ -769,7 +877,6 @@ function floodFill(startX, startY, fillColor){
       Math.abs(targetB-fb) < 8 && targetA === 255) return;
 
   const tol = 60;
-
   function matches(i){
     const dr = data[i]   - targetR;
     const dg = data[i+1] - targetG;
@@ -779,11 +886,9 @@ function floodFill(startX, startY, fillColor){
   }
 
   const stack = [[sx, sy]];
-
   while (stack.length){
     const [x0, y0] = stack.pop();
     if (y0 < 0 || y0 >= h) continue;
-
     const rowStart = y0 * w;
     let xL = x0;
     while (xL >= 0 && matches((rowStart + xL) * 4)) xL--;
@@ -791,15 +896,11 @@ function floodFill(startX, startY, fillColor){
     let xR = x0;
     while (xR < w && matches((rowStart + xR) * 4)) xR++;
     xR--;
-
     if (xL > xR) continue;
 
     for (let x = xL; x <= xR; x++){
       const pi = (rowStart + x) * 4;
-      data[pi]   = fr;
-      data[pi+1] = fg;
-      data[pi+2] = fb;
-      data[pi+3] = 255;
+      data[pi]=fr; data[pi+1]=fg; data[pi+2]=fb; data[pi+3]=255;
     }
 
     if (y0 > 0){
@@ -821,7 +922,6 @@ function floodFill(startX, startY, fillColor){
       }
     }
   }
-
   ctx.putImageData(imgData, 0, 0);
 }
 
@@ -845,6 +945,7 @@ function startGame(word, emoji, rg){
   refGrid = rg;
   myGrid = null; oppGrid = null; myImg = null; oppImg = null;
   resultShown = false;
+  clearTimeout(connectTimeout);
 
   $('promptText').textContent = word;
   $('promptEmoji').textContent = emoji;
@@ -866,11 +967,13 @@ function startGame(word, emoji, rg){
   $('eraserBtn').classList.remove('sel');
   $('bucketBtn').classList.remove('sel');
   canvas.classList.remove('bucket-mode');
+  $('customColorBtn').classList.remove('sel');
+  $('customColorBtn').style.background = '';
+  $('customColorInput').value = '#111111';
 
   clearCanvas(false);
   showScreen('game');
 
-  // Reset history dengan state kosong
   history = [];
   historyIndex = -1;
   pushHistory();
