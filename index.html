@@ -11,7 +11,7 @@
     background:radial-gradient(circle at 20% 0%,#243b6b 0%,#141a35 45%,#0a0e1f 100%);
     color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;
     padding:14px;overflow-x:hidden;}
-  .screen{display:none;width:100%;max-width:640px;animation:fade .3s ease}
+  .screen{display:none;width:100%;max-width:700px;animation:fade .3s ease}
   .screen.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
@@ -29,6 +29,7 @@
   button:active{transform:scale(.97)}
   button.ghost{background:rgba(255,255,255,.1);box-shadow:none;border:1px solid rgba(255,255,255,.16)}
   button.green{background:linear-gradient(135deg,#16b981,#0ea5a5);box-shadow:0 6px 18px rgba(16,185,129,.35)}
+  button.orange{background:linear-gradient(135deg,#f59e0b,#ea580c);box-shadow:0 6px 18px rgba(245,158,11,.35)}
   button.small{width:auto;padding:9px 16px;font-size:.85rem;margin:0}
   input{width:100%;padding:15px;border-radius:14px;border:1px solid rgba(255,255,255,.2);
     background:rgba(0,0,0,.25);color:#fff;font-size:1.25rem;text-align:center;
@@ -43,6 +44,7 @@
                  text-shadow:0 0 22px rgba(124,243,208,.5);margin-top:4px}
   .status{text-align:center;font-size:.9rem;opacity:.75;margin-top:12px;min-height:20px}
   .status.err{color:#ff7a7a;opacity:1}
+  .player-count{text-align:center;font-size:1.2rem;font-weight:700;margin:12px 0;color:#7cf3d0}
   .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
   .prompt-chip{flex:1;display:flex;align-items:center;gap:12px;
     background:linear-gradient(135deg,#ff5f6d,#a06bff);
@@ -77,16 +79,10 @@
     background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red) !important;
     display:grid;place-items:center;position:relative;overflow:hidden;
   }
-  .custom-color span{
-    font-size:1.2rem;font-weight:900;color:#fff;
-    text-shadow:0 0 6px #000,0 0 3px #000;pointer-events:none;
-    position:relative;z-index:1;
-  }
-  .custom-color input{
-    position:absolute;inset:0;width:100%;height:100%;
-    opacity:0;cursor:pointer;border:none;padding:0;
-    margin:0;letter-spacing:0;text-transform:none;
-  }
+  .custom-color span{font-size:1.2rem;font-weight:900;color:#fff;
+    text-shadow:0 0 6px #000,0 0 3px #000;pointer-events:none;position:relative;z-index:1;}
+  .custom-color input{position:absolute;inset:0;width:100%;height:100%;
+    opacity:0;cursor:pointer;border:none;padding:0;margin:0;letter-spacing:0;text-transform:none;}
   .custom-color.sel::after{content:'✓' !important;z-index:2;}
   .tools-row{display:flex;gap:8px;align-items:center;margin-top:8px;justify-content:center;flex-wrap:wrap}
   .tool{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);
@@ -99,45 +95,51 @@
   .tool.eraser.sel{border-color:#fbbf24;background:rgba(251,191,36,.25)}
   .tool.bucket.sel{border-color:#41d8ff;background:rgba(65,216,255,.25)}
   .tool.undo,.tool.redo{font-weight:900;font-size:1.3rem}
-  .tool.undo:active,.tool.redo:active{background:rgba(255,255,255,.35)}
   .tool.disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
   .ref-box{display:flex;flex-direction:column;align-items:center;
     background:rgba(0,0,0,.3);border-radius:16px;padding:14px;margin-bottom:16px;
     border:1px solid rgba(255,255,255,.12);}
-  .ref-box .ref-emoji{font-size:4.5rem;line-height:1;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+  .ref-box .ref-emoji{font-size:4rem;line-height:1;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
   .ref-box .ref-label{font-size:.7rem;letter-spacing:.2em;opacity:.6;text-transform:uppercase;margin-top:4px}
-  .ref-box .ref-word{font-size:1.4rem;font-weight:800;margin-top:2px}
-  .winner{text-align:center;font-size:1.7rem;font-weight:900;margin:6px 0 14px;
+  .ref-box .ref-word{font-size:1.3rem;font-weight:800;margin-top:2px}
+  .winner{text-align:center;font-size:1.6rem;font-weight:900;margin:6px 0 14px;
     padding:12px;border-radius:14px;letter-spacing:.02em;}
   .winner.win{background:linear-gradient(135deg,#16b981,#0ea5a5);box-shadow:0 8px 24px rgba(16,185,129,.4)}
   .winner.lose{background:linear-gradient(135deg,#ef4444,#b91c1c);box-shadow:0 8px 24px rgba(239,68,68,.4)}
   .winner.tie{background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 8px 24px rgba(245,158,11,.4)}
-  .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-  .compare .item{background:rgba(0,0,0,.3);border-radius:14px;padding:10px;
+  .compare{display:grid;gap:10px;margin-bottom:16px}
+  .compare .item{background:rgba(0,0,0,.3);border-radius:14px;padding:8px;
     border:1px solid rgba(255,255,255,.1);text-align:center;}
-  .compare .item h4{font-size:.72rem;opacity:.7;margin-bottom:8px;
-                    letter-spacing:.12em;text-transform:uppercase;font-weight:600}
-  .compare img{width:100%;border-radius:9px;background:#fff;display:block;
+  .compare .item h4{font-size:.68rem;opacity:.7;margin-bottom:6px;
+                    letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .compare img{width:100%;border-radius:8px;background:#fff;display:block;
                aspect-ratio:1/1;object-fit:contain}
-  .compare .pct{font-size:1.9rem;font-weight:900;margin-top:8px;line-height:1;
+  .compare .pct{font-size:1.6rem;font-weight:900;margin-top:6px;line-height:1;
     background:linear-gradient(90deg,#41d8ff,#a06bff);
     -webkit-background-clip:text;background-clip:text;color:transparent;}
   .compare .item.winner-col .pct{background:linear-gradient(90deg,#fbbf24,#f59e0b);
     -webkit-background-clip:text;background-clip:text;}
   .compare .item.winner-col{border-color:rgba(251,191,36,.6);box-shadow:0 0 20px rgba(251,191,36,.2)}
+  .compare .item.me h4{color:#7cf3d0}
   .verdict{text-align:center;font-size:.95rem;font-weight:600;margin-bottom:16px;opacity:.85;min-height:22px}
   .spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.15);
     border-top-color:#7c8cff;border-radius:50%;animation:spin 1s linear infinite;margin:18px auto}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .players-list{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .player-pill{background:rgba(124,243,208,.15);border:1px solid rgba(124,243,208,.4);
+    border-radius:20px;padding:6px 14px;font-size:.82rem;font-weight:600;color:#7cf3d0}
 </style>
 </head>
 <body>
 
+<!-- ============ MENU ============ -->
 <div id="menu" class="screen active">
   <div class="card">
     <h1>🎨 Draw Battle</h1>
     <p class="sub">Adu gambar! Siapa yang paling mirip dengan topiknya?</p>
-    <button onclick="createRoom()">➕ Buat Room</button>
+    <button onclick="createRoom(2)">🎯 Buat Room 1 vs 1</button>
+    <button class="orange" onclick="createRoom(3)">👥 Buat Room 3 Pemain</button>
     <button class="ghost" onclick="toggleJoin()">🔑 Gabung Room</button>
     <div id="joinBox" style="display:none;margin-top:6px">
       <input id="joinCode" placeholder="Masukkan kode room" maxlength="6"
@@ -148,6 +150,7 @@
   </div>
 </div>
 
+<!-- ============ LOBBY ============ -->
 <div id="lobby" class="screen">
   <div class="card">
     <h1 style="font-size:1.5rem">Room Dibuat!</h1>
@@ -157,11 +160,14 @@
       <div class="val" id="roomCodeDisplay">------</div>
     </div>
     <button class="ghost small" style="width:100%" onclick="copyCode()">📋 Salin Kode</button>
+    <div class="player-count" id="playerCount">👥 1 / 2</div>
+    <div class="players-list" id="playersList"></div>
     <div class="spinner"></div>
-    <div id="lobbyStatus" class="status">Menunggu lawan bergabung...</div>
+    <div id="lobbyStatus" class="status">Menunggu pemain...</div>
   </div>
 </div>
 
+<!-- ============ GAME ============ -->
 <div id="game" class="screen">
   <div class="topbar">
     <div class="prompt-chip">
@@ -200,8 +206,8 @@
     </label>
   </div>
   <div class="tools-row">
-    <div class="tool undo disabled" id="undoBtn" onclick="undo()" title="Undo (Ctrl+Z)">↶</div>
-    <div class="tool redo disabled" id="redoBtn" onclick="redo()" title="Redo (Ctrl+Y)">↷</div>
+    <div class="tool undo disabled" id="undoBtn" onclick="undo()" title="Undo">↶</div>
+    <div class="tool redo disabled" id="redoBtn" onclick="redo()" title="Redo">↷</div>
     <div class="tool sel" data-size="3"><div class="dot" style="width:5px;height:5px"></div></div>
     <div class="tool" data-size="9"><div class="dot" style="width:11px;height:11px"></div></div>
     <div class="tool" data-size="20"><div class="dot" style="width:20px;height:20px"></div></div>
@@ -212,15 +218,18 @@
   <button class="green" style="margin-top:14px" onclick="submitDrawing()">✅ Selesai &amp; Kirim</button>
 </div>
 
+<!-- ============ WAITING ============ -->
 <div id="waiting" class="screen">
   <div class="card" style="text-align:center">
     <h1 style="font-size:1.4rem">Gambarmu Terkirim! 📤</h1>
-    <p class="sub">Menunggu lawan menyelesaikan gambarnya...</p>
+    <p class="sub">Menunggu pemain lain menyelesaikan gambarnya...</p>
     <div class="spinner"></div>
     <div class="status" id="waitStatus">Sabarrr...</div>
+    <div class="players-list" id="waitPlayersList"></div>
   </div>
 </div>
 
+<!-- ============ RESULT ============ -->
 <div id="result" class="screen">
   <div class="card">
     <div class="ref-box">
@@ -229,18 +238,7 @@
       <div class="ref-word" id="refWord">-</div>
     </div>
     <div class="winner" id="winnerBox">-</div>
-    <div class="compare">
-      <div class="item" id="itemMine">
-        <h4>Gambarmu</h4>
-        <img id="imgMine" alt="gambarmu">
-        <div class="pct" id="pctMine">0%</div>
-      </div>
-      <div class="item" id="itemOpp">
-        <h4>Lawan</h4>
-        <img id="imgOpp" alt="gambar lawan">
-        <div class="pct" id="pctOpp">0%</div>
-      </div>
-    </div>
+    <div class="compare" id="compare"></div>
     <div class="verdict" id="verdict"></div>
     <button onclick="playAgain()">🔄 Main Lagi</button>
     <div class="status" id="resultStatus"></div>
@@ -250,12 +248,11 @@
 <script>
 /* ================== KONFIG ================== */
 const $ = id => document.getElementById(id);
-const GRID = 160;          // ⬅️ naik dari 128 → resolusi lebih presisi
-const DRAW_TIME = 180;     // 3 menit
-const DILATE_R = 2;        // ⬅️ turun dari 3 → toleransi lebih ketat
+const GRID = 160;
+const DRAW_TIME = 180;
+const DILATE_R = 2;
 const MAX_HISTORY = 30;
 
-/* ICE servers buat tembus NAT (WiFi beda / kuota) */
 const PEER_CONFIG = {
   debug: 2,
   config: {
@@ -276,74 +273,46 @@ const PEER_CONFIG = {
 };
 
 const TOPICS = [
-  // === HEWAN DARAT ===
   {word:'Kucing', emoji:'🐱'}, {word:'Anjing', emoji:'🐶'}, {word:'Kelinci', emoji:'🐰'},
   {word:'Hamster', emoji:'🐹'}, {word:'Tikus', emoji:'🐭'}, {word:'Sapi', emoji:'🐮'},
-  {word:'Kerbau', emoji:'🐃'}, {word:'Kambing', emoji:'🐐'}, {word:'Domba', emoji:'🐑'},
-  {word:'Kuda', emoji:'🐴'}, {word:'Babi', emoji:'🐷'}, {word:'Gajah', emoji:'🐘'},
-  {word:'Singa', emoji:'🦁'}, {word:'Harimau', emoji:'🐯'}, {word:'Macan Tutul', emoji:'🐆'},
-  {word:'Cheetah', emoji:'🐆'}, {word:'Serigala', emoji:'🐺'}, {word:'Rubah', emoji:'🦊'},
-  {word:'Beruang', emoji:'🐻'}, {word:'Panda', emoji:'🐼'}, {word:'Koala', emoji:'🐨'},
-  {word:'Monyet', emoji:'🐵'}, {word:'Gorila', emoji:'🦍'}, {word:'Jerapah', emoji:'🦒'},
-  {word:'Zebra', emoji:'🦓'}, {word:'Rusa', emoji:'🦌'}, {word:'Unta', emoji:'🐪'},
-  {word:'Badak', emoji:'🦏'}, {word:'Kuda Nil', emoji:'🦛'}, {word:'Kanguru', emoji:'🦘'},
-  {word:'Sloth', emoji:'🦥'}, {word:'Landak', emoji:'🦔'}, {word:'Kelelawar', emoji:'🦇'},
-  {word:'Tupai', emoji:'🐿️'}, {word:'Berang-berang', emoji:'🦫'}, {word:'Sigung', emoji:'🦨'},
-  {word:'Luwak', emoji:'🦡'}, {word:'Kucing Hitam', emoji:'🐈‍⬛'}, {word:'Kucing Oren', emoji:'🐈'},
-
-  // === HEWAN AIR ===
-  {word:'Ikan', emoji:'🐟'}, {word:'Ikan Tropis', emoji:'🐠'}, {word:'Ikan Hiu', emoji:'🦈'},
-  {word:'Paus', emoji:'🐋'}, {word:'Dolphin', emoji:'🐬'}, {word:'Gurita', emoji:'🐙'},
-  {word:'Cumi-cumi', emoji:'🦑'}, {word:'Kepiting', emoji:'🦀'}, {word:'Lobster', emoji:'🦞'},
-  {word:'Udang', emoji:'🦐'}, {word:'Kerang', emoji:'🐚'}, {word:'Siput', emoji:'🐌'},
+  {word:'Kambing', emoji:'🐐'}, {word:'Domba', emoji:'🐑'}, {word:'Kuda', emoji:'🐴'},
+  {word:'Gajah', emoji:'🐘'}, {word:'Singa', emoji:'🦁'}, {word:'Harimau', emoji:'🐯'},
+  {word:'Serigala', emoji:'🐺'}, {word:'Rubah', emoji:'🦊'}, {word:'Beruang', emoji:'🐻'},
+  {word:'Panda', emoji:'🐼'}, {word:'Koala', emoji:'🐨'}, {word:'Monyet', emoji:'🐵'},
+  {word:'Gorila', emoji:'🦍'}, {word:'Jerapah', emoji:'🦒'}, {word:'Zebra', emoji:'🦓'},
+  {word:'Rusa', emoji:'🦌'}, {word:'Unta', emoji:'🐪'}, {word:'Badak', emoji:'🦏'},
+  {word:'Kuda Nil', emoji:'🦛'}, {word:'Kanguru', emoji:'🦘'}, {word:'Landak', emoji:'🦔'},
+  {word:'Kelelawar', emoji:'🦇'}, {word:'Tupai', emoji:'🐿️'},
+  {word:'Ikan', emoji:'🐟'}, {word:'Ikan Hiu', emoji:'🦈'}, {word:'Paus', emoji:'🐋'},
+  {word:'Dolphin', emoji:'🐬'}, {word:'Gurita', emoji:'🐙'}, {word:'Kepiting', emoji:'🦀'},
+  {word:'Lobster', emoji:'🦞'}, {word:'Udang', emoji:'🦐'}, {word:'Siput', emoji:'🐌'},
   {word:'Kura-kura', emoji:'🐢'}, {word:'Buaya', emoji:'🐊'},
-
-  // === HEWAN TERBANG ===
-  {word:'Burung', emoji:'🐦'}, {word:'Ayam', emoji:'🐔'}, {word:'Ayam Jago', emoji:'🐓'},
-  {word:'Bebek', emoji:'🦆'}, {word:'Angsa', emoji:'🦢'}, {word:'Kalkun', emoji:'🦃'},
-  {word:'Merak', emoji:'🦚'}, {word:'Burung Hantu', emoji:'🦉'}, {word:'Elang', emoji:'🦅'},
-  {word:'Penguin', emoji:'🐧'}, {word:'Flamingo', emoji:'🦩'}, {word:'Beo', emoji:'🦜'},
-  {word:'Merpati', emoji:'🕊️'},
-
-  // === SERANGGA ===
-  {word:'Kupu-kupu', emoji:'🦋'}, {word:'Lebah', emoji:'🐝'}, {word:'Semut', emoji:'🐜'},
-  {word:'Laba-laba', emoji:'🕷️'}, {word:'Kalajengking', emoji:'🦂'}, {word:'Kumbang', emoji:'🪲'},
-  {word:'Belalang', emoji:'🦗'}, {word:'Kecoak', emoji:'🪳'}, {word:'Nyamuk', emoji:'🦟'},
-  {word:'Cacing', emoji:'🪱'},
-
-  // === MAKANAN ===
+  {word:'Burung', emoji:'🐦'}, {word:'Ayam', emoji:'🐔'}, {word:'Bebek', emoji:'🦆'},
+  {word:'Angsa', emoji:'🦢'}, {word:'Merak', emoji:'🦚'}, {word:'Burung Hantu', emoji:'🦉'},
+  {word:'Elang', emoji:'🦅'}, {word:'Penguin', emoji:'🐧'}, {word:'Flamingo', emoji:'🦩'},
+  {word:'Beo', emoji:'🦜'}, {word:'Kupu-kupu', emoji:'🦋'}, {word:'Lebah', emoji:'🐝'},
+  {word:'Semut', emoji:'🐜'}, {word:'Laba-laba', emoji:'🕷️'}, {word:'Kalajengking', emoji:'🦂'},
+  {word:'Kumbang', emoji:'🪲'}, {word:'Belalang', emoji:'🦗'}, {word:'Nyamuk', emoji:'🦟'},
   {word:'Pizza', emoji:'🍕'}, {word:'Burger', emoji:'🍔'}, {word:'Hot Dog', emoji:'🌭'},
-  {word:'Sandwich', emoji:'🥪'}, {word:'Taco', emoji:'🌮'}, {word:'Burrito', emoji:'🌯'},
-  {word:'Kentang Goreng', emoji:'🍟'}, {word:'Nasi', emoji:'🍚'}, {word:'Sushi', emoji:'🍣'},
-  {word:'Ramen', emoji:'🍜'}, {word:'Spaghetti', emoji:'🍝'}, {word:'Curry', emoji:'🍛'},
-  {word:'Bento', emoji:'🍱'}, {word:'Dumpling', emoji:'🥟'}, {word:'Sup', emoji:'🍲'},
+  {word:'Sandwich', emoji:'🥪'}, {word:'Taco', emoji:'🌮'}, {word:'Kentang Goreng', emoji:'🍟'},
+  {word:'Nasi', emoji:'🍚'}, {word:'Sushi', emoji:'🍣'}, {word:'Ramen', emoji:'🍜'},
+  {word:'Spaghetti', emoji:'🍝'}, {word:'Bento', emoji:'🍱'}, {word:'Dumpling', emoji:'🥟'},
   {word:'Salad', emoji:'🥗'}, {word:'Keju', emoji:'🧀'}, {word:'Telur', emoji:'🥚'},
-  {word:'Roti', emoji:'🍞'}, {word:'Croissant', emoji:'🥐'}, {word:'Bagel', emoji:'🥯'},
-  {word:'Pretzel', emoji:'🥨'}, {word:'Wafel', emoji:'🧇'}, {word:'Pancake', emoji:'🥞'},
+  {word:'Roti', emoji:'🍞'}, {word:'Croissant', emoji:'🥐'}, {word:'Pancake', emoji:'🥞'},
   {word:'Daging', emoji:'🥩'}, {word:'Ayam Goreng', emoji:'🍗'}, {word:'Bacon', emoji:'🥓'},
-
-  // === BUAH & SAYUR ===
-  {word:'Apel', emoji:'🍎'}, {word:'Apel Hijau', emoji:'🍏'}, {word:'Pisang', emoji:'🍌'},
-  {word:'Jeruk', emoji:'🍊'}, {word:'Lemon', emoji:'🍋'}, {word:'Semangka', emoji:'🍉'},
-  {word:'Anggur', emoji:'🍇'}, {word:'Stroberi', emoji:'🍓'}, {word:'Blueberry', emoji:'🫐'},
-  {word:'Melon', emoji:'🍈'}, {word:'Ceri', emoji:'🍒'}, {word:'Persik', emoji:'🍑'},
-  {word:'Mangga', emoji:'🥭'}, {word:'Nanas', emoji:'🍍'}, {word:'Kelapa', emoji:'🥥'},
-  {word:'Kiwi', emoji:'🥝'}, {word:'Tomat', emoji:'🍅'}, {word:'Alpukat', emoji:'🥑'},
-  {word:'Terong', emoji:'🍆'}, {word:'Kentang', emoji:'🥔'}, {word:'Wortel', emoji:'🥕'},
-  {word:'Jagung', emoji:'🌽'}, {word:'Cabai', emoji:'🌶️'}, {word:'Brokoli', emoji:'🥦'},
-  {word:'Mentimun', emoji:'🥒'}, {word:'Selada', emoji:'🥬'}, {word:'Bawang', emoji:'🧄'},
-  {word:'Bawang Bombay', emoji:'🧅'}, {word:'Jamur', emoji:'🍄'}, {word:'Kacang', emoji:'🥜'},
-
-  // === MINUMAN & DESSERT ===
-  {word:'Es Krim', emoji:'🍦'}, {word:'Es Serut', emoji:'🍧'}, {word:'Es Krim Sundae', emoji:'🍨'},
-  {word:'Donat', emoji:'🍩'}, {word:'Kue', emoji:'🍰'}, {word:'Kue Ulang Tahun', emoji:'🎂'},
-  {word:'Cupcake', emoji:'🧁'}, {word:'Pie', emoji:'🥧'}, {word:'Coklat', emoji:'🍫'},
-  {word:'Permen', emoji:'🍬'}, {word:'Lollipop', emoji:'🍭'}, {word:'Puding', emoji:'🍮'},
-  {word:'Madu', emoji:'🍯'}, {word:'Kopi', emoji:'☕'}, {word:'Teh', emoji:'🍵'},
-  {word:'Susu', emoji:'🥛'}, {word:'Jus', emoji:'🧃'}, {word:'Soda', emoji:'🥤'},
-  {word:'Bir', emoji:'🍺'}, {word:'Anggur Merah', emoji:'🍷'}, {word:'Koktail', emoji:'🍹'},
-
-  // === ALAM ===
+  {word:'Apel', emoji:'🍎'}, {word:'Pisang', emoji:'🍌'}, {word:'Jeruk', emoji:'🍊'},
+  {word:'Lemon', emoji:'🍋'}, {word:'Semangka', emoji:'🍉'}, {word:'Anggur', emoji:'🍇'},
+  {word:'Stroberi', emoji:'🍓'}, {word:'Blueberry', emoji:'🫐'}, {word:'Melon', emoji:'🍈'},
+  {word:'Ceri', emoji:'🍒'}, {word:'Persik', emoji:'🍑'}, {word:'Mangga', emoji:'🥭'},
+  {word:'Nanas', emoji:'🍍'}, {word:'Kelapa', emoji:'🥥'}, {word:'Kiwi', emoji:'🥝'},
+  {word:'Tomat', emoji:'🍅'}, {word:'Alpukat', emoji:'🥑'}, {word:'Terong', emoji:'🍆'},
+  {word:'Kentang', emoji:'🥔'}, {word:'Wortel', emoji:'🥕'}, {word:'Jagung', emoji:'🌽'},
+  {word:'Cabai', emoji:'🌶️'}, {word:'Brokoli', emoji:'🥦'}, {word:'Jamur', emoji:'🍄'},
+  {word:'Es Krim', emoji:'🍦'}, {word:'Donat', emoji:'🍩'}, {word:'Kue', emoji:'🍰'},
+  {word:'Kue Ulang Tahun', emoji:'🎂'}, {word:'Cupcake', emoji:'🧁'}, {word:'Pie', emoji:'🥧'},
+  {word:'Coklat', emoji:'🍫'}, {word:'Permen', emoji:'🍬'}, {word:'Lollipop', emoji:'🍭'},
+  {word:'Puding', emoji:'🍮'}, {word:'Madu', emoji:'🍯'}, {word:'Kopi', emoji:'☕'},
+  {word:'Teh', emoji:'🍵'}, {word:'Susu', emoji:'🥛'}, {word:'Soda', emoji:'🥤'},
   {word:'Matahari', emoji:'☀️'}, {word:'Bulan', emoji:'🌙'}, {word:'Bintang', emoji:'⭐'},
   {word:'Bintang Jatuh', emoji:'🌟'}, {word:'Awan', emoji:'☁️'}, {word:'Hujan', emoji:'🌧️'},
   {word:'Badai Petir', emoji:'⛈️'}, {word:'Salju', emoji:'❄️'}, {word:'Pelangi', emoji:'🌈'},
@@ -352,106 +321,76 @@ const TOPICS = [
   {word:'Pohon', emoji:'🌳'}, {word:'Pohon Palem', emoji:'🌴'}, {word:'Kaktus', emoji:'🌵'},
   {word:'Bunga', emoji:'🌸'}, {word:'Bunga Matahari', emoji:'🌻'}, {word:'Mawar', emoji:'🌹'},
   {word:'Tulip', emoji:'🌷'}, {word:'Daisy', emoji:'🌼'}, {word:'Daun', emoji:'🍃'},
-  {word:'Daun Maple', emoji:'🍁'}, {word:'Rumput', emoji:'🌾'}, {word:'Bambu', emoji:'🎋'},
   {word:'Semanggi', emoji:'🍀'}, {word:'Batu', emoji:'🪨'}, {word:'Kayu', emoji:'🪵'},
-
-  // === TRANSPORTASI ===
   {word:'Mobil', emoji:'🚗'}, {word:'Taksi', emoji:'🚕'}, {word:'Bus', emoji:'🚌'},
   {word:'Truk', emoji:'🚚'}, {word:'Traktor', emoji:'🚜'}, {word:'Motor', emoji:'🏍️'},
   {word:'Sepeda', emoji:'🚲'}, {word:'Skuter', emoji:'🛴'}, {word:'Kereta', emoji:'🚂'},
-  {word:'Kereta Cepat', emoji:'🚄'}, {word:'Trem', emoji:'🚊'}, {word:'Pesawat', emoji:'✈️'},
-  {word:'Helikopter', emoji:'🚁'}, {word:'Roket', emoji:'🚀'}, {word:'Kapal', emoji:'🚢'},
-  {word:'Perahu', emoji:'⛵'}, {word:'Kapal Selam', emoji:'🚤'}, {word:'UFO', emoji:'🛸'},
+  {word:'Pesawat', emoji:'✈️'}, {word:'Helikopter', emoji:'🚁'}, {word:'Roket', emoji:'🚀'},
+  {word:'Kapal', emoji:'🚢'}, {word:'Perahu', emoji:'⛵'}, {word:'UFO', emoji:'🛸'},
   {word:'Balon Udara', emoji:'🎈'}, {word:'Parasut', emoji:'🪂'},
-
-  // === BENDA RUMAH ===
   {word:'Rumah', emoji:'🏠'}, {word:'Apartemen', emoji:'🏢'}, {word:'Kastil', emoji:'🏰'},
   {word:'Tenda', emoji:'⛺'}, {word:'Pintu', emoji:'🚪'}, {word:'Jendela', emoji:'🪟'},
   {word:'Kursi', emoji:'🪑'}, {word:'Sofa', emoji:'🛋️'}, {word:'Tempat Tidur', emoji:'🛏️'},
   {word:'Lampu', emoji:'💡'}, {word:'Lilin', emoji:'🕯️'}, {word:'Cermin', emoji:'🪞'},
-  {word:'Jam', emoji:'⏰'}, {word:'Jam Pasir', emoji:'⏳'}, {word:'Kunci', emoji:'🔑'},
-  {word:'Gembok', emoji:'🔒'}, {word:'Palu', emoji:'🔨'}, {word:'Obeng', emoji:'🔧'},
-  {word:'Gunting', emoji:'✂️'}, {word:'Pisau', emoji:'🔪'}, {word:'Sendok', emoji:'🥄'},
-  {word:'Garpu', emoji:'🍴'}, {word:'Piring', emoji:'🍽️'}, {word:'Gelas', emoji:'🥛'},
-  {word:'Cangkir', emoji:'☕'}, {word:'Teko', emoji:'🫖'}, {word:'Botol', emoji:'🍾'},
-  {word:'Payung', emoji:'☂️'}, {word:'Tas', emoji:'👜'}, {word:'Koper', emoji:'🧳'},
-  {word:'Ransel', emoji:'🎒'}, {word:'Topi', emoji:'🎩'}, {word:'Topi Pantai', emoji:'👒'},
-  {word:'Sepatu', emoji:'👟'}, {word:'Sepatu Bot', emoji:'👢'}, {word:'Sandal', emoji:'🩴'},
-  {word:'Kaus Kaki', emoji:'🧦'}, {word:'Kacamata', emoji:'👓'}, {word:'Jam Tangan', emoji:'⌚'},
-  {word:'Cincin', emoji:'💍'}, {word:'Kalung', emoji:'📿'}, {word:'Mahkota', emoji:'👑'},
+  {word:'Jam', emoji:'⏰'}, {word:'Kunci', emoji:'🔑'}, {word:'Gembok', emoji:'🔒'},
+  {word:'Palu', emoji:'🔨'}, {word:'Obeng', emoji:'🔧'}, {word:'Gunting', emoji:'✂️'},
+  {word:'Pisau', emoji:'🔪'}, {word:'Sendok', emoji:'🥄'}, {word:'Garpu', emoji:'🍴'},
+  {word:'Piring', emoji:'🍽️'}, {word:'Gelas', emoji:'🥛'}, {word:'Cangkir', emoji:'☕'},
+  {word:'Teko', emoji:'🫖'}, {word:'Botol', emoji:'🍾'}, {word:'Payung', emoji:'☂️'},
+  {word:'Tas', emoji:'👜'}, {word:'Koper', emoji:'🧳'}, {word:'Ransel', emoji:'🎒'},
+  {word:'Topi', emoji:'🎩'}, {word:'Topi Pantai', emoji:'👒'}, {word:'Sepatu', emoji:'👟'},
+  {word:'Sepatu Bot', emoji:'👢'}, {word:'Sandal', emoji:'🩴'}, {word:'Kacamata', emoji:'👓'},
+  {word:'Jam Tangan', emoji:'⌚'}, {word:'Cincin', emoji:'💍'}, {word:'Mahkota', emoji:'👑'},
   {word:'Buku', emoji:'📖'}, {word:'Pensil', emoji:'✏️'}, {word:'Pulpen', emoji:'🖊️'},
   {word:'Kuas', emoji:'🖌️'}, {word:'Krayon', emoji:'🖍️'}, {word:'Penggaris', emoji:'📏'},
-  {word:'Kalkulator', emoji:'🧮'}, {word:'TV', emoji:'📺'}, {word:'Radio', emoji:'📻'},
-  {word:'Telepon', emoji:'📱'}, {word:'Komputer', emoji:'💻'}, {word:'Kamera', emoji:'📷'},
-  {word:'Video Kamera', emoji:'📹'}, {word:'Mikrofon', emoji:'🎤'}, {word:'Headphone', emoji:'🎧'},
-  {word:'Baterai', emoji:'🔋'}, {word:'Senter', emoji:'🔦'}, {word:'Peta', emoji:'🗺️'},
-  {word:'Kompas', emoji:'🧭'}, {word:'Teleskop', emoji:'🔭'}, {word:'Mikroskop', emoji:'🔬'},
-  {word:'Bom', emoji:'💣'}, {word:'Pistol', emoji:'🔫'}, {word:'Pedang', emoji:'⚔️'},
-  {word:'Perisai', emoji:'🛡️'}, {word:'Panah', emoji:'🏹'}, {word:'Tombak', emoji:'🔱'},
-
-  // === OLAHRAGA ===
+  {word:'TV', emoji:'📺'}, {word:'Radio', emoji:'📻'}, {word:'Telepon', emoji:'📱'},
+  {word:'Komputer', emoji:'💻'}, {word:'Kamera', emoji:'📷'}, {word:'Mikrofon', emoji:'🎤'},
+  {word:'Headphone', emoji:'🎧'}, {word:'Baterai', emoji:'🔋'}, {word:'Senter', emoji:'🔦'},
+  {word:'Peta', emoji:'🗺️'}, {word:'Kompas', emoji:'🧭'}, {word:'Teleskop', emoji:'🔭'},
   {word:'Bola Sepak', emoji:'⚽'}, {word:'Bola Basket', emoji:'🏀'}, {word:'Bola Voli', emoji:'🏐'},
   {word:'Baseball', emoji:'⚾'}, {word:'Tenis', emoji:'🎾'}, {word:'Bulu Tangkis', emoji:'🏸'},
   {word:'Bowling', emoji:'🎳'}, {word:'Biliar', emoji:'🎱'}, {word:'Ping Pong', emoji:'🏓'},
-  {word:'Golf', emoji:'⛳'}, {word:'Hoki', emoji:'🏒'}, {word:'Kriket', emoji:'🏏'},
-  {word:'Rugby', emoji:'🏉'}, {word:'Tinju', emoji:'🥊'}, {word:'Karate', emoji:'🥋'},
-  {word:'Angkat Beban', emoji:'🏋️'}, {word:'Berenang', emoji:'🏊'}, {word:'Bersepeda', emoji:'🚴'},
-  {word:'Ski', emoji:'🎿'}, {word:'Skateboard', emoji:'🛹'}, {word:'Selancar', emoji:'🏄'},
-  {word:'Panahan', emoji:'🏹'}, {word:'Lari', emoji:'🏃'}, {word:'Yoga', emoji:'🧘'},
-
-  // === MUSIK & SENI ===
+  {word:'Golf', emoji:'⛳'}, {word:'Tinju', emoji:'🥊'}, {word:'Karate', emoji:'🥋'},
+  {word:'Berenang', emoji:'🏊'}, {word:'Bersepeda', emoji:'🚴'}, {word:'Skateboard', emoji:'🛹'},
+  {word:'Selancar', emoji:'🏄'}, {word:'Lari', emoji:'🏃'}, {word:'Yoga', emoji:'🧘'},
   {word:'Gitar', emoji:'🎸'}, {word:'Drum', emoji:'🥁'}, {word:'Piano', emoji:'🎹'},
   {word:'Biola', emoji:'🎻'}, {word:'Terompet', emoji:'🎺'}, {word:'Saksofon', emoji:'🎷'},
-  {word:'Harmonika', emoji:'🪗'}, {word:'Banjor', emoji:'🪕'}, {word:'Lonceng', emoji:'🔔'},
-  {word:'Not Musik', emoji:'🎵'}, {word:'Palet Lukis', emoji:'🎨'}, {word:'Topeng Teater', emoji:'🎭'},
-
-  // === ORANG & PROFESI ===
-  {word:'Bayi', emoji:'👶'}, {word:'Anak', emoji:'🧒'}, {word:'Orang Dewasa', emoji:'🧑'},
-  {word:'Orang Tua', emoji:'🧓'}, {word:'Polisi', emoji:'👮'}, {word:'Dokter', emoji:'👨‍⚕️'},
-  {word:'Guru', emoji:'👨‍🏫'}, {word:'Koki', emoji:'👨‍🍳'}, {word:'Petani', emoji:'👨‍🌾'},
-  {word:'Pilot', emoji:'👨‍✈️'}, {word:'Astronaut', emoji:'👨‍🚀'}, {word:'Pemadam Kebakaran', emoji:'👨‍🚒'},
-  {word:'Ilmuwan', emoji:'👨‍🔬'}, {word:'Programmer', emoji:'👨‍💻'}, {word:'Penyanyi', emoji:'🎤'},
-  {word:'Penari', emoji:'💃'}, {word:'Superhero', emoji:'🦸'}, {word:'Ninja', emoji:'🥷'},
+  {word:'Lonceng', emoji:'🔔'}, {word:'Not Musik', emoji:'🎵'}, {word:'Palet Lukis', emoji:'🎨'},
+  {word:'Polisi', emoji:'👮'}, {word:'Dokter', emoji:'👨‍⚕️'}, {word:'Guru', emoji:'👨‍🏫'},
+  {word:'Koki', emoji:'👨‍🍳'}, {word:'Petani', emoji:'👨‍🌾'}, {word:'Pilot', emoji:'👨‍✈️'},
+  {word:'Astronaut', emoji:'👨‍🚀'}, {word:'Superhero', emoji:'🦸'}, {word:'Ninja', emoji:'🥷'},
   {word:'Penyihir', emoji:'🧙'}, {word:'Vampir', emoji:'🧛'}, {word:'Zombie', emoji:'🧟'},
-  {word:'Fairy', emoji:'🧚'}, {word:'Mermaid', emoji:'🧜'}, {word:'Raksasa', emoji:'🧞'},
-  {word:'Hantu', emoji:'👻'}, {word:'Alien', emoji:'👽'}, {word:'Robot', emoji:'🤖'},
-  {word:'Boneka Salju', emoji:'☃️'}, {word:'Sinterklas', emoji:'🎅'},
-
-  // === FANTASI ===
+  {word:'Mermaid', emoji:'🧜'}, {word:'Hantu', emoji:'👻'}, {word:'Alien', emoji:'👽'},
+  {word:'Robot', emoji:'🤖'}, {word:'Sinterklas', emoji:'🎅'},
   {word:'Naga', emoji:'🐉'}, {word:'Unicorn', emoji:'🦄'}, {word:'Dinosaurus', emoji:'🦖'},
-  {word:'T-Rex', emoji:'🦖'}, {word:'Brontosaurus', emoji:'🦕'}, {word:'Mammoth', emoji:'🦣'},
-  {word:'Harta Karun', emoji:'💰'}, {word:'Permata', emoji:'💎'}, {word:'Koin Emas', emoji:'🪙'},
-  {word:'Bola Kristal', emoji:'🔮'}, {word:'Bintang Keberuntungan', emoji:'🌟'},
-
-  // === SIMBOL & LAINNYA ===
+  {word:'Brontosaurus', emoji:'🦕'}, {word:'Harta Karun', emoji:'💰'}, {word:'Permata', emoji:'💎'},
+  {word:'Koin Emas', emoji:'🪙'}, {word:'Bola Kristal', emoji:'🔮'},
   {word:'Hati Cinta', emoji:'❤️'}, {word:'Hati Pink', emoji:'💖'}, {word:'Hati Pecah', emoji:'💔'},
   {word:'Pita', emoji:'🎀'}, {word:'Hadiah', emoji:'🎁'}, {word:'Balon', emoji:'🎈'},
-  {word:'Kembang Api', emoji:'🎆'}, {word:'Petasan', emoji:'🧨'},
-  {word:'Konfeti', emoji:'🎉'}, {word:'Bendera', emoji:'🏁'}, {word:'Trofi', emoji:'🏆'},
-  {word:'Medali', emoji:'🥇'}, {word:'Kotak Surat', emoji:'📬'},
-  {word:'Surat Cinta', emoji:'💌'}, {word:'Pesan', emoji:'💬'}, {word:'Tanda Tanya', emoji:'❓'},
-  {word:'Tanda Seru', emoji:'❗'}, {word:'Centang', emoji:'✅'}, {word:'Silang', emoji:'❌'},
-  {word:'Bintang Emas', emoji:'🌠'}, {word:'Kuburan', emoji:'🪦'}, {word:'Tengkorak', emoji:'💀'},
-  {word:'Iblis', emoji:'😈'}, {word:'Tongkat Sihir', emoji:'🪄'},
-  {word:'Kotak Musik', emoji:'🎵'}, {word:'Kotak Amal', emoji:'📦'},
-  {word:'Peta Harta', emoji:'🗺️'}, {word:'Jam Alarm', emoji:'⏰'}
+  {word:'Kembang Api', emoji:'🎆'}, {word:'Konfeti', emoji:'🎉'}, {word:'Trofi', emoji:'🏆'},
+  {word:'Medali', emoji:'🥇'}, {word:'Surat Cinta', emoji:'💌'}, {word:'Tanda Tanya', emoji:'❓'},
+  {word:'Tengkorak', emoji:'💀'}, {word:'Iblis', emoji:'😈'}, {word:'Tongkat Sihir', emoji:'🪄'}
 ];
 
 /* ================== STATE ================== */
-let peer=null, conn=null, isHost=false, roomCode='';
-let myGrid=null, oppGrid=null, refGrid=null, myImg=null, oppImg=null;
-let promptTopic=null, timerId=null, timeLeft=DRAW_TIME, gameActive=false;
-let currentColor = '#111111';
-let isEraser = false;
-let isBucket = false;
-let brushSize = 3;
-let resultShown = false;
-let connectTimeout = null;
+let peer=null;
+let peerConns=[];       // Host: array conn ke client. Client: [conn ke host]
+let isHost=false;
+let roomCode='';
+let maxPlayers=2;
+let myId=null;          // 'host' atau peer.id
+let playerIds=[];       // ['host', peerId1, ...]
+let playersData={};     // {id: {grid:String, img:dataURL}}
+let refGrid=null;
+let promptTopic=null;
+let timerId=null, timeLeft=DRAW_TIME, gameActive=false;
+let currentColor='#111111';
+let isEraser=false, isBucket=false, brushSize=3;
+let resultShown=false;
+let connectTimeout=null;
 
-/* History untuk Undo/Redo */
-let history = [];
-let historyIndex = -1;
-let isRestoring = false;
+/* History */
+let history=[], historyIndex=-1, isRestoring=false;
 
 /* ================== UTIL ================== */
 function showScreen(id){
@@ -475,7 +414,6 @@ function renderEmojiGrid(emoji){
   const cx = c.getContext('2d', {willReadFrequently:true});
   cx.fillStyle = '#ffffff';
   cx.fillRect(0, 0, GRID, GRID);
-  // ⬇️ font size 0.58 (dari 0.78) → emoji lebih kecil, nggak nutup seluruh canvas
   cx.font = `${Math.floor(GRID*0.58)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color",sans-serif`;
   cx.textAlign = 'center';
   cx.textBaseline = 'middle';
@@ -490,9 +428,17 @@ function renderEmojiGrid(emoji){
   return arr;
 }
 
-/* ================== ROOM ================== */
+/* ================== ROOM (HOST) ================== */
 let hostRetry = 0;
-function createRoom(){ isHost=true; hostRetry=0; openHost(); }
+function createRoom(mode){
+  isHost = true;
+  hostRetry = 0;
+  maxPlayers = mode;
+  myId = 'host';
+  peerConns = [];
+  playersData = {};
+  openHost();
+}
 
 function openHost(){
   roomCode = genCode();
@@ -504,13 +450,17 @@ function openHost(){
     setStatus('menuStatus','');
     showScreen('lobby');
     $('roomCodeDisplay').textContent = roomCode;
-    setStatus('lobbyStatus','Menunggu lawan bergabung...');
+    updateLobby();
   });
 
   peer.on('connection', c=>{
-    if (conn && conn.open){ c.close(); return; }
-    conn = c;
-    setupConn();
+    if (peerConns.length + 1 >= maxPlayers){
+      // Room penuh
+      c.on('open', ()=>{ c.send({type:'full'}); setTimeout(()=>c.close(), 500); });
+      return;
+    }
+    peerConns.push(c);
+    setupHostConn(c);
   });
 
   peer.on('error', e=>{
@@ -520,18 +470,122 @@ function openHost(){
       try{ peer.destroy(); }catch(_){}
       openHost();
     } else if (e.type==='network'){
-      setStatus('menuStatus','Jaringan bermasalah. Refresh & coba lagi.', true);
+      setStatus('menuStatus','Jaringan bermasalah.', true);
     } else {
       setStatus('menuStatus','Gagal membuat room: '+e.type, true);
     }
   });
 
   peer.on('disconnected', () => {
-    console.warn('Peer disconnected, reconnecting...');
     try { peer.reconnect(); } catch(_){}
   });
 }
 
+function setupHostConn(c){
+  c.on('open', ()=>{
+    console.log('Client connected:', c.peer);
+    updateLobby();
+    // Kalau udah full → mulai game
+    if (peerConns.length + 1 === maxPlayers){
+      setTimeout(startGameHost, 500);
+    }
+  });
+
+  c.on('data', data=>{
+    if (!data) return;
+    if (data.type === 'submit'){
+      // Client submit gambar
+      playersData[c.peer] = { grid: data.grid, img: data.img };
+      // Relay ke semua client lain
+      peerConns.forEach(pc => {
+        if (pc !== c && pc.open){
+          try { pc.send({type:'update', playerId: c.peer, grid: data.grid, img: data.img}); } catch(_){}
+        }
+      });
+      broadcastWaiting();
+      checkAllSubmitted();
+    }
+    else if (data.type === 'rematch'){
+      if (!gameActive) playAgainHost();
+    }
+  });
+
+  c.on('close', ()=>{
+    console.log('Client disconnected:', c.peer);
+    if (gameActive){
+      alert('Pemain terputus 😢 Game dibatalkan.');
+      location.reload();
+    } else {
+      // Buang dari array
+      peerConns = peerConns.filter(x => x !== c);
+      updateLobby();
+    }
+  });
+
+  c.on('error', e => console.error('Conn error:', e));
+}
+
+function updateLobby(){
+  const count = peerConns.length + 1;
+  $('playerCount').textContent = `👥 ${count} / ${maxPlayers}`;
+  const list = $('playersList');
+  list.innerHTML = '';
+  const names = ['🎨 Kamu (Host)'];
+  peerConns.forEach((c, i) => names.push(`🎨 Pemain ${i+2}`));
+  names.forEach(n => {
+    const d = document.createElement('div');
+    d.className = 'player-pill';
+    d.textContent = n;
+    list.appendChild(d);
+  });
+  if (count < maxPlayers){
+    setStatus('lobbyStatus', `Menunggu pemain (${count}/${maxPlayers})...`);
+  } else {
+    setStatus('lobbyStatus', 'Semua siap! Memulai game...');
+  }
+  // Beritahu client jumlah pemain
+  peerConns.forEach(pc => {
+    if (pc.open) try { pc.send({type:'lobby', count, max: maxPlayers}); } catch(_){}
+  });
+}
+
+function startGameHost(){
+  playerIds = ['host', ...peerConns.map(c => c.peer)];
+  const t = randomTopic();
+  const rg = renderEmojiGrid(t.emoji);
+  const refStr = packGrid(rg);
+
+  peerConns.forEach(pc => {
+    if (pc.open) try {
+      pc.send({
+        type:'start',
+        word: t.word,
+        emoji: t.emoji,
+        refGrid: refStr,
+        playerIds: playerIds
+      });
+    } catch(_){}
+  });
+
+  startGame(t.word, t.emoji, rg, playerIds);
+}
+
+function playAgainHost(){
+  // Reset playersData
+  playersData = {};
+  playerIds = ['host', ...peerConns.map(c => c.peer)];
+  const t = randomTopic();
+  const rg = renderEmojiGrid(t.emoji);
+  const refStr = packGrid(rg);
+  peerConns.forEach(pc => {
+    if (pc.open) try {
+      pc.send({type:'start', word:t.word, emoji:t.emoji, refGrid:refStr, playerIds});
+    } catch(_){}
+  });
+  startGame(t.word, t.emoji, rg, playerIds);
+}
+
+/* ================== ROOM (CLIENT) ================== */
 function toggleJoin(){
   const b=$('joinBox');
   b.style.display = b.style.display==='none'?'block':'none';
@@ -541,37 +595,54 @@ function toggleJoin(){
 function joinRoom(){
   const code = $('joinCode').value.trim().toUpperCase();
   if (code.length!==6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
-  roomCode = code; isHost = false;
+  roomCode = code;
+  isHost = false;
+  peerConns = [];
+  playersData = {};
   setStatus('menuStatus','Menghubungkan ke room...');
 
   try { if (peer) peer.destroy(); } catch(_){}
   peer = new Peer(PEER_CONFIG);
 
   peer.on('open', ()=>{
+    myId = peer.id;
     setStatus('menuStatus','Mencari host...');
-    conn = peer.connect('dbattle-'+code, { reliable: true });
+    const conn = peer.connect('dbattle-'+code, { reliable: true });
+    peerConns = [conn];
 
     clearTimeout(connectTimeout);
-    connectTimeout = setTimeout(() => {
-      if (!conn || !conn.open){
-        setStatus('menuStatus','Gagal terhubung (timeout 20s). Cek kode / jaringan.', true);
-        try { conn && conn.close(); peer.destroy(); } catch(_){}
+    connectTimeout = setTimeout(()=>{
+      if (!conn.open){
+        setStatus('menuStatus','Gagal terhubung (timeout). Cek kode / jaringan.', true);
+        try { conn.close(); peer.destroy(); } catch(_){}
       }
     }, 20000);
 
     conn.on('open', ()=>{
       clearTimeout(connectTimeout);
-      setStatus('menuStatus','Terhubung! ✅');
+      setStatus('menuStatus','Terhubung! Menunggu host...');
+      showScreen('lobby');
+      $('roomCodeDisplay').textContent = code;
+      setStatus('lobbyStatus','Menunggu host memulai...');
+      $('playerCount').textContent = '👥 ? / ?';
+      updateClientPlayersList(['🎨 Kamu']);
     });
 
-    setupConn();
+    conn.on('data', handleData);
+    conn.on('close', ()=>{
+      if (gameActive || $('lobby').classList.contains('active')){
+        alert('Host terputus 😢');
+        location.reload();
+      }
+    });
+    conn.on('error', e => console.error('Conn error:', e));
   });
 
   peer.on('error', e=>{
     console.error('Join error:', e);
     clearTimeout(connectTimeout);
-    if (e.type==='peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢 Cek kodenya!',true);
-    else if (e.type==='network') setStatus('menuStatus','Jaringan bermasalah. Coba refresh.',true);
+    if (e.type==='peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢',true);
+    else if (e.type==='network') setStatus('menuStatus','Jaringan bermasalah.',true);
     else setStatus('menuStatus','Error: '+e.type, true);
   });
 
@@ -580,91 +651,248 @@ function joinRoom(){
   });
 }
 
-function setupConn(){
-  conn.on('open', ()=>{
-    setStatus('menuStatus','');
-    if (isHost){
-      const t = randomTopic();
-      const rg = renderEmojiGrid(t.emoji);
-      let attempts = 0;
-      const sendStart = () => {
-        attempts++;
-        if (safeSend({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)})){
-          startGame(t.word, t.emoji, rg);
-        } else if (attempts < 10){
-          setTimeout(sendStart, 300);
-        }
-      };
-      setTimeout(sendStart, 150);
-    } else {
-      setStatus('menuStatus','Terhubung! Menunggu host...');
-      setTimeout(() => {
-        if ($('menu').classList.contains('active')){
-          safeSend({ type:'need-start' });
-        }
-      }, 8000);
-    }
+function updateClientPlayersList(names){
+  const list = $('playersList');
+  list.innerHTML = '';
+  names.forEach(n => {
+    const d = document.createElement('div');
+    d.className = 'player-pill';
+    d.textContent = n;
+    list.appendChild(d);
   });
-
-  conn.on('data', handleData);
-
-  conn.on('close', ()=>{
-    if (gameActive || $('lobby').classList.contains('active')){
-      alert('Lawan terputus 😢');
-      location.reload();
-    }
-  });
-
-  conn.on('error', e => console.error('Conn error:', e));
 }
 
-function safeSend(obj){
-  if (!conn || !conn.open){ console.warn('Conn belum siap:', obj.type); return false; }
-  try { conn.send(obj); return true; }
-  catch(e){ console.error('Kirim gagal:', e); return false; }
-}
-
+/* ================== HANDLE DATA ================== */
 function handleData(data){
   if (!data) return;
+  if (data.type === 'full'){
+    setStatus('menuStatus','Room sudah penuh! 😢', true);
+    try { peerConns[0].close(); peer.destroy(); } catch(_){}
+    return;
+  }
+  if (data.type === 'lobby'){
+    $('playerCount').textContent = `👥 ${data.count} / ${data.max}`;
+    const names = [];
+    // Kita nggak tau pasti siapa yang join, jadi pake placeholder
+    for (let i = 0; i < data.count; i++){
+      names.push(i === 0 ? '🎨 Host' : `🎨 Pemain ${i+1}`);
+    }
+    // Ganti diri sendiri
+    const myIdx = 1; // asumsi client selalu player #2 atau #3
+    if (names[1]) names[1] = '🎨 Kamu';
+    updateClientPlayersList(names);
+    setStatus('lobbyStatus', `Menunggu pemain (${data.count}/${data.max})...`);
+  }
   if (data.type === 'start'){
     clearTimeout(connectTimeout);
-    const rg = unpackGrid(data.refGrid);
-    startGame(data.word, data.emoji, rg);
+    playerIds = data.playerIds || [];
+    refGrid = unpackGrid(data.refGrid);
+    startGame(data.word, data.emoji, refGrid, playerIds);
   }
-  else if (data.type === 'draw-grid'){
-    oppGrid = unpackGrid(data.grid);
-    checkResult();
-  }
-  else if (data.type === 'draw-img'){
-    oppImg = data.img;
-    if (resultShown) $('imgOpp').src = oppImg;
-    else checkResult();
-  }
-  else if (data.type === 'rematch'){
-    if (isHost){
-      const t = randomTopic();
-      const rg = renderEmojiGrid(t.emoji);
-      safeSend({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)});
-      startGame(t.word, t.emoji, rg);
-    }
-  }
-  else if (data.type === 'need-start'){
-    if (isHost && promptTopic && refGrid){
-      safeSend({
-        type:'start',
-        word: promptTopic.word,
-        emoji: promptTopic.emoji,
-        refGrid: packGrid(refGrid)
-      });
-    }
+  if (data.type === 'update'){
+    playersData[data.playerId] = { grid: data.grid, img: data.img };
+    updateWaitingList();
+    checkAllSubmitted();
   }
 }
 
-function copyCode(){
-  navigator.clipboard?.writeText(roomCode).then(
-    ()=>setStatus('lobbyStatus','Kode disalin! ✅'),
-    ()=>setStatus('lobbyStatus','Kode: '+roomCode)
-  );
+/* ================== GAME FLOW ================== */
+function startGame(word, emoji, rg, pIds){
+  promptTopic = {word, emoji};
+  refGrid = rg;
+  if (pIds) playerIds = pIds;
+  playersData = {};
+  resultShown = false;
+  clearTimeout(connectTimeout);
+
+  $('promptText').textContent = word;
+  $('promptEmoji').textContent = emoji;
+  $('refEmoji').textContent = emoji;
+  $('refWord').textContent = word;
+  $('compare').innerHTML = '';
+  $('winnerBox').textContent = '-';
+  $('winnerBox').className = 'winner';
+  $('verdict').textContent = '';
+  setStatus('resultStatus','');
+
+  // Reset tools
+  currentColor = '#111111'; isEraser = false; isBucket = false;
+  document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel', x.dataset.color==='#111111'));
+  $('eraserBtn').classList.remove('sel');
+  $('bucketBtn').classList.remove('sel');
+  canvas.classList.remove('bucket-mode');
+  $('customColorBtn').classList.remove('sel');
+  $('customColorBtn').style.background = '';
+  $('customColorInput').value = '#111111';
+
+  clearCanvas(false);
+  showScreen('game');
+
+  history = [];
+  historyIndex = -1;
+  pushHistory();
+
+  gameActive = true;
+  timeLeft = DRAW_TIME;
+  updateTimerUI();
+  clearInterval(timerId);
+  timerId = setInterval(()=>{
+    timeLeft--;
+    updateTimerUI();
+    if (timeLeft <= 0) submitDrawing();
+  }, 1000);
+}
+
+function updateTimerUI(){
+  const t = Math.max(0, timeLeft);
+  const m = Math.floor(t/60);
+  const s = t%60;
+  $('timerNum').textContent = m + ':' + String(s).padStart(2,'0');
+  const pct = (timeLeft / DRAW_TIME) * 100;
+  const el = $('timerEl');
+  el.style.setProperty('--p', pct+'%');
+  el.classList.toggle('danger', timeLeft <= 20);
+}
+
+function submitDrawing(){
+  if (!gameActive) return;
+  gameActive = false;
+  clearInterval(timerId);
+
+  const myGrid = toGrid(canvas);
+  const myImg  = canvasToThumb(canvas, 320);
+  const myGridStr = packGrid(myGrid);
+
+  // Simpan punya sendiri
+  playersData[myId] = { grid: myGridStr, img: myImg };
+
+  if (isHost){
+    // Broadcast ke semua client
+    peerConns.forEach(pc => {
+      if (pc.open) try {
+        pc.send({type:'update', playerId: myId, grid: myGridStr, img: myImg});
+      } catch(_){}
+    });
+  } else {
+    // Kirim ke host
+    if (peerConns[0] && peerConns[0].open){
+      try { peerConns[0].send({type:'submit', grid: myGridStr, img: myImg}); } catch(_){}
+    }
+  }
+
+  showScreen('waiting');
+  setStatus('waitStatus','Menunggu pemain lain menyelesaikan gambarnya...');
+  updateWaitingList();
+  checkAllSubmitted();
+}
+
+function updateWaitingList(){
+  const list = $('waitPlayersList');
+  if (!list) return;
+  list.innerHTML = '';
+  playerIds.forEach(id => {
+    const done = !!playersData[id];
+    const label = getPlayerLabel(id);
+    const d = document.createElement('div');
+    d.className = 'player-pill';
+    d.style.opacity = done ? 1 : 0.4;
+    d.textContent = (done ? '✅ ' : '⏳ ') + label;
+    list.appendChild(d);
+  });
+}
+
+function broadcastWaiting(){
+  // Host: kabari semua client siapa yang udah selesai
+  // (simple: client update lewat 'update' data yang di-relay)
+  // Tidak perlu action tambahan
+}
+
+function checkAllSubmitted(){
+  if (resultShown) return;
+  if (playerIds.length === 0) return;
+  // Cek apakah semua pemain udah submit
+  for (const id of playerIds){
+    if (!playersData[id]) return;
+  }
+  resultShown = true;
+  // Hitung skor tiap pemain
+  const scores = playerIds.map(id => {
+    const gridArr = unpackGrid(playersData[id].grid);
+    return { id, score: similarity(gridArr, refGrid) };
+  });
+  showResult(scores);
+}
+
+function getPlayerLabel(id){
+  if (id === myId) return 'Kamu';
+  if (playerIds.length === 2) return 'Lawan';
+  if (id === 'host') return 'Host';
+  const idx = playerIds.indexOf(id);
+  return 'Pemain ' + (idx + 1);
+}
+
+function showResult(scores){
+  showScreen('result');
+
+  const sorted = [...scores].sort((a,b) => b.score - a.score);
+  const maxScore = sorted[0].score;
+  const winners = sorted.filter(s => s.score === maxScore);
+
+  // Render compare dinamis
+  const cmp = $('compare');
+  cmp.innerHTML = '';
+  cmp.style.gridTemplateColumns = `repeat(${scores.length}, 1fr)`;
+
+  scores.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'item';
+    if (s.id === myId) el.classList.add('me');
+    if (s.id === winners[0].id && winners.length === 1) el.classList.add('winner-col');
+    const label = getPlayerLabel(s.id);
+    const img = playersData[s.id].img || '';
+    el.innerHTML = `
+      <h4>${label}</h4>
+      <img src="${img}" alt="${label}">
+      <div class="pct">${s.score}%</div>
+    `;
+    cmp.appendChild(el);
+  });
+
+  // Winner box
+  const box = $('winnerBox');
+  if (winners.length > 1){
+    box.textContent = '🤝 SERI!';
+    box.className = 'winner tie';
+  } else if (winners[0].id === myId){
+    box.textContent = '🏆 KAMU MENANG!';
+    box.className = 'winner win';
+  } else {
+    box.textContent = `😢 ${getPlayerLabel(winners[0].id).toUpperCase()} MENANG`;
+    box.className = 'winner lose';
+  }
+
+  // Verdict
+  const myScore = scores.find(s => s.id === myId).score;
+  const diff = myScore - maxScore;
+  let v = '';
+  if (winners.length > 1) v = '🔥 Skornya sama kuat!';
+  else if (diff === 0) v = '🎯 Gambarmu paling mirip dengan topiknya!';
+  else if (diff >= -5) v = '😱 Ketat banget, beda tipis!';
+  else if (diff >= -15) v = '😮 Lumayan deket nih!';
+  else if (diff >= -30) v = '😅 Masih ada selisih...';
+  else v = '😵 Jauh banget, latihan lagi ya!';
+  $('verdict').textContent = v;
+}
+
+function playAgain(){
+  if (isHost){
+    playAgainHost();
+  } else {
+    if (peerConns[0] && peerConns[0].open){
+      try { peerConns[0].send({type:'rematch'}); } catch(_){}
+    }
+    setStatus('resultStatus','Menunggu host memulai ulang...');
+  }
 }
 
 /* ================== DRAWING ================== */
@@ -672,7 +900,6 @@ const canvas = $('canvas');
 const ctx = canvas.getContext('2d', {willReadFrequently:true});
 let drawing=false, lastPt=null;
 
-/* ---------- HISTORY / UNDO-REDO ---------- */
 function snapshot(){ return canvas.toDataURL('image/png'); }
 
 function pushHistory(){
@@ -689,8 +916,8 @@ function restoreFromHistory(){
   isRestoring = true;
   const dataURL = history[historyIndex];
   const img = new Image();
-  img.onload = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  img.onload = ()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.drawImage(img, 0, 0);
     isRestoring = false;
   };
@@ -698,22 +925,13 @@ function restoreFromHistory(){
   updateUndoRedoUI();
 }
 
-function undo(){
-  if (historyIndex <= 0) return;
-  historyIndex--;
-  restoreFromHistory();
-}
-function redo(){
-  if (historyIndex >= history.length - 1) return;
-  historyIndex++;
-  restoreFromHistory();
-}
+function undo(){ if (historyIndex <= 0) return; historyIndex--; restoreFromHistory(); }
+function redo(){ if (historyIndex >= history.length-1) return; historyIndex++; restoreFromHistory(); }
 function updateUndoRedoUI(){
   $('undoBtn').classList.toggle('disabled', historyIndex <= 0);
   $('redoBtn').classList.toggle('disabled', historyIndex >= history.length - 1);
 }
 
-/* ---------- CANVAS DASAR ---------- */
 function clearCanvas(saveHistory = true){
   if (saveHistory) pushHistory();
   ctx.fillStyle = '#ffffff';
@@ -733,14 +951,12 @@ function activeColor(){ return isEraser ? '#ffffff' : currentColor; }
 canvas.addEventListener('pointerdown', e=>{
   if (!gameActive) return;
   e.preventDefault();
-
   if (isBucket){
     pushHistory();
     const p = getPos(e);
     floodFill(p.x, p.y, currentColor);
     return;
   }
-
   pushHistory();
   drawing = true;
   canvas.setPointerCapture(e.pointerId);
@@ -845,12 +1061,11 @@ document.addEventListener('keydown', e => {
     if (e.shiftKey) redo(); else undo();
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y'){
-    e.preventDefault();
-    redo();
+    e.preventDefault(); redo();
   }
 });
 
-/* ================== 🪣 FLOOD FILL (Scanline) ================== */
+/* ================== FLOOD FILL ================== */
 function floodFill(startX, startY, fillColor){
   const w = canvas.width, h = canvas.height;
   const sx = Math.floor(startX), sy = Math.floor(startY);
@@ -859,10 +1074,8 @@ function floodFill(startX, startY, fillColor){
   const imgData = ctx.getImageData(0, 0, w, h);
   const data = imgData.data;
   const startIdx = (sy * w + sx) * 4;
-  const targetR = data[startIdx];
-  const targetG = data[startIdx+1];
-  const targetB = data[startIdx+2];
-  const targetA = data[startIdx+3];
+  const targetR = data[startIdx], targetG = data[startIdx+1];
+  const targetB = data[startIdx+2], targetA = data[startIdx+3];
 
   const fr = parseInt(fillColor.slice(1,3), 16);
   const fg = parseInt(fillColor.slice(3,5), 16);
@@ -873,11 +1086,9 @@ function floodFill(startX, startY, fillColor){
 
   const tol = 60;
   function matches(i){
-    const dr = data[i]   - targetR;
-    const dg = data[i+1] - targetG;
-    const db = data[i+2] - targetB;
-    const da = data[i+3] - targetA;
-    return (Math.abs(dr) + Math.abs(dg) + Math.abs(db) + Math.abs(da)) <= tol;
+    const dr = data[i]-targetR, dg = data[i+1]-targetG;
+    const db = data[i+2]-targetB, da = data[i+3]-targetA;
+    return (Math.abs(dr)+Math.abs(dg)+Math.abs(db)+Math.abs(da)) <= tol;
   }
 
   const stack = [[sx, sy]];
@@ -897,13 +1108,12 @@ function floodFill(startX, startY, fillColor){
       const pi = (rowStart + x) * 4;
       data[pi]=fr; data[pi+1]=fg; data[pi+2]=fb; data[pi+3]=255;
     }
-
     if (y0 > 0){
       const upStart = (y0 - 1) * w;
       let inSpan = false;
       for (let x = xL; x <= xR; x++){
         const m = matches((upStart + x) * 4);
-        if (m && !inSpan){ stack.push([x, y0 - 1]); inSpan = true; }
+        if (m && !inSpan){ stack.push([x, y0-1]); inSpan = true; }
         else if (!m) inSpan = false;
       }
     }
@@ -912,7 +1122,7 @@ function floodFill(startX, startY, fillColor){
       let inSpan = false;
       for (let x = xL; x <= xR; x++){
         const m = matches((dnStart + x) * 4);
-        if (m && !inSpan){ stack.push([x, y0 + 1]); inSpan = true; }
+        if (m && !inSpan){ stack.push([x, y0+1]); inSpan = true; }
         else if (!m) inSpan = false;
       }
     }
@@ -934,146 +1144,11 @@ function canvasToThumb(canvasEl, maxSize){
   return tmp.toDataURL('image/jpeg', 0.6);
 }
 
-/* ================== GAME FLOW ================== */
-function startGame(word, emoji, rg){
-  promptTopic = {word, emoji};
-  refGrid = rg;
-  myGrid = null; oppGrid = null; myImg = null; oppImg = null;
-  resultShown = false;
-  clearTimeout(connectTimeout);
-
-  $('promptText').textContent = word;
-  $('promptEmoji').textContent = emoji;
-  $('refEmoji').textContent = emoji;
-  $('refWord').textContent = word;
-
-  $('imgMine').src = ''; $('imgOpp').src = '';
-  $('pctMine').textContent = '0%';
-  $('pctOpp').textContent  = '0%';
-  $('winnerBox').textContent = '-';
-  $('winnerBox').className = 'winner';
-  $('verdict').textContent = '';
-  $('itemMine').classList.remove('winner-col');
-  $('itemOpp').classList.remove('winner-col');
-  setStatus('resultStatus','');
-
-  currentColor = '#111111'; isEraser = false; isBucket = false;
-  document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel', x.dataset.color==='#111111'));
-  $('eraserBtn').classList.remove('sel');
-  $('bucketBtn').classList.remove('sel');
-  canvas.classList.remove('bucket-mode');
-  $('customColorBtn').classList.remove('sel');
-  $('customColorBtn').style.background = '';
-  $('customColorInput').value = '#111111';
-
-  clearCanvas(false);
-  showScreen('game');
-
-  history = [];
-  historyIndex = -1;
-  pushHistory();
-
-  gameActive = true;
-  timeLeft = DRAW_TIME;
-  updateTimerUI();
-  clearInterval(timerId);
-  timerId = setInterval(()=>{
-    timeLeft--;
-    updateTimerUI();
-    if (timeLeft <= 0) submitDrawing();
-  }, 1000);
-}
-
-function updateTimerUI(){
-  const t = Math.max(0, timeLeft);
-  const m = Math.floor(t/60);
-  const s = t%60;
-  $('timerNum').textContent = m + ':' + String(s).padStart(2,'0');
-  const pct = (timeLeft / DRAW_TIME) * 100;
-  const el = $('timerEl');
-  el.style.setProperty('--p', pct+'%');
-  el.classList.toggle('danger', timeLeft <= 20);
-}
-
-function submitDrawing(){
-  if (!gameActive) return;
-  gameActive = false;
-  clearInterval(timerId);
-
-  myGrid = toGrid(canvas);
-  myImg  = canvasToThumb(canvas, 320);
-
-  safeSend({type:'draw-grid', grid: packGrid(myGrid)});
-  setTimeout(() => safeSend({type:'draw-img', img: myImg}), 200);
-
-  showScreen('waiting');
-  setStatus('waitStatus','Menunggu lawan menyelesaikan gambarnya...');
-  checkResult();
-}
-
-function checkResult(){
-  if (resultShown) return;
-  if (!myGrid || !oppGrid || !refGrid) return;
-  resultShown = true;
-  const myPct  = similarity(myGrid, refGrid);
-  const oppPct = similarity(oppGrid, refGrid);
-  showResult(myPct, oppPct);
-}
-
-function showResult(myPct, oppPct){
-  $('imgMine').src = myImg || '';
-  $('imgOpp').src  = oppImg || '';
-  showScreen('result');
-
-  animatePct('pctMine', myPct);
-  animatePct('pctOpp', oppPct);
-
-  $('itemMine').classList.toggle('winner-col', myPct > oppPct);
-  $('itemOpp').classList.toggle('winner-col', oppPct > myPct);
-
-  const box = $('winnerBox');
-  if (myPct > oppPct){
-    box.textContent = '🏆 KAMU MENANG!';
-    box.className = 'winner win';
-  } else if (myPct < oppPct){
-    box.textContent = '😢 KAMU KALAH';
-    box.className = 'winner lose';
-  } else {
-    box.textContent = '🤝 SERI!';
-    box.className = 'winner tie';
-  }
-
-  const diff = Math.abs(myPct - oppPct);
-  let v = '';
-  if (myPct >= 85 && oppPct >= 85) v = '🔥 Kalian berdua jago banget!';
-  else if (diff <= 3) v = '😱 Ketat banget, beda tipis!';
-  else if (diff <= 10) v = '😮 Lumayan ketat nih!';
-  else if (myPct > oppPct) v = '🎯 Gambarmu lebih mirip dengan topiknya!';
-  else v = '🎯 Gambar lawan lebih mirip dengan topiknya!';
-  $('verdict').textContent = v;
-}
-
-function animatePct(elId, target){
-  const el = $(elId);
-  let cur = 0;
-  const step = Math.max(1, Math.ceil(target/35));
-  const iv = setInterval(()=>{
-    cur += step;
-    if (cur >= target){ cur = target; clearInterval(iv); }
-    el.textContent = cur + '%';
-  }, 25);
-}
-
-function playAgain(){
-  if (isHost){
-    const t = randomTopic();
-    const rg = renderEmojiGrid(t.emoji);
-    safeSend({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)});
-    startGame(t.word, t.emoji, rg);
-  } else {
-    safeSend({type:'rematch'});
-    setStatus('resultStatus','Menunggu host memulai ulang...');
-  }
+function copyCode(){
+  navigator.clipboard?.writeText(roomCode).then(
+    ()=>setStatus('lobbyStatus','Kode disalin! ✅'),
+    ()=>setStatus('lobbyStatus','Kode: '+roomCode)
+  );
 }
 
 /* ================== PERBANDINGAN GAMBAR ================== */
@@ -1120,17 +1195,13 @@ function dilate(arr, r){
   return out;
 }
 
-/* ⬇️ FUNGSI BARU: lebih sensitif terhadap perbedaan gambar */
 function similarity(a, b){
-  // Hitung total pixel coretan di masing-masing gambar
   let ra = 0, rb = 0;
   for (let i = 0; i < a.length; i++){
     if (a[i]) ra++;
     if (b[i]) rb++;
   }
-
-  // Kalau salah satu gambar hampir kosong → skor 0
-  const minPixels = Math.floor(GRID * GRID * 0.01); // 1% dari total
+  const minPixels = Math.floor(GRID * GRID * 0.01);
   if (ra < minPixels || rb < minPixels) return 0;
 
   const da = dilate(a, DILATE_R);
@@ -1144,15 +1215,11 @@ function similarity(a, b){
   }
   if (areaA === 0 || areaB === 0) return 0;
 
-  const p = inter / areaA;   // presisi
-  const r = inter / areaB;   // recall
+  const p = inter / areaA;
+  const r = inter / areaB;
   if (p + r === 0) return 0;
   const f1 = 2 * p * r / (p + r);
-
-  // Penalti ekstra kalau ukuran gambar beda jauh
   const sizeRatio = Math.min(areaA, areaB) / Math.max(areaA, areaB);
-
-  // Kombinasi: 85% F1 + 15% size ratio
   const score = f1 * (0.85 + 0.15 * sizeRatio);
   return Math.round(score * 100);
 }
