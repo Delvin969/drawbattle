@@ -159,28 +159,30 @@
     <div class="timer" id="timerEl"><span id="timerNum">3:00</span></div>
   </div>
   <div class="canvas-wrap"><canvas id="canvas" width="600" height="600"></canvas></div>
-  <div class="colors" id="colorsRow">
-    <div class="color sel" data-color="#111111" style="background:#111111"></div>
-    <div class="color" data-color="#ef4444" style="background:#ef4444"></div>
-    <div class="color" data-color="#f97316" style="background:#f97316"></div>
-    <div class="color" data-color="#facc15" style="background:#facc15"></div>
-    <div class="color" data-color="#22c55e" style="background:#22c55e"></div>
-    <div class="color" data-color="#3b82f6" style="background:#3b82f6"></div>
-    <div class="color" data-color="#8b5cf6" style="background:#8b5cf6"></div>
-    <div class="color" data-color="#ec4899" style="background:#ec4899"></div>
-    <div class="color" data-color="#a16207" style="background:#a16207"></div>
-  </div>
-  <div class="tools-row">
-    <div class="tool undo disabled" id="undoBtn" onclick="undo()" title="Undo (Ctrl+Z)">↶</div>
-    <div class="tool redo disabled" id="redoBtn" onclick="redo()" title="Redo (Ctrl+Y)">↷</div>
-    <div class="tool sel" data-size="3"><div class="dot" style="width:5px;height:5px"></div></div>
-    <div class="tool" data-size="9"><div class="dot" style="width:11px;height:11px"></div></div>
-    <div class="tool" data-size="20"><div class="dot" style="width:20px;height:20px"></div></div>
-    <div class="tool eraser" id="eraserBtn" onclick="toggleEraser()" title="Penghapus">🩹</div>
-    <div class="tool bucket" id="bucketBtn" onclick="toggleBucket()" title="Isi Warna">🪣</div>
-    <div class="tool clear" onclick="clearCanvas()">🗑 Hapus</div>
-  </div>
-  <button class="green" style="margin-top:14px" onclick="submitDrawing()">✅ Selesai &amp; Kirim</button>
+<div class="colors" id="colorsRow">
+  <div class="color sel" data-color="#111111" style="background:#111111"></div>
+  <div class="color" data-color="#ef4444" style="background:#ef4444"></div>
+  <div class="color" data-color="#f97316" style="background:#f97316"></div>
+  <div class="color" data-color="#facc15" style="background:#facc15"></div>
+  <div class="color" data-color="#22c55e" style="background:#22c55e"></div>
+  <div class="color" data-color="#3b82f6" style="background:#3b82f6"></div>
+  <div class="color" data-color="#8b5cf6" style="background:#8b5cf6"></div>
+  <div class="color" data-color="#ec4899" style="background:#ec4899"></div>
+  <div class="color" data-color="#a16207" style="background:#a16207"></div>
+  <div class="color" data-color="#ffffff" style="background:#ffffff"></div>
+  <div class="color" data-color="#94a3b8" style="background:#94a3b8"></div>
+  <div class="color" data-color="#78350f" style="background:#78350f"></div>
+  <div class="color" data-color="#0ea5e9" style="background:#0ea5e9"></div>
+  <div class="color" data-color="#14b8a6" style="background:#14b8a6"></div>
+  <div class="color" data-color="#f43f5e" style="background:#f43f5e"></div>
+  <div class="color" data-color="#a855f7" style="background:#a855f7"></div>
+  <div class="color" data-color="#84cc16" style="background:#84cc16</div>
+  <div class="color" data-color="#fb923c" style="background:#fb923c"></div>
+  <!-- 🎨 CUSTOM COLOR PICKER -->
+  <label class="color custom-color" id="customColorBtn" title="Pilih warna sendiri">
+    <input type="color" id="customColorInput" value="#111111">
+    <span>+</span>
+  </label>
 </div>
 
 <div id="waiting" class="screen">
