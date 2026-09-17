@@ -65,11 +65,15 @@
   /* GAME */
   .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
   .prompt-chip{
-    flex:1;background:linear-gradient(135deg,#ff5f6d,#a06bff);
-    border-radius:14px;padding:12px 16px;font-weight:700;font-size:1.05rem;
-    text-align:center;box-shadow:0 6px 20px rgba(160,107,255,.35);
+    flex:1;display:flex;align-items:center;gap:12px;
+    background:linear-gradient(135deg,#ff5f6d,#a06bff);
+    border-radius:14px;padding:10px 14px;font-weight:700;
+    box-shadow:0 6px 20px rgba(160,107,255,.35);
   }
-  .prompt-chip small{display:block;font-size:.65rem;opacity:.8;letter-spacing:.15em;font-weight:500}
+  .prompt-chip .txt{flex:1;text-align:left}
+  .prompt-chip small{display:block;font-size:.6rem;opacity:.85;letter-spacing:.15em;font-weight:500;margin-bottom:2px}
+  .prompt-chip .word{font-size:1.15rem;line-height:1.1}
+  .prompt-chip .emoji{font-size:2.4rem;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
   .timer{
     width:72px;height:72px;border-radius:50%;display:grid;place-items:center;
     font-size:1.1rem;font-weight:800;flex-shrink:0;
@@ -86,28 +90,74 @@
   canvas{display:block;width:100%;height:auto;aspect-ratio:1/1;background:#fff;
          touch-action:none;cursor:crosshair}
 
-  .tools{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap;justify-content:center}
+  /* TOOLS */
+  .colors{
+    display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:12px;
+    background:rgba(0,0,0,.25);padding:8px;border-radius:14px;
+  }
+  .color{
+    aspect-ratio:1/1;border-radius:10px;cursor:pointer;
+    border:3px solid transparent;transition:.15s;position:relative;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+  }
+  .color:hover{transform:scale(1.08)}
+  .color.sel{border-color:#fff;transform:scale(1.1);box-shadow:0 0 12px rgba(255,255,255,.5)}
+  .color.sel::after{
+    content:'✓';position:absolute;inset:0;display:grid;place-items:center;
+    color:#fff;font-weight:900;font-size:.85rem;text-shadow:0 0 4px #000;
+  }
+
+  .tools-row{display:flex;gap:8px;align-items:center;margin-top:8px;justify-content:center;flex-wrap:wrap}
   .tool{
     width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);
     border:2px solid transparent;display:grid;place-items:center;cursor:pointer;transition:.15s;
+    font-size:1.1rem;
   }
-  .tool.sel{border-color:#7c8cff;background:rgba(124,140,255,.25)}
+  .tool:hover{background:rgba(255,255,255,.18)}
+  .tool.sel{border-color:#7c8cff;background:rgba(124,140,255,.3)}
   .tool .dot{background:#fff;border-radius:50%}
-  .tool.clear{width:auto;padding:0 16px;font-size:.85rem;font-weight:600;color:#fff}
+  .tool.clear{width:auto;padding:0 16px;font-size:.85rem;font-weight:600;color:#fff;gap:6px}
+  .tool.eraser.sel{border-color:#fbbf24;background:rgba(251,191,36,.25)}
 
   /* RESULT */
-  .score{font-size:4.6rem;font-weight:900;text-align:center;line-height:1;
-         background:linear-gradient(90deg,#41d8ff,#a06bff,#ff5f6d);
-         -webkit-background-clip:text;background-clip:text;color:transparent;
-         margin:6px 0 2px}
-  .score-lbl{text-align:center;opacity:.6;font-size:.85rem;letter-spacing:.18em;
-             text-transform:uppercase;margin-bottom:18px}
+  .ref-box{
+    display:flex;flex-direction:column;align-items:center;
+    background:rgba(0,0,0,.3);border-radius:16px;padding:14px;margin-bottom:16px;
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .ref-box .ref-emoji{font-size:4.5rem;line-height:1;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+  .ref-box .ref-label{font-size:.7rem;letter-spacing:.2em;opacity:.6;text-transform:uppercase;margin-top:4px}
+  .ref-box .ref-word{font-size:1.4rem;font-weight:800;margin-top:2px}
+
+  .winner{
+    text-align:center;font-size:1.7rem;font-weight:900;margin:6px 0 14px;
+    padding:12px;border-radius:14px;letter-spacing:.02em;
+  }
+  .winner.win{background:linear-gradient(135deg,#16b981,#0ea5a5);box-shadow:0 8px 24px rgba(16,185,129,.4)}
+  .winner.lose{background:linear-gradient(135deg,#ef4444,#b91c1c);box-shadow:0 8px 24px rgba(239,68,68,.4)}
+  .winner.tie{background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 8px 24px rgba(245,158,11,.4)}
+
   .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-  .compare .item{background:rgba(0,0,0,.3);border-radius:14px;padding:10px;border:1px solid rgba(255,255,255,.1)}
-  .compare .item h4{font-size:.75rem;text-align:center;opacity:.65;margin-bottom:8px;
-                    letter-spacing:.1em;text-transform:uppercase;font-weight:600}
-  .compare img{width:100%;border-radius:9px;background:#fff;display:block;aspect-ratio:1/1;object-fit:contain}
-  .verdict{text-align:center;font-size:1.05rem;font-weight:600;margin-bottom:18px;min-height:24px}
+  .compare .item{
+    background:rgba(0,0,0,.3);border-radius:14px;padding:10px;
+    border:1px solid rgba(255,255,255,.1);text-align:center;
+  }
+  .compare .item h4{font-size:.72rem;opacity:.7;margin-bottom:8px;
+                    letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+  .compare img{width:100%;border-radius:9px;background:#fff;display:block;
+               aspect-ratio:1/1;object-fit:contain}
+  .compare .pct{
+    font-size:1.9rem;font-weight:900;margin-top:8px;line-height:1;
+    background:linear-gradient(90deg,#41d8ff,#a06bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .compare .item.winner-col .pct{
+    background:linear-gradient(90deg,#fbbf24,#f59e0b);
+    -webkit-background-clip:text;background-clip:text;
+  }
+  .compare .item.winner-col{border-color:rgba(251,191,36,.6);box-shadow:0 0 20px rgba(251,191,36,.2)}
+
+  .verdict{text-align:center;font-size:.95rem;font-weight:600;margin-bottom:16px;opacity:.85;min-height:22px}
 
   .spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.15);
     border-top-color:#7c8cff;border-radius:50%;animation:spin 1s linear infinite;margin:18px auto}
@@ -120,7 +170,7 @@
 <div id="menu" class="screen active">
   <div class="card">
     <h1>🎨 Draw Battle</h1>
-    <p class="sub">Gambar bareng teman; lihat seberapa mirip kalian!</p>
+    <p class="sub">Adu gambar! Siapa yang paling mirip dengan topiknya?</p>
     <button onclick="createRoom()">➕ Buat Room</button>
     <button class="ghost" onclick="toggleJoin()">🔑 Gabung Room</button>
     <div id="joinBox" style="display:none;margin-top:6px">
@@ -150,16 +200,40 @@
 <!-- ============ GAME ============ -->
 <div id="game" class="screen">
   <div class="topbar">
-    <div class="prompt-chip"><small>TEMA GAMBAR</small><span id="promptText">-</span></div>
+    <div class="prompt-chip">
+      <div class="txt">
+        <small>TEMA GAMBAR</small>
+        <div class="word" id="promptText">-</div>
+      </div>
+      <div class="emoji" id="promptEmoji">🎨</div>
+    </div>
     <div class="timer" id="timerEl"><span id="timerNum">3:00</span></div>
   </div>
+
   <div class="canvas-wrap"><canvas id="canvas" width="600" height="600"></canvas></div>
-  <div class="tools">
+
+  <!-- Palet warna -->
+  <div class="colors" id="colorsRow">
+    <div class="color sel" data-color="#111111" style="background:#111111"></div>
+    <div class="color" data-color="#ef4444" style="background:#ef4444"></div>
+    <div class="color" data-color="#f97316" style="background:#f97316"></div>
+    <div class="color" data-color="#facc15" style="background:#facc15"></div>
+    <div class="color" data-color="#22c55e" style="background:#22c55e"></div>
+    <div class="color" data-color="#3b82f6" style="background:#3b82f6"></div>
+    <div class="color" data-color="#8b5cf6" style="background:#8b5cf6"></div>
+    <div class="color" data-color="#ec4899" style="background:#ec4899"></div>
+    <div class="color" data-color="#a16207" style="background:#a16207"></div>
+  </div>
+
+  <!-- Ukuran + Penghapus + Hapus -->
+  <div class="tools-row">
     <div class="tool sel" data-size="3"><div class="dot" style="width:5px;height:5px"></div></div>
     <div class="tool" data-size="9"><div class="dot" style="width:11px;height:11px"></div></div>
     <div class="tool" data-size="20"><div class="dot" style="width:20px;height:20px"></div></div>
-    <div class="tool clear" onclick="clearCanvas()">🗑 Hapus</div>
+    <div class="tool eraser" id="eraserBtn" onclick="toggleEraser()" title="Penghapus">🩹</div>
+    <div class="tool clear" onclick="clearCanvas()">🗑 Hapus Semua</div>
   </div>
+
   <button class="green" style="margin-top:14px" onclick="submitDrawing()">✅ Selesai &amp; Kirim</button>
 </div>
 
@@ -176,12 +250,27 @@
 <!-- ============ RESULT ============ -->
 <div id="result" class="screen">
   <div class="card">
-    <div class="score" id="scoreVal">0%</div>
-    <div class="score-lbl">Tingkat Kemiripan</div>
-    <div class="compare">
-      <div class="item"><h4>Gambarmu</h4><img id="imgMine" alt="gambarmu"></div>
-      <div class="item"><h4>Gambar Lawan</h4><img id="imgOpp" alt="gambar lawan"></div>
+    <div class="ref-box">
+      <div class="ref-emoji" id="refEmoji">🎨</div>
+      <div class="ref-label">Topik</div>
+      <div class="ref-word" id="refWord">-</div>
     </div>
+
+    <div class="winner" id="winnerBox">-</div>
+
+    <div class="compare">
+      <div class="item" id="itemMine">
+        <h4>Gambarmu</h4>
+        <img id="imgMine" alt="gambarmu">
+        <div class="pct" id="pctMine">0%</div>
+      </div>
+      <div class="item" id="itemOpp">
+        <h4>Lawan</h4>
+        <img id="imgOpp" alt="gambar lawan">
+        <div class="pct" id="pctOpp">0%</div>
+      </div>
+    </div>
+
     <div class="verdict" id="verdict"></div>
     <button onclick="playAgain()">🔄 Main Lagi</button>
     <div class="status" id="resultStatus"></div>
@@ -189,109 +278,151 @@
 </div>
 
 <script>
-/* ================== UTIL ================== */
+/* ================== KONFIG ================== */
 const $ = id => document.getElementById(id);
 const GRID = 128;
-const DRAW_TIME = 180;   // ⏱️ 3 menit = 180 detik
+const DRAW_TIME = 180; // 3 menit
+const DILATE_R = 3;    // radius dilasi untuk perbandingan
 
-const PROMPTS = ['Kucing','Rumah','Mobil','Pohon','Matahari','Bunga','Ikan','Burung',
-'Kue Ulang Tahun','Pesawat','Sepeda','Gunung','Pantai','Bintang','Bulan','Awan',
-'Pisang','Apel','Robot','Dinosaurus','Naga','Kastil','Topi','Sepatu','Jam Tangan',
-'Kacamata','Payung','Kursi','Meja','Pintu','Jendela','Sendok','Gelas','Pizza',
-'Es Krim','Donat','Pensil','Buku','Balon','Layang-layang','Kupu-kupu','Semut',
-'Gajah','Singa','Harimau','Jerapah','Kura-kura','Katak','Ular','Kepiting',
-'Pohon Kelapa','Pelangi','Bebek','Ayam','Sapi','Kambing','Sepatu Roda','Gitar',
-'Drum','Terompet','Palu','Obeng','Traktor','Kereta Api','Kapal Laut','Roket'];
+// Topik + emoji referensi (dipakai sebagai "kunci jawaban")
+const TOPICS = [
+  {word:'Kucing', emoji:'🐱'}, {word:'Rumah', emoji:'🏠'}, {word:'Mobil', emoji:'🚗'},
+  {word:'Pohon', emoji:'🌳'}, {word:'Matahari', emoji:'☀️'}, {word:'Bunga', emoji:'🌸'},
+  {word:'Ikan', emoji:'🐟'}, {word:'Burung', emoji:'🐦'}, {word:'Kue Ulang Tahun', emoji:'🎂'},
+  {word:'Pesawat', emoji:'✈️'}, {word:'Sepeda', emoji:'🚲'}, {word:'Gunung', emoji:'⛰️'},
+  {word:'Pantai', emoji:'🏖️'}, {word:'Bintang', emoji:'⭐'}, {word:'Bulan', emoji:'🌙'},
+  {word:'Awan', emoji:'☁️'}, {word:'Pisang', emoji:'🍌'}, {word:'Apel', emoji:'🍎'},
+  {word:'Robot', emoji:'🤖'}, {word:'Dinosaurus', emoji:'🦖'}, {word:'Naga', emoji:'🐉'},
+  {word:'Kastil', emoji:'🏰'}, {word:'Topi', emoji:'🎩'}, {word:'Sepatu', emoji:'👟'},
+  {word:'Jam Tangan', emoji:'⌚'}, {word:'Kacamata', emoji:'👓'}, {word:'Payung', emoji:'☂️'},
+  {word:'Kursi', emoji:'🪑'}, {word:'Pintu', emoji:'🚪'}, {word:'Gelas', emoji:'🥛'},
+  {word:'Pizza', emoji:'🍕'}, {word:'Es Krim', emoji:'🍦'}, {word:'Donat', emoji:'🍩'},
+  {word:'Pensil', emoji:'✏️'}, {word:'Buku', emoji:'📖'}, {word:'Balon', emoji:'🎈'},
+  {word:'Kupu-kupu', emoji:'🦋'}, {word:'Semut', emoji:'🐜'}, {word:'Gajah', emoji:'🐘'},
+  {word:'Singa', emoji:'🦁'}, {word:'Harimau', emoji:'🐯'}, {word:'Jerapah', emoji:'🦒'},
+  {word:'Kura-kura', emoji:'🐢'}, {word:'Katak', emoji:'🐸'}, {word:'Ular', emoji:'🐍'},
+  {word:'Kepiting', emoji:'🦀'}, {word:'Pelangi', emoji:'🌈'}, {word:'Bebek', emoji:'🦆'},
+  {word:'Ayam', emoji:'🐔'}, {word:'Sapi', emoji:'🐮'}, {word:'Gitar', emoji:'🎸'},
+  {word:'Drum', emoji:'🥁'}, {word:'Terompet', emoji:'🎺'}, {word:'Roket', emoji:'🚀'},
+  {word:'Bola Basket', emoji:'🏀'}, {word:'Bola Sepak', emoji:'⚽'}, {word:'Mahkota', emoji:'👑'},
+  {word:'Kunci', emoji:'🔑'}, {word:'Lampu', emoji:'💡'}, {word:'TV', emoji:'📺'}
+];
 
-let peer = null, conn = null, isHost = false, roomCode = '';
-let myGrid = null, oppGrid = null, myImg = null, oppImg = null;
-let promptText = '', timerId = null, timeLeft = DRAW_TIME, gameActive = false;
+const COLORS = ['#111111','#ef4444','#f97316','#facc15','#22c55e','#3b82f6','#8b5cf6','#ec4899','#a16207'];
+
+/* ================== STATE ================== */
+let peer=null, conn=null, isHost=false, roomCode='';
+let myGrid=null, oppGrid=null, refGrid=null, myImg=null, oppImg=null;
+let promptTopic=null, timerId=null, timeLeft=DRAW_TIME, gameActive=false;
+let currentColor = '#111111';
+let isEraser = false;
 let brushSize = 3;
 
+/* ================== UTIL ================== */
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $(id).classList.add('active');
 }
-function randomPrompt(){ return PROMPTS[Math.floor(Math.random()*PROMPTS.length)]; }
+function randomTopic(){ return TOPICS[Math.floor(Math.random()*TOPICS.length)]; }
 function genCode(){
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s = '';
-  for (let i=0;i<6;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s=''; for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
   return s;
 }
-function setStatus(el, msg, err){
-  const e = $(el);
-  e.textContent = msg;
-  e.classList.toggle('err', !!err);
+function setStatus(el,msg,err){
+  const e=$(el); e.textContent=msg; e.classList.toggle('err',!!err);
+}
+
+/* ================== RENDER EMOJI → GRID ================== */
+function renderEmojiGrid(emoji){
+  const c = document.createElement('canvas');
+  c.width = GRID; c.height = GRID;
+  const cx = c.getContext('2d', {willReadFrequently:true});
+  cx.fillStyle = '#ffffff';
+  cx.fillRect(0, 0, GRID, GRID);
+  cx.font = `${Math.floor(GRID*0.78)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color",sans-serif`;
+  cx.textAlign = 'center';
+  cx.textBaseline = 'middle';
+  cx.fillText(emoji, GRID/2, GRID/2 + GRID*0.02);
+
+  const d = cx.getImageData(0,0,GRID,GRID).data;
+  const arr = new Uint8Array(GRID*GRID);
+  for (let i=0, j=0; i<d.length; i+=4, j++){
+    // deteksi "bukan putih" pakai jarak RGB (biar kuning/orange ke-detect)
+    const dist = Math.abs(255-d[i]) + Math.abs(255-d[i+1]) + Math.abs(255-d[i+2]);
+    arr[j] = dist > 100 ? 1 : 0;
+  }
+  return arr;
 }
 
 /* ================== ROOM ================== */
 let hostRetry = 0;
-function createRoom(){
-  isHost = true;
-  hostRetry = 0;
-  openHost();
-}
+function createRoom(){ isHost=true; hostRetry=0; openHost(); }
 function openHost(){
   roomCode = genCode();
   setStatus('menuStatus','Membuat room...');
-  peer = new Peer('dbattle-' + roomCode, { debug: 1 });
+  peer = new Peer('dbattle-'+roomCode, {debug:1});
 
-  peer.on('open', () => {
+  peer.on('open', ()=>{
     setStatus('menuStatus','');
     showScreen('lobby');
     $('roomCodeDisplay').textContent = roomCode;
     setStatus('lobbyStatus','Menunggu lawan bergabung...');
   });
 
-  peer.on('connection', c => {
-    if (conn && conn.open) { c.close(); return; }
+  peer.on('connection', c=>{
+    if (conn && conn.open){ c.close(); return; }
     conn = c;
     setupConn();
   });
 
-  peer.on('error', e => {
-    if (e.type === 'unavailable-id' && hostRetry < 5){
+  peer.on('error', e=>{
+    if (e.type==='unavailable-id' && hostRetry<5){
       hostRetry++;
-      try { peer.destroy(); } catch(_){}
+      try{ peer.destroy(); }catch(_){}
       openHost();
     } else {
-      setStatus('menuStatus','Gagal membuat room: ' + e.type, true);
+      setStatus('menuStatus','Gagal membuat room: '+e.type, true);
     }
   });
 }
 
 function toggleJoin(){
-  const b = $('joinBox');
-  b.style.display = b.style.display === 'none' ? 'block' : 'none';
-  if (b.style.display === 'block') $('joinCode').focus();
+  const b=$('joinBox');
+  b.style.display = b.style.display==='none'?'block':'none';
+  if (b.style.display==='block') $('joinCode').focus();
 }
 
 function joinRoom(){
   const code = $('joinCode').value.trim().toUpperCase();
-  if (code.length !== 6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
-  roomCode = code;
-  isHost = false;
+  if (code.length!==6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
+  roomCode = code; isHost = false;
   setStatus('menuStatus','Menghubungkan ke room...');
-  peer = new Peer({ debug: 1 });
+  peer = new Peer({debug:1});
 
-  peer.on('open', () => {
-    conn = peer.connect('dbattle-' + code, { reliable: true });
+  peer.on('open', ()=>{
+    conn = peer.connect('dbattle-'+code, {reliable:true});
     setupConn();
   });
-  peer.on('error', e => {
-    if (e.type === 'peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢',true);
-    else setStatus('menuStatus','Error: ' + e.type, true);
+  peer.on('error', e=>{
+    if (e.type==='peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢',true);
+    else setStatus('menuStatus','Error: '+e.type, true);
   });
 }
 
 function setupConn(){
-  conn.on('open', () => {
+  conn.on('open', ()=>{
     setStatus('menuStatus','');
     if (isHost){
-      promptText = randomPrompt();
-      conn.send({ type:'start', prompt: promptText });
-      startGame(promptText);
+      const t = randomTopic();
+      const rg = renderEmojiGrid(t.emoji);
+      conn.send({
+        type:'start',
+        word: t.word,
+        emoji: t.emoji,
+        refGrid: packGrid(rg)
+      });
+      startGame(t.word, t.emoji, rg);
     } else {
       setStatus('menuStatus','Terhubung! Menunggu host...');
     }
@@ -299,7 +430,7 @@ function setupConn(){
 
   conn.on('data', handleData);
 
-  conn.on('close', () => {
+  conn.on('close', ()=>{
     if (gameActive || $('lobby').classList.contains('active')){
       alert('Lawan terputus 😢');
       location.reload();
@@ -309,41 +440,41 @@ function setupConn(){
 
 function handleData(data){
   if (!data) return;
-  if (data.type === 'start'){
-    promptText = data.prompt;
-    startGame(data.prompt);
+  if (data.type==='start'){
+    const rg = unpackGrid(data.refGrid);
+    startGame(data.word, data.emoji, rg);
   }
-  else if (data.type === 'draw'){
+  else if (data.type==='draw'){
     oppGrid = unpackGrid(data.grid);
     oppImg  = data.img;
     checkResult();
   }
-  else if (data.type === 'rematch'){
+  else if (data.type==='rematch'){
     if (isHost){
-      promptText = randomPrompt();
-      conn.send({ type:'start', prompt: promptText });
-      startGame(promptText);
+      const t = randomTopic();
+      const rg = renderEmojiGrid(t.emoji);
+      conn.send({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)});
+      startGame(t.word, t.emoji, rg);
     }
   }
 }
 
 function copyCode(){
   navigator.clipboard?.writeText(roomCode).then(
-    () => { setStatus('lobbyStatus','Kode disalin! ✅'); },
-    () => { setStatus('lobbyStatus','Kode: ' + roomCode); }
+    ()=>setStatus('lobbyStatus','Kode disalin! ✅'),
+    ()=>setStatus('lobbyStatus','Kode: '+roomCode)
   );
 }
 
 /* ================== DRAWING ================== */
 const canvas = $('canvas');
-const ctx = canvas.getContext('2d', { willReadFrequently: true });
-let drawing = false, lastPt = null;
+const ctx = canvas.getContext('2d', {willReadFrequently:true});
+let drawing=false, lastPt=null;
 
 function clearCanvas(){
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
-
 function getPos(e){
   const r = canvas.getBoundingClientRect();
   return {
@@ -351,8 +482,9 @@ function getPos(e){
     y: (e.clientY - r.top) * (canvas.height / r.height)
   };
 }
+function activeColor(){ return isEraser ? '#ffffff' : currentColor; }
 
-canvas.addEventListener('pointerdown', e => {
+canvas.addEventListener('pointerdown', e=>{
   if (!gameActive) return;
   e.preventDefault();
   drawing = true;
@@ -361,18 +493,18 @@ canvas.addEventListener('pointerdown', e => {
   lastPt = p;
   ctx.beginPath();
   ctx.arc(p.x, p.y, brushSize/2, 0, Math.PI*2);
-  ctx.fillStyle = '#111';
+  ctx.fillStyle = activeColor();
   ctx.fill();
 });
 
-canvas.addEventListener('pointermove', e => {
+canvas.addEventListener('pointermove', e=>{
   if (!drawing || !gameActive) return;
   e.preventDefault();
   const p = getPos(e);
   ctx.beginPath();
   ctx.moveTo(lastPt.x, lastPt.y);
   ctx.lineTo(p.x, p.y);
-  ctx.strokeStyle = '#111';
+  ctx.strokeStyle = activeColor();
   ctx.lineWidth = brushSize;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
@@ -381,27 +513,68 @@ canvas.addEventListener('pointermove', e => {
 });
 
 ['pointerup','pointercancel','pointerleave'].forEach(ev =>
-  canvas.addEventListener(ev, () => { drawing = false; lastPt = null; })
+  canvas.addEventListener(ev, ()=>{ drawing=false; lastPt=null; })
 );
 
-document.querySelectorAll('.tool[data-size]').forEach(t => {
-  t.addEventListener('click', () => {
-    document.querySelectorAll('.tool[data-size]').forEach(x => x.classList.remove('sel'));
+// Pilih ukuran kuas
+document.querySelectorAll('.tool[data-size]').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tool[data-size]').forEach(x=>x.classList.remove('sel'));
     t.classList.add('sel');
     brushSize = parseInt(t.dataset.size);
   });
 });
 
+// Pilih warna
+document.querySelectorAll('.color').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');
+    currentColor = c.dataset.color;
+    isEraser = false;
+    $('eraserBtn').classList.remove('sel');
+  });
+});
+
+// Toggle penghapus
+function toggleEraser(){
+  isEraser = !isEraser;
+  $('eraserBtn').classList.toggle('sel', isEraser);
+  if (isEraser){
+    document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
+  } else {
+    // balik ke warna terakhir
+    document.querySelectorAll('.color').forEach(x=>{
+      if (x.dataset.color === currentColor) x.classList.add('sel');
+    });
+  }
+}
+
 /* ================== GAME FLOW ================== */
-function startGame(prompt){
-  promptText = prompt;
+function startGame(word, emoji, rg){
+  promptTopic = {word, emoji};
+  refGrid = rg;
   myGrid = null; oppGrid = null; myImg = null; oppImg = null;
 
-  $('promptText').textContent = prompt;
+  $('promptText').textContent = word;
+  $('promptEmoji').textContent = emoji;
+  $('refEmoji').textContent = emoji;
+  $('refWord').textContent = word;
+
   $('imgMine').src = ''; $('imgOpp').src = '';
-  $('scoreVal').textContent = '0%';
+  $('pctMine').textContent = '0%';
+  $('pctOpp').textContent  = '0%';
+  $('winnerBox').textContent = '-';
+  $('winnerBox').className = 'winner';
   $('verdict').textContent = '';
+  $('itemMine').classList.remove('winner-col');
+  $('itemOpp').classList.remove('winner-col');
   setStatus('resultStatus','');
+
+  // reset tools ke default
+  currentColor = '#111111'; isEraser = false;
+  document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel', x.dataset.color==='#111111'));
+  $('eraserBtn').classList.remove('sel');
 
   clearCanvas();
   showScreen('game');
@@ -409,9 +582,8 @@ function startGame(prompt){
   gameActive = true;
   timeLeft = DRAW_TIME;
   updateTimerUI();
-
   clearInterval(timerId);
-  timerId = setInterval(() => {
+  timerId = setInterval(()=>{
     timeLeft--;
     updateTimerUI();
     if (timeLeft <= 0) submitDrawing();
@@ -420,12 +592,12 @@ function startGame(prompt){
 
 function updateTimerUI(){
   const t = Math.max(0, timeLeft);
-  const m = Math.floor(t / 60);
-  const s = t % 60;
+  const m = Math.floor(t/60);
+  const s = t%60;
   $('timerNum').textContent = m + ':' + String(s).padStart(2,'0');
   const pct = (timeLeft / DRAW_TIME) * 100;
   const el = $('timerEl');
-  el.style.setProperty('--p', pct + '%');
+  el.style.setProperty('--p', pct+'%');
   el.classList.toggle('danger', timeLeft <= 20);
 }
 
@@ -437,50 +609,76 @@ function submitDrawing(){
   myGrid = toGrid(canvas);
   myImg  = canvas.toDataURL('image/png');
 
-  try { conn.send({ type:'draw', grid: packGrid(myGrid), img: myImg }); } catch(e){}
+  try { conn.send({type:'draw', grid:packGrid(myGrid), img:myImg}); } catch(e){}
 
   showScreen('waiting');
-  setStatus('waitStatus', 'Menunggu lawan menyelesaikan gambarnya...');
+  setStatus('waitStatus','Menunggu lawan menyelesaikan gambarnya...');
   checkResult();
 }
 
 function checkResult(){
-  if (!myGrid || !oppGrid) return;
-  const pct = similarity(myGrid, oppGrid);
-  showResult(pct);
+  if (!myGrid || !oppGrid || !refGrid) return;
+  const myPct  = similarity(myGrid, refGrid);
+  const oppPct = similarity(oppGrid, refGrid);
+  showResult(myPct, oppPct);
 }
 
-function showResult(pct){
+function showResult(myPct, oppPct){
   $('imgMine').src = myImg;
   $('imgOpp').src  = oppImg;
-
   showScreen('result');
-  let cur = 0;
-  const step = Math.max(1, Math.ceil(pct / 35));
-  const iv = setInterval(() => {
-    cur += step;
-    if (cur >= pct){ cur = pct; clearInterval(iv); }
-    $('scoreVal').textContent = cur + '%';
-  }, 25);
 
+  // Animasi angka
+  animatePct('pctMine', myPct);
+  animatePct('pctOpp', oppPct);
+
+  // Kolom pemenang highlight
+  $('itemMine').classList.toggle('winner-col', myPct > oppPct);
+  $('itemOpp').classList.toggle('winner-col', oppPct > myPct);
+
+  // Pemenang
+  const box = $('winnerBox');
+  if (myPct > oppPct){
+    box.textContent = '🏆 KAMU MENANG!';
+    box.className = 'winner win';
+  } else if (myPct < oppPct){
+    box.textContent = '😢 KAMU KALAH';
+    box.className = 'winner lose';
+  } else {
+    box.textContent = '🤝 SERI!';
+    box.className = 'winner tie';
+  }
+
+  // Komentar
+  const diff = Math.abs(myPct - oppPct);
   let v = '';
-  if (pct >= 90) v = '🤯 GILA! Kalian kayak satu otak!';
-  else if (pct >= 75) v = '🔥 Keren banget, hampir identik!';
-  else if (pct >= 55) v = '😄 Lumayan mirip, kalian sepemikiran!';
-  else if (pct >= 35) v = '🙂 Ada kemiripan dikit...';
-  else if (pct >= 15) v = '😅 Hmm, beda persepsi kayaknya';
-  else if (pct === 0) v = '💀 Beda total, kalian dari planet berbeda!';
-  else v = '😵 Yah, jauh banget...';
+  if (myPct >= 85 && oppPct >= 85) v = '🔥 Kalian berdua jago banget!';
+  else if (diff <= 3) v = '😱 Ketat banget, beda tipis!';
+  else if (diff <= 10) v = '😮 Lumayan ketat nih!';
+  else if (myPct > oppPct) v = '🎯 Gambarmu lebih mirip dengan topiknya!';
+  else v = '🎯 Gambar lawan lebih mirip dengan topiknya!';
   $('verdict').textContent = v;
+}
+
+function animatePct(elId, target){
+  const el = $(elId);
+  let cur = 0;
+  const step = Math.max(1, Math.ceil(target/35));
+  const iv = setInterval(()=>{
+    cur += step;
+    if (cur >= target){ cur = target; clearInterval(iv); }
+    el.textContent = cur + '%';
+  }, 25);
 }
 
 function playAgain(){
   if (isHost){
-    promptText = randomPrompt();
-    conn.send({ type:'start', prompt: promptText });
-    startGame(promptText);
+    const t = randomTopic();
+    const rg = renderEmojiGrid(t.emoji);
+    conn.send({type:'start', word:t.word, emoji:t.emoji, refGrid:packGrid(rg)});
+    startGame(t.word, t.emoji, rg);
   } else {
-    conn.send({ type:'rematch' });
+    conn.send({type:'rematch'});
     setStatus('resultStatus','Menunggu host memulai ulang...');
   }
 }
@@ -489,39 +687,38 @@ function playAgain(){
 function toGrid(canvasEl){
   const tmp = document.createElement('canvas');
   tmp.width = GRID; tmp.height = GRID;
-  const tc = tmp.getContext('2d', { willReadFrequently: true });
+  const tc = tmp.getContext('2d', {willReadFrequently:true});
   tc.fillStyle = '#fff';
-  tc.fillRect(0, 0, GRID, GRID);
+  tc.fillRect(0,0,GRID,GRID);
   tc.drawImage(canvasEl, 0, 0, GRID, GRID);
-  const d = tc.getImageData(0, 0, GRID, GRID).data;
-  const arr = new Uint8Array(GRID * GRID);
-  for (let i = 0, j = 0; i < d.length; i += 4, j++){
-    const lum = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
-    arr[j] = lum < 145 ? 1 : 0;
+  const d = tc.getImageData(0,0,GRID,GRID).data;
+  const arr = new Uint8Array(GRID*GRID);
+  for (let i=0, j=0; i<d.length; i+=4, j++){
+    const dist = Math.abs(255-d[i]) + Math.abs(255-d[i+1]) + Math.abs(255-d[i+2]);
+    arr[j] = dist > 100 ? 1 : 0;
   }
   return arr;
 }
 
-// ubah Uint8Array <-> string biar bisa dikirim lewat PeerJS
 function packGrid(arr){ return Array.from(arr).join(''); }
 function unpackGrid(str){
   const a = new Uint8Array(str.length);
-  for (let i = 0; i < str.length; i++) a[i] = str.charCodeAt(i) === 49 ? 1 : 0;
+  for (let i=0;i<str.length;i++) a[i] = str.charCodeAt(i)===49 ? 1 : 0;
   return a;
 }
 
 function dilate(arr, r){
   const out = new Uint8Array(arr.length);
-  for (let y = 0; y < GRID; y++){
-    for (let x = 0; x < GRID; x++){
+  for (let y=0; y<GRID; y++){
+    for (let x=0; x<GRID; x++){
       let v = 0;
-      for (let dy = -r; dy <= r && !v; dy++){
-        const ny = y + dy;
-        if (ny < 0 || ny >= GRID) continue;
-        for (let dx = -r; dx <= r; dx++){
-          const nx = x + dx;
-          if (nx < 0 || nx >= GRID) continue;
-          if (arr[ny*GRID + nx]) { v = 1; break; }
+      for (let dy=-r; dy<=r && !v; dy++){
+        const ny = y+dy;
+        if (ny<0 || ny>=GRID) continue;
+        for (let dx=-r; dx<=r; dx++){
+          const nx = x+dx;
+          if (nx<0 || nx>=GRID) continue;
+          if (arr[ny*GRID + nx]){ v=1; break; }
         }
       }
       out[y*GRID + x] = v;
@@ -530,18 +727,24 @@ function dilate(arr, r){
   return out;
 }
 
+// F1-score dari area yang "bertumpuk" setelah dilasi
+// → reward kalau gambar overlap dengan referensi
+// → penalti kalau gambar keluar dari area referensi atau banyak area referensi yang kosong
 function similarity(a, b){
-  let ca = 0, cb = 0;
-  for (let i = 0; i < a.length; i++){ if (a[i]) ca++; if (b[i]) cb++; }
-  if (ca === 0 && cb === 0) return 100;
-  if (ca === 0 || cb === 0) return 0;
-  const da = dilate(a, 2), db = dilate(b, 2);
-  let mA = 0, mB = 0;
-  for (let i = 0; i < a.length; i++){
-    if (a[i] && db[i]) mA++;
-    if (b[i] && da[i]) mB++;
+  const da = dilate(a, DILATE_R);
+  const db = dilate(b, DILATE_R);
+  let areaA=0, areaB=0, inter=0;
+  for (let i=0; i<a.length; i++){
+    const A = da[i], B = db[i];
+    if (A) areaA++;
+    if (B) areaB++;
+    if (A && B) inter++;
   }
-  return Math.round(((mA + mB) / (ca + cb)) * 100);
+  if (areaA===0 || areaB===0) return 0;
+  const p = inter / areaA;   // presisi: berapa banyak coretan yang ada di area referensi
+  const r = inter / areaB;   // recall:  berapa banyak area referensi yang ketutup coretan
+  if (p + r === 0) return 0;
+  return Math.round((2*p*r/(p+r)) * 100);
 }
 </script>
 </body>
