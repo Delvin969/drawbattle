@@ -2,1455 +2,547 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎱 8-Ball Pool HD — vs Bot AI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Draw Battle 🎨</title>
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overflow: hidden; }
-  body {
-    background:
-      radial-gradient(ellipse at 20% 0%, #1a1f3a 0%, transparent 55%),
-      radial-gradient(ellipse at 80% 100%, #2a1a3a 0%, transparent 55%),
-      radial-gradient(circle at 50% 50%, #0d0f1a 0%, #05060a 100%);
-    font-family: -apple-system, 'Segoe UI', sans-serif;
-    color: #fff; user-select: none;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(circle at 20% 0%,#243b6b 0%,#141a35 45%,#0a0e1f 100%);
+    color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:14px;overflow-x:hidden;
   }
+  .screen{display:none;width:100%;max-width:640px;animation:fade .3s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  /* ===== MENU ===== */
-  #menu {
-    width: 540px; padding: 44px 46px; border-radius: 24px;
-    background: linear-gradient(180deg, rgba(30,32,48,0.88), rgba(15,16,26,0.94));
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 30px 90px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    text-align: center;
+  .card{
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;padding:26px 22px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
   }
-  #menu h1 {
-    font-size: 40px; font-weight: 900; letter-spacing: -1.5px;
-    background: linear-gradient(135deg, #4ade80, #22d3ee 55%, #a78bfa);
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent; margin-bottom: 6px;
-  }
-  #menu .sub {
-    font-size: 12px; opacity: 0.55; letter-spacing: 3px;
-    text-transform: uppercase; margin-bottom: 32px;
-  }
-  .sec {
-    text-align: left; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; opacity: 0.5; margin-bottom: 12px;
-  }
-  .grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px; margin-bottom: 26px;
-  }
-  .diff {
-    padding: 14px 16px; border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.03);
-    color: #fff; font-family: inherit;
-    cursor: pointer; text-align: left;
-    transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
-  }
-  .diff:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-  }
-  .diff.sel {
-    border-color: #4ade80;
-    background: linear-gradient(135deg, rgba(74,222,128,0.18), rgba(34,211,238,0.12));
-    box-shadow: 0 0 0 1px rgba(74,222,128,0.3), 0 10px 30px rgba(74,222,128,0.2);
-  }
-  .diff .lvl { font-size: 10px; letter-spacing: 1.5px; opacity: 0.5; font-weight: 700; }
-  .diff.sel .lvl { color: #4ade80; opacity: 0.9; }
-  .diff .nm { font-size: 16px; font-weight: 800; margin: 2px 0; }
-  .diff .dsc { font-size: 10px; opacity: 0.5; }
-  .start {
-    width: 100%; padding: 16px; border-radius: 14px; border: none;
-    background: linear-gradient(135deg, #4ade80, #22c55e);
-    color: #0a0a12; font-family: inherit;
-    font-size: 16px; font-weight: 800; letter-spacing: 1px;
-    cursor: pointer; transition: all 0.22s;
-    box-shadow: 0 10px 30px rgba(74,222,128,0.35);
-  }
-  .start:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(74,222,128,0.5); }
+  h1{font-size:2.1rem;text-align:center;margin-bottom:6px;
+     background:linear-gradient(90deg,#ffb347,#ff5f6d,#a06bff,#41d8ff);
+     -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  .sub{text-align:center;opacity:.6;font-size:.86rem;margin-bottom:24px}
 
-  /* ===== GAME ===== */
-  #gameScreen { display: none; flex-direction: column; align-items: center; gap: 12px; }
+  button{
+    font-family:inherit;font-size:1rem;font-weight:600;
+    border:none;border-radius:14px;padding:15px 18px;cursor:pointer;
+    width:100%;margin-bottom:12px;color:#fff;
+    background:linear-gradient(135deg,#4f6cff,#8b5cf6);
+    transition:.18s;box-shadow:0 6px 18px rgba(79,108,255,.35);
+  }
+  button:hover{transform:translateY(-2px);filter:brightness(1.1)}
+  button:active{transform:scale(.97)}
+  button.ghost{background:rgba(255,255,255,.1);box-shadow:none;border:1px solid rgba(255,255,255,.16)}
+  button.green{background:linear-gradient(135deg,#16b981,#0ea5a5);box-shadow:0 6px 18px rgba(16,185,129,.35)}
+  button.small{width:auto;padding:9px 16px;font-size:.85rem;margin:0}
 
-  #topbar {
-    display: flex; width: 900px; gap: 12px; align-items: center;
+  input{
+    width:100%;padding:15px;border-radius:14px;border:1px solid rgba(255,255,255,.2);
+    background:rgba(0,0,0,.25);color:#fff;font-size:1.25rem;text-align:center;
+    letter-spacing:.35em;text-transform:uppercase;font-weight:700;margin-bottom:12px;
+    font-family:inherit;outline:none;
   }
-  .pl {
-    flex: 1; display: flex; align-items: center; gap: 12px;
-    padding: 10px 18px; border-radius: 14px;
-    background: linear-gradient(180deg, rgba(30,32,48,0.7), rgba(15,16,26,0.8));
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
-    position: relative; overflow: hidden;
-  }
-  .pl.active {
-    border-color: rgba(74,222,128,0.5);
-    box-shadow: 0 0 0 1px rgba(74,222,128,0.3), 0 10px 30px rgba(74,222,128,0.15);
-  }
-  .pl.active::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(74,222,128,0.08), transparent);
-    pointer-events: none;
-  }
-  .av {
-    width: 40px; height: 40px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
-    transition: all 0.3s;
-  }
-  .pl.active .av {
-    background: linear-gradient(135deg, #4ade80, #22c55e); color: #0a0a12;
-    box-shadow: 0 0 20px rgba(74,222,128,0.5);
-  }
-  .info { flex: 1; min-width: 0; }
-  .nm { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .grp { font-size: 11px; opacity: 0.65; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
-  .dot {
-    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-  }
-  .dot.solid { background: #f5c518; }
-  .dot.stripe {
-    background: linear-gradient(135deg, #f5c518 0 50%, #fff 50% 100%);
-    border: 1px solid rgba(0,0,0,0.3);
-  }
-  .rem { font-size: 10px; opacity: 0.5; margin-top: 1px; font-weight: 600; }
+  input:focus{border-color:#7c8cff;box-shadow:0 0 0 3px rgba(124,140,255,.25)}
+  input::placeholder{letter-spacing:normal;font-weight:400;font-size:.95rem;text-transform:none}
 
-  #container { position: relative; }
-  #gameCanvas {
-    display: block; border-radius: 16px;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.05);
-    cursor: crosshair;
+  .code-box{
+    background:rgba(0,0,0,.35);border:2px dashed rgba(255,255,255,.3);
+    border-radius:16px;padding:18px;text-align:center;margin:16px 0;
   }
-  #powerWrap {
-    position: absolute; right: 16px; top: 50%;
-    transform: translateY(-50%);
-    width: 14px; height: 240px;
-    background: rgba(0,0,0,0.55);
-    border-radius: 10px; overflow: hidden;
-    display: flex; flex-direction: column-reverse;
-    border: 1px solid rgba(255,255,255,0.1);
-    pointer-events: none;
-  }
-  #powerFill {
-    width: 100%; height: 0%;
-    background: linear-gradient(to top, #22c55e, #eab308 60%, #ef4444 100%);
-    transition: height 0.05s linear;
-    box-shadow: 0 0 12px rgba(234,179,8,0.5);
-  }
-  #toast {
-    position: absolute; top: 20px; left: 50%;
-    transform: translate(-50%, -30px);
-    padding: 10px 24px; border-radius: 12px;
-    font-size: 15px; font-weight: 700;
-    background: rgba(10,10,18,0.92);
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    opacity: 0; transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
-    pointer-events: none; white-space: nowrap;
-  }
-  #toast.show { opacity: 1; transform: translate(-50%, 0); }
-  #toast.foul { color: #f87171; border-color: rgba(248,113,113,0.4); }
-  #toast.good { color: #4ade80; border-color: rgba(74,222,128,0.4); }
+  .code-box .lbl{font-size:.75rem;letter-spacing:.2em;opacity:.55;text-transform:uppercase}
+  .code-box .val{font-size:2.6rem;font-weight:800;letter-spacing:.18em;color:#7cf3d0;
+                 text-shadow:0 0 22px rgba(124,243,208,.5);margin-top:4px}
 
-  #thinking {
-    position: absolute; bottom: 18px; left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 20px; border-radius: 20px;
-    background: rgba(10,10,18,0.88);
-    border: 1px solid rgba(34,211,238,0.4);
-    font-size: 13px; font-weight: 600; color: #22d3ee;
-    display: none; align-items: center; gap: 10px;
-  }
-  #thinking.show { display: flex; }
-  .dots { display: inline-flex; gap: 4px; }
-  .dots span {
-    width: 5px; height: 5px; border-radius: 50%; background: #22d3ee;
-    animation: bounce 1.2s infinite ease-in-out;
-  }
-  .dots span:nth-child(2) { animation-delay: 0.15s; }
-  .dots span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes bounce {
-    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
-    30% { transform: translateY(-5px); opacity: 1; }
-  }
+  .status{text-align:center;font-size:.9rem;opacity:.75;margin-top:12px;min-height:20px}
+  .status.err{color:#ff7a7a;opacity:1}
 
-  #controls { margin-top: 8px; display: flex; gap: 10px; }
-  .btn {
-    padding: 9px 22px; border-radius: 10px; border: none;
-    background: rgba(255,255,255,0.08); color: #fff;
-    font-family: inherit; font-weight: 700; font-size: 13px;
-    cursor: pointer; transition: all 0.2s;
+  /* GAME */
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+  .prompt-chip{
+    flex:1;background:linear-gradient(135deg,#ff5f6d,#a06bff);
+    border-radius:14px;padding:12px 16px;font-weight:700;font-size:1.05rem;
+    text-align:center;box-shadow:0 6px 20px rgba(160,107,255,.35);
   }
-  .btn:hover { background: rgba(255,255,255,0.15); }
-  #hint {
-    margin-top: 4px; font-size: 12px;
-    color: rgba(255,255,255,0.5); text-align: center;
-    min-height: 16px;
+  .prompt-chip small{display:block;font-size:.65rem;opacity:.8;letter-spacing:.15em;font-weight:500}
+  .timer{
+    width:72px;height:72px;border-radius:50%;display:grid;place-items:center;
+    font-size:1.1rem;font-weight:800;flex-shrink:0;
+    background:conic-gradient(#41d8ff var(--p,100%),rgba(255,255,255,.1) 0);
+    position:relative;
   }
+  .timer::after{content:'';position:absolute;inset:6px;border-radius:50%;background:#151a30}
+  .timer span{position:relative;z-index:1}
+  .timer.danger{animation:pulse .6s infinite}
+  @keyframes pulse{50%{opacity:.5}}
 
-  /* ===== OVERLAY ===== */
-  #overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    display: none; align-items: center; justify-content: center;
-    z-index: 100; opacity: 0; transition: opacity 0.4s;
+  .canvas-wrap{position:relative;border-radius:18px;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.15)}
+  canvas{display:block;width:100%;height:auto;aspect-ratio:1/1;background:#fff;
+         touch-action:none;cursor:crosshair}
+
+  .tools{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap;justify-content:center}
+  .tool{
+    width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.1);
+    border:2px solid transparent;display:grid;place-items:center;cursor:pointer;transition:.15s;
   }
-  #overlay.show { display: flex; opacity: 1; }
-  #overlay .panel {
-    padding: 44px 52px; border-radius: 24px;
-    background: linear-gradient(180deg, rgba(30,32,48,0.96), rgba(15,16,26,0.98));
-    border: 1px solid rgba(255,255,255,0.1);
-    text-align: center;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-    transform: scale(0.9);
-    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  #overlay.show .panel { transform: scale(1); }
-  #ovTitle {
-    font-size: 36px; font-weight: 900; letter-spacing: -1.5px;
-    margin-bottom: 8px;
-  }
-  #ovTitle.win {
-    background: linear-gradient(135deg, #4ade80, #22d3ee);
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  #ovTitle.lose {
-    background: linear-gradient(135deg, #f87171, #ef4444);
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  #ovSub { font-size: 13px; opacity: 0.6; margin-bottom: 26px; }
-  .ovBtns { display: flex; gap: 12px; justify-content: center; }
-  .ovBtn {
-    padding: 12px 28px; border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.05); color: #fff;
-    font-family: inherit; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .ovBtn:hover { background: rgba(255,255,255,0.12); }
-  .ovBtn.primary {
-    background: linear-gradient(135deg, #4ade80, #22c55e);
-    color: #0a0a12; border-color: transparent;
-  }
-  .ovBtn.primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(74,222,128,0.4); }
+  .tool.sel{border-color:#7c8cff;background:rgba(124,140,255,.25)}
+  .tool .dot{background:#fff;border-radius:50%}
+  .tool.clear{width:auto;padding:0 16px;font-size:.85rem;font-weight:600;color:#fff}
+
+  /* RESULT */
+  .score{font-size:4.6rem;font-weight:900;text-align:center;line-height:1;
+         background:linear-gradient(90deg,#41d8ff,#a06bff,#ff5f6d);
+         -webkit-background-clip:text;background-clip:text;color:transparent;
+         margin:6px 0 2px}
+  .score-lbl{text-align:center;opacity:.6;font-size:.85rem;letter-spacing:.18em;
+             text-transform:uppercase;margin-bottom:18px}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .compare .item{background:rgba(0,0,0,.3);border-radius:14px;padding:10px;border:1px solid rgba(255,255,255,.1)}
+  .compare .item h4{font-size:.75rem;text-align:center;opacity:.65;margin-bottom:8px;
+                    letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+  .compare img{width:100%;border-radius:9px;background:#fff;display:block;aspect-ratio:1/1;object-fit:contain}
+  .verdict{text-align:center;font-size:1.05rem;font-weight:600;margin-bottom:18px;min-height:24px}
+
+  .spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.15);
+    border-top-color:#7c8cff;border-radius:50%;animation:spin 1s linear infinite;margin:18px auto}
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ===== MENU ===== -->
-<div id="menu">
-  <h1>🎱 8-Ball Pool</h1>
-  <div class="sub">HD · Realistis · vs Bot AI</div>
-
-  <div class="sec">Pilih Tingkat Bot</div>
-  <div class="grid" id="diffGrid">
-    <button class="diff" data-diff="amatir">
-      <div class="lvl">LEVEL 1</div>
-      <div class="nm">🐣 Amatir</div>
-      <div class="dsc">Sering meleset, mudah dikalahkan</div>
-    </button>
-    <button class="diff" data-diff="menengah">
-      <div class="lvl">LEVEL 2</div>
-      <div class="nm">🎯 Menengah</div>
-      <div class="dsc">Paham aturan, eksekusi standar</div>
-    </button>
-    <button class="diff" data-diff="pintar">
-      <div class="lvl">LEVEL 3</div>
-      <div class="nm">🧠 Pintar</div>
-      <div class="dsc">Aim akurat, pilih shot terbaik</div>
-    </button>
-    <button class="diff sel" data-diff="dunia">
-      <div class="lvl">LEVEL 4</div>
-      <div class="nm">👑 Tingkat Dunia</div>
-      <div class="dsc">Presisi, nyaris tanpa kesalahan</div>
-    </button>
+<!-- ============ MENU ============ -->
+<div id="menu" class="screen active">
+  <div class="card">
+    <h1>🎨 Draw Battle</h1>
+    <p class="sub">Gambar bareng teman; lihat seberapa mirip kalian!</p>
+    <button onclick="createRoom()">➕ Buat Room</button>
+    <button class="ghost" onclick="toggleJoin()">🔑 Gabung Room</button>
+    <div id="joinBox" style="display:none;margin-top:6px">
+      <input id="joinCode" placeholder="Masukkan kode room" maxlength="6"
+             autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+      <button class="green" onclick="joinRoom()">🚀 Gabung</button>
+    </div>
+    <div id="menuStatus" class="status"></div>
   </div>
-
-  <button class="start" onclick="startGame()">▶  MULAI BERMAIN</button>
 </div>
 
-<!-- ===== GAME (ID diubah dari "game" → "gameScreen") ===== -->
-<div id="gameScreen">
-  <div id="topbar">
-    <div class="pl" id="p1">
-      <div class="av">👤</div>
-      <div class="info">
-        <div class="nm">Kamu</div>
-        <div class="grp"><span class="dot" id="p1Dot"></span><span id="p1Grp">Grup: —</span></div>
-        <div class="rem" id="p1Rem"></div>
-      </div>
+<!-- ============ LOBBY ============ -->
+<div id="lobby" class="screen">
+  <div class="card">
+    <h1 style="font-size:1.5rem">Room Dibuat!</h1>
+    <p class="sub">Bagikan kode ini ke temanmu</p>
+    <div class="code-box">
+      <div class="lbl">Kode Room</div>
+      <div class="val" id="roomCodeDisplay">------</div>
     </div>
-    <div class="pl" id="p2">
-      <div class="av">🤖</div>
-      <div class="info">
-        <div class="nm" id="p2Name">Bot</div>
-        <div class="grp"><span class="dot" id="p2Dot"></span><span id="p2Grp">Grup: —</span></div>
-        <div class="rem" id="p2Rem"></div>
-      </div>
-    </div>
+    <button class="ghost small" style="width:100%" onclick="copyCode()">📋 Salin Kode</button>
+    <div class="spinner"></div>
+    <div id="lobbyStatus" class="status">Menunggu lawan bergabung...</div>
   </div>
-
-  <div id="container">
-    <!-- CANVAS ID DIGANTI JADI "gameCanvas" -->
-    <canvas id="gameCanvas" width="900" height="500"></canvas>
-    <div id="powerWrap"><div id="powerFill"></div></div>
-    <div id="toast"></div>
-    <div id="thinking">Bot sedang berpikir<span class="dots"><span></span><span></span><span></span></span></div>
-  </div>
-
-  <div id="controls">
-    <button class="btn" onclick="backToMenu()">🏠 Menu</button>
-    <button class="btn" onclick="resetGame()">🔄 Main Ulang</button>
-  </div>
-  <div id="hint">Gerakkan mouse untuk bidik · Tahan klik untuk power · Lepas untuk tembak</div>
 </div>
 
-<!-- ===== OVERLAY ===== -->
-<div id="overlay">
-  <div class="panel">
-    <div id="ovTitle">🏆 Menang!</div>
-    <div id="ovSub">Kamu mengalahkan bot</div>
-    <div class="ovBtns">
-      <button class="ovBtn" onclick="backToMenu()">Menu</button>
-      <button class="ovBtn primary" onclick="resetGame()">Main Lagi</button>
+<!-- ============ GAME ============ -->
+<div id="game" class="screen">
+  <div class="topbar">
+    <div class="prompt-chip"><small>TEMA GAMBAR</small><span id="promptText">-</span></div>
+    <div class="timer" id="timerEl"><span id="timerNum">3:00</span></div>
+  </div>
+  <div class="canvas-wrap"><canvas id="canvas" width="600" height="600"></canvas></div>
+  <div class="tools">
+    <div class="tool sel" data-size="3"><div class="dot" style="width:5px;height:5px"></div></div>
+    <div class="tool" data-size="9"><div class="dot" style="width:11px;height:11px"></div></div>
+    <div class="tool" data-size="20"><div class="dot" style="width:20px;height:20px"></div></div>
+    <div class="tool clear" onclick="clearCanvas()">🗑 Hapus</div>
+  </div>
+  <button class="green" style="margin-top:14px" onclick="submitDrawing()">✅ Selesai &amp; Kirim</button>
+</div>
+
+<!-- ============ WAITING ============ -->
+<div id="waiting" class="screen">
+  <div class="card" style="text-align:center">
+    <h1 style="font-size:1.4rem">Gambarmu Terkirim! 📤</h1>
+    <p class="sub">Menunggu lawan menyelesaikan gambarnya...</p>
+    <div class="spinner"></div>
+    <div class="status" id="waitStatus">Sabarrr...</div>
+  </div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<div id="result" class="screen">
+  <div class="card">
+    <div class="score" id="scoreVal">0%</div>
+    <div class="score-lbl">Tingkat Kemiripan</div>
+    <div class="compare">
+      <div class="item"><h4>Gambarmu</h4><img id="imgMine" alt="gambarmu"></div>
+      <div class="item"><h4>Gambar Lawan</h4><img id="imgOpp" alt="gambar lawan"></div>
     </div>
+    <div class="verdict" id="verdict"></div>
+    <button onclick="playAgain()">🔄 Main Lagi</button>
+    <div class="status" id="resultStatus"></div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// SETUP CANVAS (HD/4K ready) — pakai id "gameCanvas"
-// ============================================================
-const CW = 900, CH = 500;
-const canvas = document.getElementById('gameCanvas');   // ← FIX
-const ctx = canvas.getContext('2d');
-const DPR = Math.max(2, window.devicePixelRatio || 1);
-canvas.width = CW * DPR;
-canvas.height = CH * DPR;
-canvas.style.width = CW + 'px';
-canvas.style.height = CH + 'px';
+/* ================== UTIL ================== */
+const $ = id => document.getElementById(id);
+const GRID = 128;
+const DRAW_TIME = 180;   // ⏱️ 3 menit = 180 detik
 
-const powerFill = document.getElementById('powerFill');
-const toastEl = document.getElementById('toast');
-const thinkingEl = document.getElementById('thinking');
-const hintEl = document.getElementById('hint');
+const PROMPTS = ['Kucing','Rumah','Mobil','Pohon','Matahari','Bunga','Ikan','Burung',
+'Kue Ulang Tahun','Pesawat','Sepeda','Gunung','Pantai','Bintang','Bulan','Awan',
+'Pisang','Apel','Robot','Dinosaurus','Naga','Kastil','Topi','Sepatu','Jam Tangan',
+'Kacamata','Payung','Kursi','Meja','Pintu','Jendela','Sendok','Gelas','Pizza',
+'Es Krim','Donat','Pensil','Buku','Balon','Layang-layang','Kupu-kupu','Semut',
+'Gajah','Singa','Harimau','Jerapah','Kura-kura','Katak','Ular','Kepiting',
+'Pohon Kelapa','Pelangi','Bebek','Ayam','Sapi','Kambing','Sepatu Roda','Gitar',
+'Drum','Terompet','Palu','Obeng','Traktor','Kereta Api','Kapal Laut','Roket'];
 
-// ============================================================
-// KONSTANTA
-// ============================================================
-const TABLE = { x: 60, y: 60, w: 780, h: 380 };
-const TABLE_R = TABLE.x + TABLE.w;
-const TABLE_B = TABLE.y + TABLE.h;
-const BALL_R = 11;
-const POCKET_R = 20;
-const MAX_SPEED = 20;
-const FRICTION = 0.988;
-const WALL_BOUNCE = 0.88;
-const MIN_V = 0.05;
+let peer = null, conn = null, isHost = false, roomCode = '';
+let myGrid = null, oppGrid = null, myImg = null, oppImg = null;
+let promptText = '', timerId = null, timeLeft = DRAW_TIME, gameActive = false;
+let brushSize = 3;
 
-const POCKETS = [
-  { x: TABLE.x,               y: TABLE.y },
-  { x: TABLE.x + TABLE.w / 2, y: TABLE.y },
-  { x: TABLE_R,               y: TABLE.y },
-  { x: TABLE.x,               y: TABLE_B },
-  { x: TABLE.x + TABLE.w / 2, y: TABLE_B },
-  { x: TABLE_R,               y: TABLE_B }
-];
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+function randomPrompt(){ return PROMPTS[Math.floor(Math.random()*PROMPTS.length)]; }
+function genCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i=0;i<6;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+function setStatus(el, msg, err){
+  const e = $(el);
+  e.textContent = msg;
+  e.classList.toggle('err', !!err);
+}
 
-const BALL_COLORS = {
-  1:'#f5c518', 2:'#1e4db7', 3:'#d42a2a', 4:'#7a1fa8', 5:'#f5821f',
-  6:'#1f9d4a', 7:'#8b2f1a', 8:'#111111',
-  9:'#f5c518', 10:'#1e4db7', 11:'#d42a2a', 12:'#7a1fa8', 13:'#f5821f',
-  14:'#1f9d4a', 15:'#8b2f1a'
-};
+/* ================== ROOM ================== */
+let hostRetry = 0;
+function createRoom(){
+  isHost = true;
+  hostRetry = 0;
+  openHost();
+}
+function openHost(){
+  roomCode = genCode();
+  setStatus('menuStatus','Membuat room...');
+  peer = new Peer('dbattle-' + roomCode, { debug: 1 });
 
-const DIFFICULTY = {
-  amatir:   { name: 'Amatir',        angleErr: 0.075,  powerErr: 0.30, bestChance: 0.35, topN: 7, delay: [700, 1300] },
-  menengah: { name: 'Menengah',      angleErr: 0.032,  powerErr: 0.16, bestChance: 0.65, topN: 4, delay: [900, 1500] },
-  pintar:   { name: 'Pintar',        angleErr: 0.010,  powerErr: 0.07, bestChance: 0.88, topN: 2, delay: [1100, 1800] },
-  dunia:    { name: 'Tingkat Dunia', angleErr: 0.0025, powerErr: 0.025, bestChance: 1.0, topN: 1, delay: [1300, 2000] }
-};
-
-// ============================================================
-// STATE
-// ============================================================
-let balls = [];
-let currentPlayer = 1;
-let p1Group = null, p2Group = null;
-let state = 'idle';
-let ballInHand = false;
-let aimAngle = 0;
-let charging = false, chargeStart = 0, power = 0;
-let shotState = { firstHit: null, pocketedThisTurn: [], cueBallPocketed: false };
-let botLevel = 'dunia';
-let botVisual = { angle: 0, power: 0, show: false };
-let feltPattern = null;
-let botScheduled = false;
-
-// ============================================================
-// SETUP BOLA
-// ============================================================
-function setupBalls() {
-  balls = [];
-  balls.push({
-    x: TABLE.x + TABLE.w * 0.25,
-    y: TABLE.y + TABLE.h / 2,
-    vx: 0, vy: 0, number: 0, color: '#fff',
-    isCue: true, isStripe: false, pocketed: false
+  peer.on('open', () => {
+    setStatus('menuStatus','');
+    showScreen('lobby');
+    $('roomCodeDisplay').textContent = roomCode;
+    setStatus('lobbyStatus','Menunggu lawan bergabung...');
   });
 
-  const startX = TABLE.x + TABLE.w * 0.72;
-  const startY = TABLE.y + TABLE.h / 2;
-  const dx = Math.sqrt(3) * BALL_R + 0.5;
-  const dy = 2 * BALL_R + 0.6;
+  peer.on('connection', c => {
+    if (conn && conn.open) { c.close(); return; }
+    conn = c;
+    setupConn();
+  });
 
-  const rack = [[1], [9, 2], [10, 8, 3], [11, 4, 12, 5], [13, 6, 14, 7, 15]];
-  for (let row = 0; row < rack.length; row++) {
-    for (let i = 0; i < rack[row].length; i++) {
-      const num = rack[row][i];
-      balls.push({
-        x: startX + row * dx,
-        y: startY + (i - row / 2) * dy,
-        vx: 0, vy: 0, number: num,
-        color: BALL_COLORS[num],
-        isCue: false, isStripe: num > 8, pocketed: false
-      });
-    }
-  }
-}
-
-// ============================================================
-// FELT TEXTURE
-// ============================================================
-function buildFeltPattern() {
-  const c = document.createElement('canvas');
-  c.width = c.height = 100;
-  const g = c.getContext('2d');
-  const img = g.createImageData(100, 100);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = 6 + Math.random() * 16;
-    img.data[i] = v; img.data[i+1] = v; img.data[i+2] = v; img.data[i+3] = 14;
-  }
-  g.putImageData(img, 0, 0);
-  feltPattern = ctx.createPattern(c, 'repeat');
-}
-
-// ============================================================
-// FISIKA
-// ============================================================
-function stepPhysics(dt) {
-  const f = Math.pow(FRICTION, dt);
-  for (const b of balls) {
-    if (b.pocketed) continue;
-    b.x += b.vx * dt;
-    b.y += b.vy * dt;
-    b.vx *= f; b.vy *= f;
-    if (Math.abs(b.vx) < MIN_V) b.vx = 0;
-    if (Math.abs(b.vy) < MIN_V) b.vy = 0;
-  }
-
-  for (let i = 0; i < balls.length; i++) {
-    const a = balls[i];
-    if (a.pocketed) continue;
-    for (let j = i + 1; j < balls.length; j++) {
-      const b = balls[j];
-      if (b.pocketed) continue;
-      collideBalls(a, b);
-    }
-  }
-
-  for (const b of balls) {
-    if (b.pocketed) continue;
-
-    let dropped = false;
-    for (const p of POCKETS) {
-      const dx = b.x - p.x, dy = b.y - p.y;
-      if (dx * dx + dy * dy < POCKET_R * POCKET_R * 0.8) {
-        b.pocketed = true; b.vx = 0; b.vy = 0;
-        onBallPocketed(b);
-        dropped = true;
-        break;
-      }
-    }
-    if (dropped) continue;
-
-    if (b.x - BALL_R < TABLE.x) { b.x = TABLE.x + BALL_R; b.vx = -b.vx * WALL_BOUNCE; }
-    if (b.x + BALL_R > TABLE_R) { b.x = TABLE_R - BALL_R; b.vx = -b.vx * WALL_BOUNCE; }
-    if (b.y - BALL_R < TABLE.y) { b.y = TABLE.y + BALL_R; b.vy = -b.vy * WALL_BOUNCE; }
-    if (b.y + BALL_R > TABLE_B) { b.y = TABLE_B - BALL_R; b.vy = -b.vy * WALL_BOUNCE; }
-  }
-}
-
-function collideBalls(a, b) {
-  const dx = b.x - a.x, dy = b.y - a.y;
-  const d2 = dx * dx + dy * dy;
-  const minD = 2 * BALL_R;
-  if (d2 >= minD * minD || d2 === 0) return;
-
-  const d = Math.sqrt(d2);
-  const nx = dx / d, ny = dy / d;
-  const ov = minD - d;
-  a.x -= nx * ov / 2; a.y -= ny * ov / 2;
-  b.x += nx * ov / 2; b.y += ny * ov / 2;
-
-  const dvx = b.vx - a.vx, dvy = b.vy - a.vy;
-  const vn = dvx * nx + dvy * ny;
-  if (vn > 0) return;
-
-  a.vx += vn * nx; a.vy += vn * ny;
-  b.vx -= vn * nx; b.vy -= vn * ny;
-
-  if (a.isCue && !shotState.firstHit) shotState.firstHit = b;
-  if (b.isCue && !shotState.firstHit) shotState.firstHit = a;
-}
-
-function onBallPocketed(b) {
-  if (b.isCue) shotState.cueBallPocketed = true;
-  else shotState.pocketedThisTurn.push(b);
-}
-
-function allStopped() {
-  for (const b of balls) {
-    if (!b.pocketed && (b.vx !== 0 || b.vy !== 0)) return false;
-  }
-  return true;
-}
-
-// ============================================================
-// ATURAN 8-BALL
-// ============================================================
-const isSolid  = n => n >= 1 && n <= 7;
-const isStripe = n => n >= 9 && n <= 15;
-
-function evaluateTurn() {
-  const player = currentPlayer;
-  const wasOpen = !p1Group && !p2Group;
-  const pocketed = shotState.pocketedThisTurn;
-  const nonEight = pocketed.filter(b => b.number !== 8);
-  const eightPocketed = pocketed.some(b => b.number === 8);
-  const cuePocketed = shotState.cueBallPocketed;
-  const firstHit = shotState.firstHit;
-
-  let foul = false;
-  let msg = '';
-
-  if (wasOpen && nonEight.length > 0) {
-    const first = nonEight[0];
-    const firstIsSolid = isSolid(first.number);
-    if (player === 1) {
-      p1Group = firstIsSolid ? 'solid' : 'stripe';
-      p2Group = firstIsSolid ? 'stripe' : 'solid';
+  peer.on('error', e => {
+    if (e.type === 'unavailable-id' && hostRetry < 5){
+      hostRetry++;
+      try { peer.destroy(); } catch(_){}
+      openHost();
     } else {
-      p2Group = firstIsSolid ? 'solid' : 'stripe';
-      p1Group = firstIsSolid ? 'stripe' : 'solid';
+      setStatus('menuStatus','Gagal membuat room: ' + e.type, true);
     }
-    updateGroupDisplay();
-  }
+  });
+}
 
-  const myGroup = player === 1 ? p1Group : p2Group;
+function toggleJoin(){
+  const b = $('joinBox');
+  b.style.display = b.style.display === 'none' ? 'block' : 'none';
+  if (b.style.display === 'block') $('joinCode').focus();
+}
 
-  if (cuePocketed) { foul = true; msg = '❌ Foul! Bola putih masuk'; }
-  if (!foul && !firstHit) { foul = true; msg = '❌ Foul! Tidak kena bola'; }
+function joinRoom(){
+  const code = $('joinCode').value.trim().toUpperCase();
+  if (code.length !== 6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
+  roomCode = code;
+  isHost = false;
+  setStatus('menuStatus','Menghubungkan ke room...');
+  peer = new Peer({ debug: 1 });
 
-  if (!foul && myGroup && firstHit) {
-    const remaining = balls.filter(b =>
-      !b.pocketed && !b.isCue && b.number !== 8 &&
-      (myGroup === 'solid' ? isSolid(b.number) : isStripe(b.number))
-    ).length;
+  peer.on('open', () => {
+    conn = peer.connect('dbattle-' + code, { reliable: true });
+    setupConn();
+  });
+  peer.on('error', e => {
+    if (e.type === 'peer-unavailable') setStatus('menuStatus','Room tidak ditemukan 😢',true);
+    else setStatus('menuStatus','Error: ' + e.type, true);
+  });
+}
 
-    if (remaining > 0) {
-      const hitOwn = myGroup === 'solid' ? isSolid(firstHit.number) : isStripe(firstHit.number);
-      if (!hitOwn) {
-        foul = true;
-        msg = firstHit.number === 8 ? '❌ Foul! Kena 8 duluan' : '❌ Foul! Bola salah';
-      }
+function setupConn(){
+  conn.on('open', () => {
+    setStatus('menuStatus','');
+    if (isHost){
+      promptText = randomPrompt();
+      conn.send({ type:'start', prompt: promptText });
+      startGame(promptText);
     } else {
-      if (firstHit.number !== 8) { foul = true; msg = '❌ Foul! Harus kena bola 8'; }
+      setStatus('menuStatus','Terhubung! Menunggu host...');
     }
-  }
-
-  if (eightPocketed) {
-    const remaining = balls.filter(b =>
-      !b.pocketed && !b.isCue && b.number !== 8 &&
-      (myGroup === 'solid' ? isSolid(b.number) : isStripe(b.number))
-    ).length;
-    const winner = (foul || remaining > 0) ? (player === 1 ? 2 : 1) : player;
-    state = 'gameover';
-    shotState = { firstHit: null, pocketedThisTurn: [], cueBallPocketed: false };
-    endGame(winner);
-    return;
-  }
-
-  let pocketedOwn = false;
-  if (!foul) {
-    if (wasOpen && nonEight.length > 0) pocketedOwn = true;
-    else if (myGroup) {
-      pocketedOwn = pocketed.some(b =>
-        b.number !== 8 && (myGroup === 'solid' ? isSolid(b.number) : isStripe(b.number))
-      );
-    }
-  }
-
-  if (cuePocketed) {
-    const cue = balls[0];
-    cue.pocketed = false;
-    cue.vx = 0; cue.vy = 0;
-    cue.x = TABLE.x + TABLE.w * 0.25;
-    cue.y = TABLE.y + TABLE.h / 2;
-  }
-
-  if (foul) {
-    ballInHand = true;
-    currentPlayer = player === 1 ? 2 : 1;
-    showToast(msg, 1800, 'foul');
-  } else if (!pocketedOwn) {
-    currentPlayer = player === 1 ? 2 : 1;
-  } else {
-    showToast('✅ Lanjut menembak', 1200, 'good');
-  }
-
-  shotState = { firstHit: null, pocketedThisTurn: [], cueBallPocketed: false };
-  state = 'aiming';
-  updateTurnDisplay();
-  updateGroupDisplay();
-  updateHint();
-  scheduleBotIfNeeded();
-}
-
-// ============================================================
-// SHOOT
-// ============================================================
-function shoot(angle, p) {
-  const cue = balls[0];
-  if (cue.pocketed) return;
-  const speed = MAX_SPEED * p;
-  cue.vx = Math.cos(angle) * speed;
-  cue.vy = Math.sin(angle) * speed;
-  state = 'moving';
-  shotState = { firstHit: null, pocketedThisTurn: [], cueBallPocketed: false };
-  updateHint();
-}
-
-// ============================================================
-// BOT AI
-// ============================================================
-function scheduleBotIfNeeded() {
-  if (state !== 'aiming') return;
-  if (currentPlayer !== 2) return;
-  if (botScheduled) return;
-  botScheduled = true;
-
-  const cfg = DIFFICULTY[botLevel];
-  const delay = cfg.delay[0] + Math.random() * (cfg.delay[1] - cfg.delay[0]);
-
-  if (ballInHand) {
-    setTimeout(() => {
-      botPlaceCueBall();
-      setTimeout(botExecuteShot, delay * 0.6);
-    }, delay * 0.5);
-  } else {
-    setTimeout(botExecuteShot, delay);
-  }
-}
-
-function botPlaceCueBall() {
-  const cue = balls[0];
-  const candidates = [];
-  for (let tx = TABLE.x + TABLE.w * 0.12; tx < TABLE.x + TABLE.w * 0.40; tx += 38) {
-    for (let ty = TABLE.y + 35; ty < TABLE_B - 35; ty += 38) {
-      if (isValidCuePos(tx, ty)) candidates.push({ x: tx, y: ty });
-    }
-  }
-  if (candidates.length === 0) {
-    cue.x = TABLE.x + TABLE.w * 0.25;
-    cue.y = TABLE.y + TABLE.h / 2;
-  } else {
-    let best = null, bestScore = -Infinity;
-    for (const c of candidates) {
-      const saveX = cue.x, saveY = cue.y;
-      cue.x = c.x; cue.y = c.y;
-      const shots = enumerateShots(2);
-      const sc = shots.length > 0 ? shots[0].score : -1000;
-      cue.x = saveX; cue.y = saveY;
-      if (sc > bestScore) { bestScore = sc; best = c; }
-    }
-    cue.x = best.x; cue.y = best.y;
-  }
-  cue.pocketed = false;
-  cue.vx = 0; cue.vy = 0;
-  ballInHand = false;
-  showToast('🤖 Bot menaruh bola putih', 900);
-}
-
-function isValidCuePos(x, y) {
-  if (x - BALL_R < TABLE.x || x + BALL_R > TABLE_R) return false;
-  if (y - BALL_R < TABLE.y || y + BALL_R > TABLE_B) return false;
-  for (let i = 1; i < balls.length; i++) {
-    const b = balls[i];
-    if (b.pocketed) continue;
-    const dx = b.x - x, dy = b.y - y;
-    if (dx * dx + dy * dy < (2 * BALL_R + 1.5) * (2 * BALL_R + 1.5)) return false;
-  }
-  return true;
-}
-
-function botExecuteShot() {
-  if (state !== 'aiming' || currentPlayer !== 2) { botScheduled = false; return; }
-
-  thinkingEl.classList.add('show');
-  hintEl.textContent = '🤖 Bot sedang berpikir...';
-
-  const shot = pickBotShot();
-  if (!shot) {
-    const fallback = fallbackShot();
-    if (!fallback) {
-      currentPlayer = 1;
-      botScheduled = false;
-      thinkingEl.classList.remove('show');
-      updateTurnDisplay();
-      updateHint();
-      return;
-    }
-    botVisual = { angle: fallback.angle, power: fallback.power, show: true };
-    setTimeout(() => {
-      botVisual.show = false;
-      thinkingEl.classList.remove('show');
-      botScheduled = false;
-      shoot(fallback.angle, fallback.power);
-    }, 900);
-    return;
-  }
-
-  botVisual = { angle: shot.angle, power: shot.power, show: true };
-  setTimeout(() => {
-    botVisual.show = false;
-    thinkingEl.classList.remove('show');
-    botScheduled = false;
-    shoot(shot.angle, shot.power);
-  }, 900);
-}
-
-function fallbackShot() {
-  const cue = balls[0];
-  if (cue.pocketed) return null;
-  const myGroup = p2Group;
-  let legal = balls.filter(b => {
-    if (b.isCue || b.pocketed) return false;
-    if (b.number === 8) {
-      const remain = balls.filter(x =>
-        !x.isCue && !x.pocketed && x.number !== 8 &&
-        (myGroup === 'solid' ? isSolid(x.number) : myGroup === 'stripe' ? isStripe(x.number) : false)
-      ).length;
-      return myGroup && remain === 0;
-    }
-    if (!myGroup) return true;
-    return myGroup === 'solid' ? isSolid(b.number) : isStripe(b.number);
   });
-  if (legal.length === 0) legal = balls.filter(b => !b.isCue && !b.pocketed);
-  if (legal.length === 0) return null;
 
-  legal.sort((a, b) => {
-    const da = Math.hypot(a.x - cue.x, a.y - cue.y);
-    const db = Math.hypot(b.x - cue.x, b.y - cue.y);
-    return da - db;
+  conn.on('data', handleData);
+
+  conn.on('close', () => {
+    if (gameActive || $('lobby').classList.contains('active')){
+      alert('Lawan terputus 😢');
+      location.reload();
+    }
   });
-  const t = legal[0];
-  const angle = Math.atan2(t.y - cue.y, t.x - cue.x);
-  return { angle, power: 0.35 };
 }
 
-function pickBotShot() {
-  const shots = enumerateShots(1);
-  if (shots.length === 0) return null;
-
-  const cfg = DIFFICULTY[botLevel];
-  let chosen;
-  if (Math.random() < cfg.bestChance || shots.length === 1) {
-    chosen = shots[0];
-  } else {
-    const n = Math.min(shots.length, cfg.topN);
-    chosen = shots[Math.floor(Math.random() * n)];
+function handleData(data){
+  if (!data) return;
+  if (data.type === 'start'){
+    promptText = data.prompt;
+    startGame(data.prompt);
   }
+  else if (data.type === 'draw'){
+    oppGrid = unpackGrid(data.grid);
+    oppImg  = data.img;
+    checkResult();
+  }
+  else if (data.type === 'rematch'){
+    if (isHost){
+      promptText = randomPrompt();
+      conn.send({ type:'start', prompt: promptText });
+      startGame(promptText);
+    }
+  }
+}
 
-  const angleErr = (Math.random() * 2 - 1) * cfg.angleErr;
-  const powerErr = (Math.random() * 2 - 1) * cfg.powerErr;
+function copyCode(){
+  navigator.clipboard?.writeText(roomCode).then(
+    () => { setStatus('lobbyStatus','Kode disalin! ✅'); },
+    () => { setStatus('lobbyStatus','Kode: ' + roomCode); }
+  );
+}
 
+/* ================== DRAWING ================== */
+const canvas = $('canvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+let drawing = false, lastPt = null;
+
+function clearCanvas(){
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function getPos(e){
+  const r = canvas.getBoundingClientRect();
   return {
-    angle: chosen.angle + angleErr,
-    power: Math.max(0.2, Math.min(1, chosen.power * (1 + powerErr)))
+    x: (e.clientX - r.left) * (canvas.width / r.width),
+    y: (e.clientY - r.top) * (canvas.height / r.height)
   };
 }
 
-function enumerateShots(limit) {
-  const cue = balls[0];
-  if (cue.pocketed) return [];
-
-  const myGroup = p2Group;
-  let targets;
-
-  if (!myGroup) {
-    targets = balls.filter(b => !b.isCue && !b.pocketed && b.number !== 8);
-  } else {
-    const remain = balls.filter(b =>
-      !b.isCue && !b.pocketed && b.number !== 8 &&
-      (myGroup === 'solid' ? isSolid(b.number) : isStripe(b.number))
-    );
-    if (remain.length === 0) {
-      targets = balls.filter(b => b.number === 8 && !b.pocketed);
-    } else {
-      targets = remain;
-    }
-  }
-
-  if (targets.length === 0) return [];
-
-  const shots = [];
-  for (const target of targets) {
-    for (const pocket of POCKETS) {
-      const s = evaluateShot(cue, target, pocket);
-      if (s) shots.push(s);
-    }
-  }
-
-  shots.sort((a, b) => b.score - a.score);
-  return limit ? shots.slice(0, limit) : shots;
-}
-
-function evaluateShot(cue, target, pocket) {
-  const R = BALL_R;
-  const D = 2 * R;
-
-  let dx = pocket.x - target.x;
-  let dy = pocket.y - target.y;
-  const distTP = Math.hypot(dx, dy);
-  if (distTP < 6) return null;
-  dx /= distTP; dy /= distTP;
-
-  const gx = target.x - dx * D;
-  const gy = target.y - dy * D;
-
-  const ax = gx - cue.x, ay = gy - cue.y;
-  const distCG = Math.hypot(ax, ay);
-  if (distCG < 2) return null;
-  const angle = Math.atan2(ay, ax);
-
-  const tx = target.x - cue.x, ty = target.y - cue.y;
-  const distCT = Math.hypot(tx, ty);
-  if (distCT < 1) return null;
-  const cosCut = (tx * dx + ty * dy) / distCT;
-  const cut = Math.acos(Math.max(-1, Math.min(1, cosCut)));
-  if (cut > Math.PI * 0.44) return null;
-
-  if (pathBlocked(cue.x, cue.y, gx, gy, [cue, target])) return null;
-  if (pathBlocked(target.x, target.y, pocket.x, pocket.y, [target, cue])) return null;
-
-  let score = 100;
-  score -= distTP * 0.07;
-  score -= distCG * 0.04;
-  score -= cut * 60;
-
-  const myGroup = p2Group;
-  if (myGroup && target.number !== 8) {
-    const remain = balls.filter(b =>
-      !b.isCue && !b.pocketed && b.number !== 8 &&
-      (myGroup === 'solid' ? isSolid(b.number) : isStripe(b.number))
-    );
-    if (remain.length === 1) score += 18;
-  }
-  if (target.number === 8) score += 40;
-
-  let power = 0.32 + (distTP + distCG) / 1500;
-  power = Math.max(0.28, Math.min(1, power));
-
-  return { angle, power, score };
-}
-
-function pathBlocked(x1, y1, x2, y2, exclude) {
-  const minD = 2 * BALL_R - 0.5;
-  const dx = x2 - x1, dy = y2 - y1;
-  const len = Math.hypot(dx, dy);
-  if (len < 0.001) return false;
-  const ux = dx / len, uy = dy / len;
-
-  for (const b of balls) {
-    if (b.pocketed) continue;
-    if (exclude.includes(b)) continue;
-    const ox = b.x - x1, oy = b.y - y1;
-    const proj = ox * ux + oy * uy;
-    if (proj < 0 || proj > len) continue;
-    const px = x1 + ux * proj, py = y1 + uy * proj;
-    const d = Math.hypot(b.x - px, b.y - py);
-    if (d < minD) return true;
-  }
-  return false;
-}
-
-// ============================================================
-// RAYCAST AIM
-// ============================================================
-function raycastAim(cx, cy, angle) {
-  const dx = Math.cos(angle), dy = Math.sin(angle);
-  let minT = Infinity, hitBall = null;
-  for (let i = 1; i < balls.length; i++) {
-    const b = balls[i];
-    if (b.pocketed) continue;
-    const ox = b.x - cx, oy = b.y - cy;
-    const R2 = 2 * BALL_R;
-    const t = ox * dx + oy * dy;
-    if (t < 0) continue;
-    const perp2 = ox * ox + oy * oy - t * t;
-    if (perp2 > R2 * R2) continue;
-    const thc = Math.sqrt(R2 * R2 - perp2);
-    const t0 = t - thc;
-    if (t0 > 0 && t0 < minT) { minT = t0; hitBall = b; }
-  }
-  let wallT = Infinity;
-  if (dx > 0) wallT = Math.min(wallT, (TABLE_R - BALL_R - cx) / dx);
-  if (dx < 0) wallT = Math.min(wallT, (TABLE.x + BALL_R - cx) / dx);
-  if (dy > 0) wallT = Math.min(wallT, (TABLE_B - BALL_R - cy) / dy);
-  if (dy < 0) wallT = Math.min(wallT, (TABLE.y + BALL_R - cy) / dy);
-  return wallT < minT ? { t: wallT, ball: null } : { t: minT, ball: hitBall };
-}
-
-// ============================================================
-// RENDER HD
-// ============================================================
-function roundRect(c, x, y, w, h, r) {
-  c.beginPath();
-  c.moveTo(x + r, y);
-  c.arcTo(x + w, y, x + w, y + h, r);
-  c.arcTo(x + w, y + h, x, y + h, r);
-  c.arcTo(x, y + h, x, y, r);
-  c.arcTo(x, y, x + w, y, r);
-  c.closePath();
-}
-
-function drawTable() {
-  const wood = ctx.createLinearGradient(0, 0, 0, CH);
-  wood.addColorStop(0, '#8a5a2c');
-  wood.addColorStop(0.35, '#6b4520');
-  wood.addColorStop(0.7, '#4a2f15');
-  wood.addColorStop(1, '#2e1c0a');
-  ctx.fillStyle = wood;
-  roundRect(ctx, 0, 0, CW, CH, 24);
+canvas.addEventListener('pointerdown', e => {
+  if (!gameActive) return;
+  e.preventDefault();
+  drawing = true;
+  canvas.setPointerCapture(e.pointerId);
+  const p = getPos(e);
+  lastPt = p;
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, brushSize/2, 0, Math.PI*2);
+  ctx.fillStyle = '#111';
   ctx.fill();
+});
 
-  ctx.save();
-  roundRect(ctx, 0, 0, CW, CH, 24);
-  ctx.clip();
-  for (let i = 0; i < 55; i++) {
-    const y = (i * 12) % CH;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.bezierCurveTo(CW * 0.3, y + Math.sin(i * 1.3) * 3, CW * 0.7, y - Math.cos(i * 0.9) * 3, CW, y);
-    ctx.strokeStyle = `rgba(0,0,0,${0.03 + Math.random() * 0.04})`;
-    ctx.lineWidth = 1 + Math.random() * 1.2;
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  const topHi = ctx.createLinearGradient(0, 0, 0, 50);
-  topHi.addColorStop(0, 'rgba(255,220,180,0.22)');
-  topHi.addColorStop(1, 'rgba(255,220,180,0)');
-  ctx.fillStyle = topHi;
-  roundRect(ctx, 0, 0, CW, CH, 24);
-  ctx.fill();
-
-  const felt = ctx.createRadialGradient(
-    TABLE.x + TABLE.w / 2, TABLE.y + TABLE.h / 2, 80,
-    TABLE.x + TABLE.w / 2, TABLE.y + TABLE.h / 2, 650
-  );
-  felt.addColorStop(0, '#0e8a52');
-  felt.addColorStop(0.5, '#0a7043');
-  felt.addColorStop(0.85, '#075a34');
-  felt.addColorStop(1, '#043d24');
-  ctx.fillStyle = felt;
-  ctx.fillRect(TABLE.x, TABLE.y, TABLE.w, TABLE.h);
-
-  if (feltPattern) {
-    ctx.save();
-    ctx.globalAlpha = 0.6;
-    ctx.fillStyle = feltPattern;
-    ctx.fillRect(TABLE.x, TABLE.y, TABLE.w, TABLE.h);
-    ctx.restore();
-  }
-
-  const vig = ctx.createRadialGradient(
-    TABLE.x + TABLE.w / 2, TABLE.y + TABLE.h / 2, 180,
-    TABLE.x + TABLE.w / 2, TABLE.y + TABLE.h / 2, 500
-  );
-  vig.addColorStop(0, 'rgba(0,0,0,0)');
-  vig.addColorStop(1, 'rgba(0,0,0,0.5)');
-  ctx.fillStyle = vig;
-  ctx.fillRect(TABLE.x, TABLE.y, TABLE.w, TABLE.h);
-
-  ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(TABLE.x - 1, TABLE.y - 1, TABLE.w + 2, TABLE.h + 2);
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(TABLE.x + 2, TABLE.y + 2, TABLE.w - 4, TABLE.h - 4);
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
-  ctx.lineWidth = 1;
+canvas.addEventListener('pointermove', e => {
+  if (!drawing || !gameActive) return;
+  e.preventDefault();
+  const p = getPos(e);
   ctx.beginPath();
-  ctx.moveTo(TABLE.x + TABLE.w * 0.25, TABLE.y);
-  ctx.lineTo(TABLE.x + TABLE.w * 0.25, TABLE_B);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(TABLE.x + TABLE.w * 0.25, TABLE.y + TABLE.h / 2, 2.5, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,0.22)';
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(TABLE.x + TABLE.w * 0.75, TABLE.y + TABLE.h / 2, 2.5, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,0.18)';
-  ctx.fill();
-
-  for (const p of POCKETS) {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, POCKET_R + 3, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.85)';
-    ctx.fill();
-
-    const pg = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, POCKET_R);
-    pg.addColorStop(0, '#000');
-    pg.addColorStop(0.65, '#050505');
-    pg.addColorStop(0.9, '#0e0e0e');
-    pg.addColorStop(1, '#1a1a1a');
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, POCKET_R, 0, Math.PI * 2);
-    ctx.fillStyle = pg;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, POCKET_R, Math.PI * 0.15, Math.PI * 0.85);
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-}
-
-function drawBall(b) {
-  const R = BALL_R;
-
-  const sh = ctx.createRadialGradient(b.x + 3, b.y + 4, 0, b.x + 3, b.y + 4, R * 1.9);
-  sh.addColorStop(0, 'rgba(0,0,0,0.55)');
-  sh.addColorStop(0.45, 'rgba(0,0,0,0.22)');
-  sh.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.beginPath();
-  ctx.ellipse(b.x + 3, b.y + 4, R * 1.9, R * 1.3, 0, 0, Math.PI * 2);
-  ctx.fillStyle = sh;
-  ctx.fill();
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(b.x, b.y, R, 0, Math.PI * 2);
-  ctx.clip();
-
-  if (b.isCue) {
-    ctx.fillStyle = '#f6f4ee';
-    ctx.fillRect(b.x - R, b.y - R, R * 2, R * 2);
-  } else if (b.isStripe) {
-    ctx.fillStyle = '#f6f4ee';
-    ctx.fillRect(b.x - R, b.y - R, R * 2, R * 2);
-    ctx.fillStyle = b.color;
-    ctx.fillRect(b.x - R, b.y - R * 0.55, R * 2, R * 1.1);
-  } else {
-    ctx.fillStyle = b.color;
-    ctx.fillRect(b.x - R, b.y - R, R * 2, R * 2);
-  }
-
-  if (!b.isCue) {
-    ctx.beginPath();
-    ctx.arc(b.x, b.y, R * 0.52, 0, Math.PI * 2);
-    ctx.fillStyle = '#fbfbf6';
-    ctx.fill();
-
-    ctx.fillStyle = '#111';
-    ctx.font = `900 ${R * 0.85}px Arial, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(b.number, b.x, b.y + R * 0.04);
-  }
-
-  const shade = ctx.createRadialGradient(
-    b.x - R * 0.45, b.y - R * 0.5, R * 0.08,
-    b.x, b.y, R * 1.1
-  );
-  shade.addColorStop(0, 'rgba(255,255,255,0.55)');
-  shade.addColorStop(0.35, 'rgba(255,255,255,0.05)');
-  shade.addColorStop(0.75, 'rgba(0,0,0,0.22)');
-  shade.addColorStop(1, 'rgba(0,0,0,0.75)');
-  ctx.beginPath();
-  ctx.arc(b.x, b.y, R, 0, Math.PI * 2);
-  ctx.fillStyle = shade;
-  ctx.fill();
-
-  ctx.restore();
-
-  const spec = ctx.createRadialGradient(
-    b.x - R * 0.38, b.y - R * 0.42, 0,
-    b.x - R * 0.38, b.y - R * 0.42, R * 0.5
-  );
-  spec.addColorStop(0, 'rgba(255,255,255,0.95)');
-  spec.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.beginPath();
-  ctx.arc(b.x - R * 0.38, b.y - R * 0.42, R * 0.5, 0, Math.PI * 2);
-  ctx.fillStyle = spec;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(b.x, b.y, R, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(0,0,0,0.35)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-}
-
-function drawCueStick(cx, cy, angle, power, alpha = 1, colorOverride = null) {
-  const offset = 18 + power * 55;
-  const stickLen = 220;
-  const sx = cx - Math.cos(angle) * offset;
-  const sy = cy - Math.sin(angle) * offset;
-  const ex = sx - Math.cos(angle) * stickLen;
-  const ey = sy - Math.sin(angle) * stickLen;
-
-  ctx.save();
-  ctx.globalAlpha = alpha;
-
-  ctx.beginPath();
-  ctx.moveTo(sx + 2, sy + 3);
-  ctx.lineTo(ex + 2, ey + 3);
-  ctx.strokeStyle = 'rgba(0,0,0,0.45)';
-  ctx.lineWidth = 8;
+  ctx.moveTo(lastPt.x, lastPt.y);
+  ctx.lineTo(p.x, p.y);
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = brushSize;
   ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   ctx.stroke();
-
-  const g = ctx.createLinearGradient(sx, sy, ex, ey);
-  g.addColorStop(0, '#f7ecd0');
-  g.addColorStop(0.06, '#e8d4a8');
-  g.addColorStop(0.15, '#c9a978');
-  g.addColorStop(0.55, '#8a5a2b');
-  g.addColorStop(0.9, '#4a2810');
-  g.addColorStop(1, '#2a1608');
-  ctx.beginPath();
-  ctx.moveTo(sx, sy);
-  ctx.lineTo(ex, ey);
-  ctx.strokeStyle = colorOverride || g;
-  ctx.lineWidth = 6.5;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(sx, sy - 1);
-  ctx.lineTo(ex, ey - 1);
-  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
-
-  const tipLen = 8;
-  const t2x = sx + Math.cos(angle) * tipLen;
-  const t2y = sy + Math.sin(angle) * tipLen;
-  ctx.beginPath();
-  ctx.moveTo(sx, sy);
-  ctx.lineTo(t2x, t2y);
-  ctx.strokeStyle = '#f0f0e8';
-  ctx.lineWidth = 6.5;
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-function render() {
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  ctx.clearRect(0, 0, CW, CH);
-
-  drawTable();
-
-  for (const b of balls) {
-    if (b.pocketed) continue;
-    const ghost = b.isCue && ballInHand && currentPlayer === 1;
-    if (ghost) ctx.globalAlpha = 0.5;
-    drawBall(b);
-    ctx.globalAlpha = 1;
-  }
-
-  const cue = balls[0];
-
-  if (state === 'aiming' && currentPlayer === 1 && !cue.pocketed && !ballInHand) {
-    const hit = raycastAim(cue.x, cue.y, aimAngle);
-    ctx.save();
-    ctx.setLineDash([6, 6]);
-    ctx.strokeStyle = 'rgba(255,255,255,0.65)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(cue.x, cue.y);
-    ctx.lineTo(cue.x + Math.cos(aimAngle) * hit.t, cue.y + Math.sin(aimAngle) * hit.t);
-    ctx.stroke();
-    ctx.restore();
-
-    if (hit.ball) {
-      const gx = cue.x + Math.cos(aimAngle) * hit.t;
-      const gy = cue.y + Math.sin(aimAngle) * hit.t;
-      ctx.beginPath();
-      ctx.arc(gx, gy, BALL_R, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
-    }
-    drawCueStick(cue.x, cue.y, aimAngle, power);
-  }
-
-  if (botVisual.show && cue && !cue.pocketed) {
-    const hit = raycastAim(cue.x, cue.y, botVisual.angle);
-    ctx.save();
-    ctx.setLineDash([6, 6]);
-    ctx.strokeStyle = 'rgba(34,211,238,0.65)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(cue.x, cue.y);
-    ctx.lineTo(cue.x + Math.cos(botVisual.angle) * hit.t, cue.y + Math.sin(botVisual.angle) * hit.t);
-    ctx.stroke();
-    ctx.restore();
-
-    if (hit.ball) {
-      const gx = cue.x + Math.cos(botVisual.angle) * hit.t;
-      const gy = cue.y + Math.sin(botVisual.angle) * hit.t;
-      ctx.beginPath();
-      ctx.arc(gx, gy, BALL_R, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(34,211,238,0.55)';
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
-    }
-    drawCueStick(cue.x, cue.y, botVisual.angle, botVisual.power * 0.6, 0.9, 'rgba(180,220,240,0.9)');
-  }
-}
-
-// ============================================================
-// LOOP
-// ============================================================
-function updatePhysics() {
-  const SUB = 4;
-  for (let i = 0; i < SUB; i++) stepPhysics(1 / SUB);
-}
-
-function update() {
-  if (state === 'moving') {
-    updatePhysics();
-    if (allStopped()) {
-      state = 'aiming';
-      evaluateTurn();
-    }
-  }
-  if (charging && state === 'aiming' && currentPlayer === 1) {
-    power = Math.min(1, (performance.now() - chargeStart) / 900);
-    powerFill.style.height = (power * 100) + '%';
-  }
-}
-
-function loop() {
-  update();
-  render();
-  requestAnimationFrame(loop);
-}
-
-// ============================================================
-// INPUT
-// ============================================================
-function getMousePos(e) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: (e.clientX - rect.left) * (CW / rect.width),
-    y: (e.clientY - rect.top) * (CH / rect.height)
-  };
-}
-
-canvas.addEventListener('mousemove', e => {
-  if (state !== 'aiming' || currentPlayer !== 1) return;
-  const p = getMousePos(e);
-  const cue = balls[0];
-  if (cue.pocketed || ballInHand) return;
-  aimAngle = Math.atan2(p.y - cue.y, p.x - cue.x);
+  lastPt = p;
 });
 
-canvas.addEventListener('mousedown', e => {
-  if (state !== 'aiming' || currentPlayer !== 1) return;
-  const p = getMousePos(e);
+['pointerup','pointercancel','pointerleave'].forEach(ev =>
+  canvas.addEventListener(ev, () => { drawing = false; lastPt = null; })
+);
 
-  if (ballInHand) {
-    if (canPlaceCue(p.x, p.y)) {
-      const cue = balls[0];
-      cue.x = p.x; cue.y = p.y; cue.pocketed = false;
-      cue.vx = 0; cue.vy = 0;
-      ballInHand = false;
-      showToast('Bola putih ditaruh', 900, 'good');
-    }
-    return;
-  }
-
-  charging = true;
-  chargeStart = performance.now();
-  power = 0;
-});
-
-canvas.addEventListener('mouseup', () => {
-  if (!charging) return;
-  charging = false;
-  if (power > 0.03 && state === 'aiming' && currentPlayer === 1 && !ballInHand) {
-    shoot(aimAngle, power);
-  }
-  power = 0;
-  powerFill.style.height = '0%';
-});
-
-canvas.addEventListener('mouseleave', () => {
-  charging = false;
-  power = 0;
-  powerFill.style.height = '0%';
-});
-
-function canPlaceCue(x, y) {
-  return isValidCuePos(x, y);
-}
-
-// ============================================================
-// UI
-// ============================================================
-function updateTurnDisplay() {
-  document.getElementById('p1').classList.toggle('active', currentPlayer === 1 && state !== 'gameover');
-  document.getElementById('p2').classList.toggle('active', currentPlayer === 2 && state !== 'gameover');
-}
-
-function updateGroupDisplay() {
-  document.getElementById('p1Grp').textContent = 'Grup: ' +
-    (p1Group === 'solid' ? 'Solid (1–7)' : p1Group === 'stripe' ? 'Stripe (9–15)' : '—');
-  document.getElementById('p2Grp').textContent = 'Grup: ' +
-    (p2Group === 'solid' ? 'Solid (1–7)' : p2Group === 'stripe' ? 'Stripe (9–15)' : '—');
-  document.getElementById('p1Dot').className = 'dot ' + (p1Group || '');
-  document.getElementById('p2Dot').className = 'dot ' + (p2Group || '');
-  document.getElementById('p2Name').textContent = 'Bot · ' + DIFFICULTY[botLevel].name;
-
-  const rem1 = p1Group ? balls.filter(b => !b.pocketed && !b.isCue && b.number !== 8 &&
-    (p1Group === 'solid' ? isSolid(b.number) : isStripe(b.number))).length : null;
-  const rem2 = p2Group ? balls.filter(b => !b.pocketed && !b.isCue && b.number !== 8 &&
-    (p2Group === 'solid' ? isSolid(b.number) : isStripe(b.number))).length : null;
-  document.getElementById('p1Rem').textContent = rem1 !== null ? `Sisa: ${rem1} bola` : '';
-  document.getElementById('p2Rem').textContent = rem2 !== null ? `Sisa: ${rem2} bola` : '';
-}
-
-function updateHint() {
-  if (state === 'gameover') { hintEl.textContent = '🏁 Game selesai'; return; }
-  if (currentPlayer === 1) {
-    hintEl.textContent = ballInHand
-      ? '🎯 Klik di meja untuk menaruh bola putih'
-      : '🎯 Giliranmu — bidik & tahan klik untuk power';
-  } else {
-    hintEl.textContent = '⏳ Giliran bot...';
-  }
-}
-
-let toastTimer = null;
-function showToast(text, duration = 1500, type = '') {
-  toastEl.textContent = text;
-  toastEl.className = 'show ' + type;
-  clearTimeout(toastTimer);
-  if (duration) toastTimer = setTimeout(() => toastEl.className = type, duration);
-}
-
-// ============================================================
-// GAME FLOW
-// ============================================================
-function startGame() {
-  document.getElementById('menu').style.display = 'none';
-  document.getElementById('gameScreen').style.display = 'flex';   // ← FIX
-  document.getElementById('overlay').classList.remove('show');
-  if (!feltPattern) buildFeltPattern();
-  resetGame();
-  showToast('Giliranmu — pecah bola!', 1800, 'good');
-}
-
-function resetGame() {
-  setupBalls();
-  currentPlayer = 1;
-  p1Group = null;
-  p2Group = null;
-  state = 'aiming';
-  ballInHand = false;
-  charging = false;
-  power = 0;
-  aimAngle = 0;
-  botScheduled = false;
-  botVisual = { angle: 0, power: 0, show: false };
-  powerFill.style.height = '0%';
-  shotState = { firstHit: null, pocketedThisTurn: [], cueBallPocketed: false };
-  document.getElementById('overlay').classList.remove('show');
-  thinkingEl.classList.remove('show');
-  updateTurnDisplay();
-  updateGroupDisplay();
-  updateHint();
-}
-
-function endGame(winner) {
-  state = 'gameover';
-  updateTurnDisplay();
-  updateHint();
-
-  const ov = document.getElementById('overlay');
-  const title = document.getElementById('ovTitle');
-  const sub = document.getElementById('ovSub');
-
-  if (winner === 1) {
-    title.textContent = '🏆 MENANG!';
-    title.className = 'win';
-    sub.textContent = `Kamu mengalahkan Bot ${DIFFICULTY[botLevel].name}!`;
-  } else {
-    title.textContent = '💀 KALAH';
-    title.className = 'lose';
-    sub.textContent = `Bot ${DIFFICULTY[botLevel].name} mengalahkanmu.`;
-  }
-  ov.classList.add('show');
-}
-
-function backToMenu() {
-  document.getElementById('overlay').classList.remove('show');
-  document.getElementById('gameScreen').style.display = 'none';   // ← FIX
-  document.getElementById('menu').style.display = 'block';
-  state = 'idle';
-  thinkingEl.classList.remove('show');
-  botScheduled = false;
-}
-
-// ============================================================
-// MENU HANDLERS
-// ============================================================
-document.querySelectorAll('.diff').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.diff').forEach(b => b.classList.remove('sel'));
-    btn.classList.add('sel');
-    botLevel = btn.dataset.diff;
-    console.log('Bot level:', botLevel);   // debug
+document.querySelectorAll('.tool[data-size]').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tool[data-size]').forEach(x => x.classList.remove('sel'));
+    t.classList.add('sel');
+    brushSize = parseInt(t.dataset.size);
   });
 });
 
-// ============================================================
-// START
-// ============================================================
-setupBalls();
-buildFeltPattern();
-loop();
+/* ================== GAME FLOW ================== */
+function startGame(prompt){
+  promptText = prompt;
+  myGrid = null; oppGrid = null; myImg = null; oppImg = null;
+
+  $('promptText').textContent = prompt;
+  $('imgMine').src = ''; $('imgOpp').src = '';
+  $('scoreVal').textContent = '0%';
+  $('verdict').textContent = '';
+  setStatus('resultStatus','');
+
+  clearCanvas();
+  showScreen('game');
+
+  gameActive = true;
+  timeLeft = DRAW_TIME;
+  updateTimerUI();
+
+  clearInterval(timerId);
+  timerId = setInterval(() => {
+    timeLeft--;
+    updateTimerUI();
+    if (timeLeft <= 0) submitDrawing();
+  }, 1000);
+}
+
+function updateTimerUI(){
+  const t = Math.max(0, timeLeft);
+  const m = Math.floor(t / 60);
+  const s = t % 60;
+  $('timerNum').textContent = m + ':' + String(s).padStart(2,'0');
+  const pct = (timeLeft / DRAW_TIME) * 100;
+  const el = $('timerEl');
+  el.style.setProperty('--p', pct + '%');
+  el.classList.toggle('danger', timeLeft <= 20);
+}
+
+function submitDrawing(){
+  if (!gameActive) return;
+  gameActive = false;
+  clearInterval(timerId);
+
+  myGrid = toGrid(canvas);
+  myImg  = canvas.toDataURL('image/png');
+
+  try { conn.send({ type:'draw', grid: packGrid(myGrid), img: myImg }); } catch(e){}
+
+  showScreen('waiting');
+  setStatus('waitStatus', 'Menunggu lawan menyelesaikan gambarnya...');
+  checkResult();
+}
+
+function checkResult(){
+  if (!myGrid || !oppGrid) return;
+  const pct = similarity(myGrid, oppGrid);
+  showResult(pct);
+}
+
+function showResult(pct){
+  $('imgMine').src = myImg;
+  $('imgOpp').src  = oppImg;
+
+  showScreen('result');
+  let cur = 0;
+  const step = Math.max(1, Math.ceil(pct / 35));
+  const iv = setInterval(() => {
+    cur += step;
+    if (cur >= pct){ cur = pct; clearInterval(iv); }
+    $('scoreVal').textContent = cur + '%';
+  }, 25);
+
+  let v = '';
+  if (pct >= 90) v = '🤯 GILA! Kalian kayak satu otak!';
+  else if (pct >= 75) v = '🔥 Keren banget, hampir identik!';
+  else if (pct >= 55) v = '😄 Lumayan mirip, kalian sepemikiran!';
+  else if (pct >= 35) v = '🙂 Ada kemiripan dikit...';
+  else if (pct >= 15) v = '😅 Hmm, beda persepsi kayaknya';
+  else if (pct === 0) v = '💀 Beda total, kalian dari planet berbeda!';
+  else v = '😵 Yah, jauh banget...';
+  $('verdict').textContent = v;
+}
+
+function playAgain(){
+  if (isHost){
+    promptText = randomPrompt();
+    conn.send({ type:'start', prompt: promptText });
+    startGame(promptText);
+  } else {
+    conn.send({ type:'rematch' });
+    setStatus('resultStatus','Menunggu host memulai ulang...');
+  }
+}
+
+/* ================== PERBANDINGAN GAMBAR ================== */
+function toGrid(canvasEl){
+  const tmp = document.createElement('canvas');
+  tmp.width = GRID; tmp.height = GRID;
+  const tc = tmp.getContext('2d', { willReadFrequently: true });
+  tc.fillStyle = '#fff';
+  tc.fillRect(0, 0, GRID, GRID);
+  tc.drawImage(canvasEl, 0, 0, GRID, GRID);
+  const d = tc.getImageData(0, 0, GRID, GRID).data;
+  const arr = new Uint8Array(GRID * GRID);
+  for (let i = 0, j = 0; i < d.length; i += 4, j++){
+    const lum = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+    arr[j] = lum < 145 ? 1 : 0;
+  }
+  return arr;
+}
+
+// ubah Uint8Array <-> string biar bisa dikirim lewat PeerJS
+function packGrid(arr){ return Array.from(arr).join(''); }
+function unpackGrid(str){
+  const a = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) a[i] = str.charCodeAt(i) === 49 ? 1 : 0;
+  return a;
+}
+
+function dilate(arr, r){
+  const out = new Uint8Array(arr.length);
+  for (let y = 0; y < GRID; y++){
+    for (let x = 0; x < GRID; x++){
+      let v = 0;
+      for (let dy = -r; dy <= r && !v; dy++){
+        const ny = y + dy;
+        if (ny < 0 || ny >= GRID) continue;
+        for (let dx = -r; dx <= r; dx++){
+          const nx = x + dx;
+          if (nx < 0 || nx >= GRID) continue;
+          if (arr[ny*GRID + nx]) { v = 1; break; }
+        }
+      }
+      out[y*GRID + x] = v;
+    }
+  }
+  return out;
+}
+
+function similarity(a, b){
+  let ca = 0, cb = 0;
+  for (let i = 0; i < a.length; i++){ if (a[i]) ca++; if (b[i]) cb++; }
+  if (ca === 0 && cb === 0) return 100;
+  if (ca === 0 || cb === 0) return 0;
+  const da = dilate(a, 2), db = dilate(b, 2);
+  let mA = 0, mB = 0;
+  for (let i = 0; i < a.length; i++){
+    if (a[i] && db[i]) mA++;
+    if (b[i] && da[i]) mB++;
+  }
+  return Math.round(((mA + mB) / (ca + cb)) * 100);
+}
 </script>
 </body>
 </html>
