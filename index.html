@@ -11,7 +11,7 @@
     background:radial-gradient(circle at 20% 0%,#243b6b 0%,#141a35 45%,#0a0e1f 100%);
     color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;
     padding:14px;overflow-x:hidden;}
-  .screen{display:none;width:100%;max-width:700px;animation:fade .3s ease}
+  .screen{display:none;width:100%;max-width:720px;animation:fade .3s ease}
   .screen.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
@@ -75,10 +75,8 @@
   .color.sel{border-color:#fff;transform:scale(1.1);box-shadow:0 0 12px rgba(255,255,255,.5)}
   .color.sel::after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;
     color:#fff;font-weight:900;font-size:.85rem;text-shadow:0 0 4px #000;}
-  .custom-color{
-    background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red) !important;
-    display:grid;place-items:center;position:relative;overflow:hidden;
-  }
+  .custom-color{background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red) !important;
+    display:grid;place-items:center;position:relative;overflow:hidden;}
   .custom-color span{font-size:1.2rem;font-weight:900;color:#fff;
     text-shadow:0 0 6px #000,0 0 3px #000;pointer-events:none;position:relative;z-index:1;}
   .custom-color input{position:absolute;inset:0;width:100%;height:100%;
@@ -111,17 +109,45 @@
   .compare .item{background:rgba(0,0,0,.3);border-radius:14px;padding:8px;
     border:1px solid rgba(255,255,255,.1);text-align:center;}
   .compare .item h4{font-size:.68rem;opacity:.7;margin-bottom:6px;
-                    letter-spacing:.1em;text-transform:uppercase;font-weight:600;
-                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+                    letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
   .compare img{width:100%;border-radius:8px;background:#fff;display:block;
                aspect-ratio:1/1;object-fit:contain}
-  .compare .pct{font-size:1.6rem;font-weight:900;margin-top:6px;line-height:1;
+  .compare .pct{font-size:1.7rem;font-weight:900;margin-top:6px;line-height:1;
     background:linear-gradient(90deg,#41d8ff,#a06bff);
     -webkit-background-clip:text;background-clip:text;color:transparent;}
   .compare .item.winner-col .pct{background:linear-gradient(90deg,#fbbf24,#f59e0b);
     -webkit-background-clip:text;background-clip:text;}
   .compare .item.winner-col{border-color:rgba(251,191,36,.6);box-shadow:0 0 20px rgba(251,191,36,.2)}
   .compare .item.me h4{color:#7cf3d0}
+  .grade{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:10px;
+    background:rgba(124,243,208,.2);color:#7cf3d0;margin-left:6px;font-weight:700;}
+  
+  /* BREAKDOWN TABLE */
+  .bd-section{margin-bottom:16px;}
+  .bd-title{text-align:center;font-size:.75rem;letter-spacing:.2em;opacity:.6;
+    text-transform:uppercase;margin-bottom:10px;font-weight:600}
+  .bd-card{background:rgba(0,0,0,.3);border-radius:14px;padding:12px 14px;
+    border:1px solid rgba(255,255,255,.1);margin-bottom:10px;}
+  .bd-card.me{border-color:rgba(124,243,208,.4);box-shadow:0 0 16px rgba(124,243,208,.15)}
+  .bd-card.win-row{border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.08)}
+  .bd-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .bd-head h4{font-size:.95rem;font-weight:800;color:#fff;}
+  .bd-head .tot{font-size:1.5rem;font-weight:900;line-height:1;
+    background:linear-gradient(90deg,#41d8ff,#a06bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bd-row{display:grid;grid-template-columns:1fr auto;gap:8px;
+    font-size:.78rem;padding:4px 0;align-items:center;}
+  .bd-row .label{opacity:.8;display:flex;align-items:center;gap:6px}
+  .bd-row .val{font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+  .bd-row .val small{opacity:.5;font-weight:400;font-size:.7rem;margin-left:2px}
+  .bd-bar{grid-column:1/-1;height:5px;background:rgba(255,255,255,.08);
+    border-radius:3px;overflow:hidden;margin-top:2px;margin-bottom:2px}
+  .bd-bar-inner{height:100%;border-radius:3px;transition:width .6s ease}
+  .bd-bar-inner.t1{background:linear-gradient(90deg,#f472b6,#ec4899)}
+  .bd-bar-inner.t2{background:linear-gradient(90deg,#38bdf8,#0ea5e9)}
+  .bd-bar-inner.t3{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+  .bd-bar-inner.t4{background:linear-gradient(90deg,#4ade80,#22c55e)}
+  
   .verdict{text-align:center;font-size:.95rem;font-weight:600;margin-bottom:16px;opacity:.85;min-height:22px}
   .spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.15);
     border-top-color:#7c8cff;border-radius:50%;animation:spin 1s linear infinite;margin:18px auto}
@@ -133,11 +159,10 @@
 </head>
 <body>
 
-<!-- ============ MENU ============ -->
 <div id="menu" class="screen active">
   <div class="card">
     <h1>🎨 Draw Battle</h1>
-    <p class="sub">Adu gambar! Siapa yang paling mirip dengan topiknya?</p>
+    <p class="sub">Adu gambar! Penilaian 4 kriteria ala lomba seni 🏆</p>
     <button onclick="createRoom(2)">🎯 Buat Room 1 vs 1</button>
     <button class="orange" onclick="createRoom(3)">👥 Buat Room 3 Pemain</button>
     <button class="ghost" onclick="toggleJoin()">🔑 Gabung Room</button>
@@ -150,7 +175,6 @@
   </div>
 </div>
 
-<!-- ============ LOBBY ============ -->
 <div id="lobby" class="screen">
   <div class="card">
     <h1 style="font-size:1.5rem">Room Dibuat!</h1>
@@ -167,7 +191,6 @@
   </div>
 </div>
 
-<!-- ============ GAME ============ -->
 <div id="game" class="screen">
   <div class="topbar">
     <div class="prompt-chip">
@@ -200,25 +223,24 @@
     <div class="color" data-color="#84cc16" style="background:#84cc16"></div>
     <div class="color" data-color="#fb923c" style="background:#fb923c"></div>
     <div class="color" data-color="#1e293b" style="background:#1e293b"></div>
-    <label class="color custom-color" id="customColorBtn" title="Pilih warna sendiri">
+    <label class="color custom-color" id="customColorBtn">
       <input type="color" id="customColorInput" value="#111111">
       <span>+</span>
     </label>
   </div>
   <div class="tools-row">
-    <div class="tool undo disabled" id="undoBtn" onclick="undo()" title="Undo">↶</div>
-    <div class="tool redo disabled" id="redoBtn" onclick="redo()" title="Redo">↷</div>
+    <div class="tool undo disabled" id="undoBtn" onclick="undo()">↶</div>
+    <div class="tool redo disabled" id="redoBtn" onclick="redo()">↷</div>
     <div class="tool sel" data-size="3"><div class="dot" style="width:5px;height:5px"></div></div>
     <div class="tool" data-size="9"><div class="dot" style="width:11px;height:11px"></div></div>
     <div class="tool" data-size="20"><div class="dot" style="width:20px;height:20px"></div></div>
-    <div class="tool eraser" id="eraserBtn" onclick="toggleEraser()" title="Penghapus">🩹</div>
-    <div class="tool bucket" id="bucketBtn" onclick="toggleBucket()" title="Isi Warna">🪣</div>
+    <div class="tool eraser" id="eraserBtn" onclick="toggleEraser()">🩹</div>
+    <div class="tool bucket" id="bucketBtn" onclick="toggleBucket()">🪣</div>
     <div class="tool clear" onclick="clearCanvas()">🗑 Hapus</div>
   </div>
   <button class="green" style="margin-top:14px" onclick="submitDrawing()">✅ Selesai &amp; Kirim</button>
 </div>
 
-<!-- ============ WAITING ============ -->
 <div id="waiting" class="screen">
   <div class="card" style="text-align:center">
     <h1 style="font-size:1.4rem">Gambarmu Terkirim! 📤</h1>
@@ -229,7 +251,6 @@
   </div>
 </div>
 
-<!-- ============ RESULT ============ -->
 <div id="result" class="screen">
   <div class="card">
     <div class="ref-box">
@@ -239,6 +260,10 @@
     </div>
     <div class="winner" id="winnerBox">-</div>
     <div class="compare" id="compare"></div>
+    <div class="bd-section">
+      <div class="bd-title">📊 Penilaian 4 Kriteria</div>
+      <div id="breakdown"></div>
+    </div>
     <div class="verdict" id="verdict"></div>
     <button onclick="playAgain()">🔄 Main Lagi</button>
     <div class="status" id="resultStatus"></div>
@@ -252,6 +277,7 @@ const GRID = 160;
 const DRAW_TIME = 180;
 const DILATE_R = 2;
 const MAX_HISTORY = 30;
+const DRAW_THRESHOLD = 60;
 
 const PEER_CONFIG = {
   debug: 2,
@@ -272,256 +298,169 @@ const PEER_CONFIG = {
   }
 };
 
-const TOPICS = [
-  {word:'Kucing', emoji:'🐱'}, {word:'Anjing', emoji:'🐶'}, {word:'Kelinci', emoji:'🐰'},
-  {word:'Hamster', emoji:'🐹'}, {word:'Tikus', emoji:'🐭'}, {word:'Sapi', emoji:'🐮'},
-  {word:'Kambing', emoji:'🐐'}, {word:'Domba', emoji:'🐑'}, {word:'Kuda', emoji:'🐴'},
-  {word:'Gajah', emoji:'🐘'}, {word:'Singa', emoji:'🦁'}, {word:'Harimau', emoji:'🐯'},
-  {word:'Serigala', emoji:'🐺'}, {word:'Rubah', emoji:'🦊'}, {word:'Beruang', emoji:'🐻'},
-  {word:'Panda', emoji:'🐼'}, {word:'Koala', emoji:'🐨'}, {word:'Monyet', emoji:'🐵'},
-  {word:'Gorila', emoji:'🦍'}, {word:'Jerapah', emoji:'🦒'}, {word:'Zebra', emoji:'🦓'},
-  {word:'Rusa', emoji:'🦌'}, {word:'Unta', emoji:'🐪'}, {word:'Badak', emoji:'🦏'},
-  {word:'Kuda Nil', emoji:'🦛'}, {word:'Kanguru', emoji:'🦘'}, {word:'Landak', emoji:'🦔'},
-  {word:'Kelelawar', emoji:'🦇'}, {word:'Tupai', emoji:'🐿️'},
-  {word:'Ikan', emoji:'🐟'}, {word:'Ikan Hiu', emoji:'🦈'}, {word:'Paus', emoji:'🐋'},
-  {word:'Dolphin', emoji:'🐬'}, {word:'Gurita', emoji:'🐙'}, {word:'Kepiting', emoji:'🦀'},
-  {word:'Lobster', emoji:'🦞'}, {word:'Udang', emoji:'🦐'}, {word:'Siput', emoji:'🐌'},
-  {word:'Kura-kura', emoji:'🐢'}, {word:'Buaya', emoji:'🐊'},
-  {word:'Burung', emoji:'🐦'}, {word:'Ayam', emoji:'🐔'}, {word:'Bebek', emoji:'🦆'},
-  {word:'Angsa', emoji:'🦢'}, {word:'Merak', emoji:'🦚'}, {word:'Burung Hantu', emoji:'🦉'},
-  {word:'Elang', emoji:'🦅'}, {word:'Penguin', emoji:'🐧'}, {word:'Flamingo', emoji:'🦩'},
-  {word:'Beo', emoji:'🦜'}, {word:'Kupu-kupu', emoji:'🦋'}, {word:'Lebah', emoji:'🐝'},
-  {word:'Semut', emoji:'🐜'}, {word:'Laba-laba', emoji:'🕷️'}, {word:'Kalajengking', emoji:'🦂'},
-  {word:'Kumbang', emoji:'🪲'}, {word:'Belalang', emoji:'🦗'}, {word:'Nyamuk', emoji:'🦟'},
-  {word:'Pizza', emoji:'🍕'}, {word:'Burger', emoji:'🍔'}, {word:'Hot Dog', emoji:'🌭'},
-  {word:'Sandwich', emoji:'🥪'}, {word:'Taco', emoji:'🌮'}, {word:'Kentang Goreng', emoji:'🍟'},
-  {word:'Nasi', emoji:'🍚'}, {word:'Sushi', emoji:'🍣'}, {word:'Ramen', emoji:'🍜'},
-  {word:'Spaghetti', emoji:'🍝'}, {word:'Bento', emoji:'🍱'}, {word:'Dumpling', emoji:'🥟'},
-  {word:'Salad', emoji:'🥗'}, {word:'Keju', emoji:'🧀'}, {word:'Telur', emoji:'🥚'},
-  {word:'Roti', emoji:'🍞'}, {word:'Croissant', emoji:'🥐'}, {word:'Pancake', emoji:'🥞'},
-  {word:'Daging', emoji:'🥩'}, {word:'Ayam Goreng', emoji:'🍗'}, {word:'Bacon', emoji:'🥓'},
-  {word:'Apel', emoji:'🍎'}, {word:'Pisang', emoji:'🍌'}, {word:'Jeruk', emoji:'🍊'},
-  {word:'Lemon', emoji:'🍋'}, {word:'Semangka', emoji:'🍉'}, {word:'Anggur', emoji:'🍇'},
-  {word:'Stroberi', emoji:'🍓'}, {word:'Blueberry', emoji:'🫐'}, {word:'Melon', emoji:'🍈'},
-  {word:'Ceri', emoji:'🍒'}, {word:'Persik', emoji:'🍑'}, {word:'Mangga', emoji:'🥭'},
-  {word:'Nanas', emoji:'🍍'}, {word:'Kelapa', emoji:'🥥'}, {word:'Kiwi', emoji:'🥝'},
-  {word:'Tomat', emoji:'🍅'}, {word:'Alpukat', emoji:'🥑'}, {word:'Terong', emoji:'🍆'},
-  {word:'Kentang', emoji:'🥔'}, {word:'Wortel', emoji:'🥕'}, {word:'Jagung', emoji:'🌽'},
-  {word:'Cabai', emoji:'🌶️'}, {word:'Brokoli', emoji:'🥦'}, {word:'Jamur', emoji:'🍄'},
-  {word:'Es Krim', emoji:'🍦'}, {word:'Donat', emoji:'🍩'}, {word:'Kue', emoji:'🍰'},
-  {word:'Kue Ulang Tahun', emoji:'🎂'}, {word:'Cupcake', emoji:'🧁'}, {word:'Pie', emoji:'🥧'},
-  {word:'Coklat', emoji:'🍫'}, {word:'Permen', emoji:'🍬'}, {word:'Lollipop', emoji:'🍭'},
-  {word:'Puding', emoji:'🍮'}, {word:'Madu', emoji:'🍯'}, {word:'Kopi', emoji:'☕'},
-  {word:'Teh', emoji:'🍵'}, {word:'Susu', emoji:'🥛'}, {word:'Soda', emoji:'🥤'},
-  {word:'Matahari', emoji:'☀️'}, {word:'Bulan', emoji:'🌙'}, {word:'Bintang', emoji:'⭐'},
-  {word:'Bintang Jatuh', emoji:'🌟'}, {word:'Awan', emoji:'☁️'}, {word:'Hujan', emoji:'🌧️'},
-  {word:'Badai Petir', emoji:'⛈️'}, {word:'Salju', emoji:'❄️'}, {word:'Pelangi', emoji:'🌈'},
-  {word:'Api', emoji:'🔥'}, {word:'Air', emoji:'💧'}, {word:'Gunung', emoji:'⛰️'},
-  {word:'Gunung Berapi', emoji:'🌋'}, {word:'Pantai', emoji:'🏖️'}, {word:'Pulau', emoji:'🏝️'},
-  {word:'Pohon', emoji:'🌳'}, {word:'Pohon Palem', emoji:'🌴'}, {word:'Kaktus', emoji:'🌵'},
-  {word:'Bunga', emoji:'🌸'}, {word:'Bunga Matahari', emoji:'🌻'}, {word:'Mawar', emoji:'🌹'},
-  {word:'Tulip', emoji:'🌷'}, {word:'Daisy', emoji:'🌼'}, {word:'Daun', emoji:'🍃'},
-  {word:'Semanggi', emoji:'🍀'}, {word:'Batu', emoji:'🪨'}, {word:'Kayu', emoji:'🪵'},
-  {word:'Mobil', emoji:'🚗'}, {word:'Taksi', emoji:'🚕'}, {word:'Bus', emoji:'🚌'},
-  {word:'Truk', emoji:'🚚'}, {word:'Traktor', emoji:'🚜'}, {word:'Motor', emoji:'🏍️'},
-  {word:'Sepeda', emoji:'🚲'}, {word:'Skuter', emoji:'🛴'}, {word:'Kereta', emoji:'🚂'},
-  {word:'Pesawat', emoji:'✈️'}, {word:'Helikopter', emoji:'🚁'}, {word:'Roket', emoji:'🚀'},
-  {word:'Kapal', emoji:'🚢'}, {word:'Perahu', emoji:'⛵'}, {word:'UFO', emoji:'🛸'},
-  {word:'Balon Udara', emoji:'🎈'}, {word:'Parasut', emoji:'🪂'},
-  {word:'Rumah', emoji:'🏠'}, {word:'Apartemen', emoji:'🏢'}, {word:'Kastil', emoji:'🏰'},
-  {word:'Tenda', emoji:'⛺'}, {word:'Pintu', emoji:'🚪'}, {word:'Jendela', emoji:'🪟'},
-  {word:'Kursi', emoji:'🪑'}, {word:'Sofa', emoji:'🛋️'}, {word:'Tempat Tidur', emoji:'🛏️'},
-  {word:'Lampu', emoji:'💡'}, {word:'Lilin', emoji:'🕯️'}, {word:'Cermin', emoji:'🪞'},
-  {word:'Jam', emoji:'⏰'}, {word:'Kunci', emoji:'🔑'}, {word:'Gembok', emoji:'🔒'},
-  {word:'Palu', emoji:'🔨'}, {word:'Obeng', emoji:'🔧'}, {word:'Gunting', emoji:'✂️'},
-  {word:'Pisau', emoji:'🔪'}, {word:'Sendok', emoji:'🥄'}, {word:'Garpu', emoji:'🍴'},
-  {word:'Piring', emoji:'🍽️'}, {word:'Gelas', emoji:'🥛'}, {word:'Cangkir', emoji:'☕'},
-  {word:'Teko', emoji:'🫖'}, {word:'Botol', emoji:'🍾'}, {word:'Payung', emoji:'☂️'},
-  {word:'Tas', emoji:'👜'}, {word:'Koper', emoji:'🧳'}, {word:'Ransel', emoji:'🎒'},
-  {word:'Topi', emoji:'🎩'}, {word:'Topi Pantai', emoji:'👒'}, {word:'Sepatu', emoji:'👟'},
-  {word:'Sepatu Bot', emoji:'👢'}, {word:'Sandal', emoji:'🩴'}, {word:'Kacamata', emoji:'👓'},
-  {word:'Jam Tangan', emoji:'⌚'}, {word:'Cincin', emoji:'💍'}, {word:'Mahkota', emoji:'👑'},
-  {word:'Buku', emoji:'📖'}, {word:'Pensil', emoji:'✏️'}, {word:'Pulpen', emoji:'🖊️'},
-  {word:'Kuas', emoji:'🖌️'}, {word:'Krayon', emoji:'🖍️'}, {word:'Penggaris', emoji:'📏'},
-  {word:'TV', emoji:'📺'}, {word:'Radio', emoji:'📻'}, {word:'Telepon', emoji:'📱'},
-  {word:'Komputer', emoji:'💻'}, {word:'Kamera', emoji:'📷'}, {word:'Mikrofon', emoji:'🎤'},
-  {word:'Headphone', emoji:'🎧'}, {word:'Baterai', emoji:'🔋'}, {word:'Senter', emoji:'🔦'},
-  {word:'Peta', emoji:'🗺️'}, {word:'Kompas', emoji:'🧭'}, {word:'Teleskop', emoji:'🔭'},
-  {word:'Bola Sepak', emoji:'⚽'}, {word:'Bola Basket', emoji:'🏀'}, {word:'Bola Voli', emoji:'🏐'},
-  {word:'Baseball', emoji:'⚾'}, {word:'Tenis', emoji:'🎾'}, {word:'Bulu Tangkis', emoji:'🏸'},
-  {word:'Bowling', emoji:'🎳'}, {word:'Biliar', emoji:'🎱'}, {word:'Ping Pong', emoji:'🏓'},
-  {word:'Golf', emoji:'⛳'}, {word:'Tinju', emoji:'🥊'}, {word:'Karate', emoji:'🥋'},
-  {word:'Berenang', emoji:'🏊'}, {word:'Bersepeda', emoji:'🚴'}, {word:'Skateboard', emoji:'🛹'},
-  {word:'Selancar', emoji:'🏄'}, {word:'Lari', emoji:'🏃'}, {word:'Yoga', emoji:'🧘'},
-  {word:'Gitar', emoji:'🎸'}, {word:'Drum', emoji:'🥁'}, {word:'Piano', emoji:'🎹'},
-  {word:'Biola', emoji:'🎻'}, {word:'Terompet', emoji:'🎺'}, {word:'Saksofon', emoji:'🎷'},
-  {word:'Lonceng', emoji:'🔔'}, {word:'Not Musik', emoji:'🎵'}, {word:'Palet Lukis', emoji:'🎨'},
-  {word:'Polisi', emoji:'👮'}, {word:'Dokter', emoji:'👨‍⚕️'}, {word:'Guru', emoji:'👨‍🏫'},
-  {word:'Koki', emoji:'👨‍🍳'}, {word:'Petani', emoji:'👨‍🌾'}, {word:'Pilot', emoji:'👨‍✈️'},
-  {word:'Astronaut', emoji:'👨‍🚀'}, {word:'Superhero', emoji:'🦸'}, {word:'Ninja', emoji:'🥷'},
-  {word:'Penyihir', emoji:'🧙'}, {word:'Vampir', emoji:'🧛'}, {word:'Zombie', emoji:'🧟'},
-  {word:'Mermaid', emoji:'🧜'}, {word:'Hantu', emoji:'👻'}, {word:'Alien', emoji:'👽'},
-  {word:'Robot', emoji:'🤖'}, {word:'Sinterklas', emoji:'🎅'},
-  {word:'Naga', emoji:'🐉'}, {word:'Unicorn', emoji:'🦄'}, {word:'Dinosaurus', emoji:'🦖'},
-  {word:'Brontosaurus', emoji:'🦕'}, {word:'Harta Karun', emoji:'💰'}, {word:'Permata', emoji:'💎'},
-  {word:'Koin Emas', emoji:'🪙'}, {word:'Bola Kristal', emoji:'🔮'},
-  {word:'Hati Cinta', emoji:'❤️'}, {word:'Hati Pink', emoji:'💖'}, {word:'Hati Pecah', emoji:'💔'},
-  {word:'Pita', emoji:'🎀'}, {word:'Hadiah', emoji:'🎁'}, {word:'Balon', emoji:'🎈'},
-  {word:'Kembang Api', emoji:'🎆'}, {word:'Konfeti', emoji:'🎉'}, {word:'Trofi', emoji:'🏆'},
-  {word:'Medali', emoji:'🥇'}, {word:'Surat Cinta', emoji:'💌'}, {word:'Tanda Tanya', emoji:'❓'},
-  {word:'Tengkorak', emoji:'💀'}, {word:'Iblis', emoji:'😈'}, {word:'Tongkat Sihir', emoji:'🪄'}
+const TOPICS_RAW = [
+'Kucing|🐱','Anjing|🐶','Kelinci|🐰','Hamster|🐹','Tikus|🐭','Sapi|🐮','Kambing|🐐','Domba|🐑',
+'Kuda|🐴','Gajah|🐘','Singa|🦁','Harimau|🐯','Serigala|🐺','Rubah|🦊','Beruang|🐻','Panda|🐼',
+'Koala|🐨','Monyet|🐵','Gorila|🦍','Jerapah|🦒','Zebra|🦓','Rusa|🦌','Unta|🐪','Badak|🦏',
+'Kuda Nil|🦛','Kanguru|🦘','Landak|🦔','Kelelawar|🦇','Tupai|🐿️','Sloth|🦥',
+'Ikan|🐟','Ikan Hiu|🦈','Paus|🐋','Dolphin|🐬','Gurita|🐙','Kepiting|🦀','Lobster|🦞',
+'Udang|🦐','Siput|🐌','Kura-kura|🐢','Buaya|🐊','Cumi-cumi|🦑',
+'Burung|🐦','Ayam|🐔','Bebek|🦆','Angsa|🦢','Merak|🦚','Burung Hantu|🦉','Elang|🦅',
+'Penguin|🐧','Flamingo|🦩','Beo|🦜','Merpati|🕊️','Kalkun|🦃',
+'Kupu-kupu|🦋','Lebah|🐝','Semut|🐜','Laba-laba|🕷️','Kalajengking|🦂','Kumbang|🪲',
+'Belalang|🦗','Kecoak|🪳','Nyamuk|🦟','Cacing|🪱',
+'Pizza|🍕','Burger|🍔','Hot Dog|🌭','Sandwich|🥪','Taco|🌮','Burrito|🌯','Kentang Goreng|🍟',
+'Nasi|🍚','Sushi|🍣','Ramen|🍜','Spaghetti|🍝','Curry|🍛','Bento|🍱','Dumpling|🥟',
+'Sup|🍲','Salad|🥗','Keju|🧀','Telur|🥚','Roti|🍞','Croissant|🥐','Bagel|🥯','Pretzel|🥨',
+'Wafel|🧇','Pancake|🥞','Daging|🥩','Ayam Goreng|🍗','Bacon|🥓',
+'Apel|🍎','Apel Hijau|🍏','Pisang|🍌','Jeruk|🍊','Lemon|🍋','Semangka|🍉','Anggur|🍇',
+'Stroberi|🍓','Blueberry|🫐','Melon|🍈','Ceri|🍒','Persik|🍑','Mangga|🥭','Nanas|🍍',
+'Kelapa|🥥','Kiwi|🥝','Tomat|🍅','Alpukat|🥑','Terong|🍆','Kentang|🥔','Wortel|🥕',
+'Jagung|🌽','Cabai|🌶️','Brokoli|🥦','Mentimun|🥒','Selada|🥬','Bawang|🧄',
+'Bawang Bombay|🧅','Jamur|🍄','Kacang|🥜',
+'Es Krim|🍦','Es Serut|🍧','Es Krim Sundae|🍨','Donat|🍩','Kue|🍰','Kue Ulang Tahun|🎂',
+'Cupcake|🧁','Pie|🥧','Coklat|🍫','Permen|🍬','Lollipop|🍭','Puding|🍮','Madu|🍯',
+'Kopi|☕','Teh|🍵','Susu|🥛','Jus|🧃','Soda|🥤','Bir|🍺','Anggur Merah|🍷','Koktail|🍹',
+'Matahari|☀️','Bulan|🌙','Bintang|⭐','Bintang Jatuh|🌟','Awan|☁️','Hujan|🌧️',
+'Badai Petir|⛈️','Salju|❄️','Pelangi|🌈','Api|🔥','Air|💧','Gunung|⛰️','Gunung Berapi|🌋',
+'Pantai|🏖️','Pulau|🏝️','Pohon|🌳','Pohon Palem|🌴','Kaktus|🌵','Bunga|🌸',
+'Bunga Matahari|🌻','Mawar|🌹','Tulip|🌷','Daisy|🌼','Daun|🍃','Daun Maple|🍁','Rumput|🌾',
+'Bambu|🎋','Semanggi|🍀','Batu|🪨','Kayu|🪵',
+'Mobil|🚗','Taksi|🚕','Bus|🚌','Truk|🚚','Traktor|🚜','Motor|🏍️','Sepeda|🚲','Skuter|🛴',
+'Kereta|🚂','Kereta Cepat|🚄','Trem|🚊','Pesawat|✈️','Helikopter|🚁','Roket|🚀',
+'Kapal|🚢','Perahu|⛵','Kapal Selam|🚤','UFO|🛸','Balon Udara|🎈','Parasut|🪂',
+'Rumah|🏠','Apartemen|🏢','Kastil|🏰','Tenda|⛺','Pintu|🚪','Jendela|🪟','Kursi|🪑',
+'Sofa|🛋️','Tempat Tidur|🛏️','Lampu|💡','Lilin|🕯️','Cermin|🪞','Jam|⏰','Jam Pasir|⏳',
+'Kunci|🔑','Gembok|🔒','Palu|🔨','Obeng|🔧','Gunting|✂️','Pisau|🔪','Sendok|🥄',
+'Garpu|🍴','Piring|🍽️','Gelas|🥛','Cangkir|☕','Teko|🫖','Botol|🍾','Payung|☂️',
+'Tas|👜','Koper|🧳','Ransel|🎒','Topi|🎩','Topi Pantai|👒','Sepatu|👟','Sepatu Bot|👢',
+'Sandal|🩴','Kaus Kaki|🧦','Kacamata|👓','Jam Tangan|⌚','Cincin|💍','Kalung|📿',
+'Mahkota|👑','Buku|📖','Pensil|✏️','Pulpen|🖊️','Kuas|🖌️','Krayon|🖍️','Penggaris|📏',
+'Kalkulator|🧮','TV|📺','Radio|📻','Telepon|📱','Komputer|💻','Kamera|📷','Video Kamera|📹',
+'Mikrofon|🎤','Headphone|🎧','Baterai|🔋','Senter|🔦','Peta|🗺️','Kompas|🧭',
+'Teleskop|🔭','Mikroskop|🔬','Bom|💣','Pistol|🔫','Pedang|⚔️','Perisai|🛡️','Panah|🏹',
+'Tombak|🔱',
+'Bola Sepak|⚽','Bola Basket|🏀','Bola Voli|🏐','Baseball|⚾','Tenis|🎾','Bulu Tangkis|🏸',
+'Bowling|🎳','Biliar|🎱','Ping Pong|🏓','Golf|⛳','Hoki|🏒','Kriket|🏏','Rugby|🏉',
+'Tinju|🥊','Karate|🥋','Angkat Beban|🏋️','Berenang|🏊','Bersepeda|🚴','Ski|🎿',
+'Skateboard|🛹','Selancar|🏄','Panahan|🏹','Lari|🏃','Yoga|🧘',
+'Gitar|🎸','Drum|🥁','Piano|🎹','Biola|🎻','Terompet|🎺','Saksofon|🎷','Harmonika|🪗',
+'Banjor|🪕','Lonceng|🔔','Not Musik|🎵','Palet Lukis|🎨','Topeng Teater|🎭',
+'Bayi|👶','Anak|🧒','Orang Dewasa|🧑','Orang Tua|🧓','Polisi|👮','Dokter|👨‍⚕️',
+'Guru|👨‍🏫','Koki|👨‍🍳','Petani|👨‍🌾','Pilot|👨‍✈️','Astronaut|👨‍🚀',
+'Pemadam Kebakaran|👨‍🚒','Ilmuwan|👨‍🔬','Programmer|👨‍💻','Penyanyi|🎤','Penari|💃',
+'Superhero|🦸','Ninja|🥷','Penyihir|🧙','Vampir|🧛','Zombie|🧟','Fairy|🧚','Mermaid|🧜',
+'Raksasa|🧞','Hantu|👻','Alien|👽','Robot|🤖','Boneka Salju|☃️','Sinterklas|🎅',
+'Naga|🐉','Unicorn|🦄','Dinosaurus|🦖','T-Rex|🦖','Brontosaurus|🦕','Mammoth|🦣',
+'Harta Karun|💰','Permata|💎','Koin Emas|🪙','Bola Kristal|🔮',
+'Hati Cinta|❤️','Hati Pink|💖','Hati Pecah|💔','Pita|🎀','Hadiah|🎁','Balon|🎈',
+'Kembang Api|🎆','Petasan|🧨','Konfeti|🎉','Bendera|🏁','Trofi|🏆','Medali|🥇',
+'Kotak Surat|📬','Surat Cinta|💌','Pesan|💬','Tanda Tanya|❓','Tanda Seru|❗',
+'Centang|✅','Silang|❌','Bintang Emas|🌠','Kuburan|🪦','Tengkorak|💀','Iblis|😈',
+'Tongkat Sihir|🪄','Kotak Musik|🎵','Kotak Amal|📦','Peta Harta|🗺️','Jam Alarm|⏰'
 ];
+const TOPICS = TOPICS_RAW.map(s => { const [word, emoji] = s.split('|'); return {word, emoji}; });
 
 /* ================== STATE ================== */
-let peer=null;
-let peerConns=[];       // Host: array conn ke client. Client: [conn ke host]
-let isHost=false;
-let roomCode='';
-let maxPlayers=2;
-let myId=null;          // 'host' atau peer.id
-let playerIds=[];       // ['host', peerId1, ...]
-let playersData={};     // {id: {grid:String, img:dataURL}}
-let refGrid=null;
-let promptTopic=null;
+let peer=null, peerConns=[], isHost=false, roomCode='', maxPlayers=2, myId=null;
+let playerIds=[], playersData={}, refGrid=null, promptTopic=null;
 let timerId=null, timeLeft=DRAW_TIME, gameActive=false;
-let currentColor='#111111';
-let isEraser=false, isBucket=false, brushSize=3;
-let resultShown=false;
-let connectTimeout=null;
-
-/* History */
+let currentColor='#111111', isEraser=false, isBucket=false, brushSize=3;
+let resultShown=false, connectTimeout=null;
 let history=[], historyIndex=-1, isRestoring=false;
 
 /* ================== UTIL ================== */
-function showScreen(id){
+const showScreen = id => {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $(id).classList.add('active');
-}
-function randomTopic(){ return TOPICS[Math.floor(Math.random()*TOPICS.length)]; }
-function genCode(){
+};
+const randomTopic = () => TOPICS[Math.floor(Math.random()*TOPICS.length)];
+const genCode = () => {
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s=''; for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
   return s;
-}
-function setStatus(el,msg,err){
+};
+const setStatus = (el,msg,err) => {
   const e=$(el); e.textContent=msg; e.classList.toggle('err',!!err);
-}
+};
 
-/* ================== RENDER EMOJI → GRID ================== */
+/* ================== RENDER EMOJI ================== */
 function renderEmojiGrid(emoji){
   const c = document.createElement('canvas');
   c.width = GRID; c.height = GRID;
   const cx = c.getContext('2d', {willReadFrequently:true});
   cx.fillStyle = '#ffffff';
-  cx.fillRect(0, 0, GRID, GRID);
-  cx.font = `${Math.floor(GRID*0.58)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","EmojiOne Color",sans-serif`;
-  cx.textAlign = 'center';
-  cx.textBaseline = 'middle';
+  cx.fillRect(0,0,GRID,GRID);
+  cx.font = `${Math.floor(GRID*0.55)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+  cx.textAlign = 'center'; cx.textBaseline = 'middle';
   cx.fillText(emoji, GRID/2, GRID/2 + GRID*0.02);
-
   const d = cx.getImageData(0,0,GRID,GRID).data;
   const arr = new Uint8Array(GRID*GRID);
-  for (let i=0, j=0; i<d.length; i+=4, j++){
+  for (let i=0,j=0; i<d.length; i+=4,j++){
     const dist = Math.abs(255-d[i]) + Math.abs(255-d[i+1]) + Math.abs(255-d[i+2]);
-    arr[j] = dist > 100 ? 1 : 0;
+    arr[j] = dist > DRAW_THRESHOLD ? 1 : 0;
   }
   return arr;
 }
 
-/* ================== ROOM (HOST) ================== */
+/* ================== ROOM ================== */
 let hostRetry = 0;
 function createRoom(mode){
-  isHost = true;
-  hostRetry = 0;
-  maxPlayers = mode;
-  myId = 'host';
-  peerConns = [];
-  playersData = {};
-  openHost();
+  isHost = true; hostRetry = 0; maxPlayers = mode; myId = 'host';
+  peerConns = []; playersData = {}; openHost();
 }
-
 function openHost(){
   roomCode = genCode();
   setStatus('menuStatus','Membuat room...');
   try { if (peer) peer.destroy(); } catch(_){}
   peer = new Peer('dbattle-'+roomCode, PEER_CONFIG);
-
   peer.on('open', ()=>{
     setStatus('menuStatus','');
     showScreen('lobby');
     $('roomCodeDisplay').textContent = roomCode;
     updateLobby();
   });
-
   peer.on('connection', c=>{
     if (peerConns.length + 1 >= maxPlayers){
-      // Room penuh
-      c.on('open', ()=>{ c.send({type:'full'}); setTimeout(()=>c.close(), 500); });
+      c.on('open', ()=>{ c.send({type:'full'}); setTimeout(()=>c.close(),500); });
       return;
     }
     peerConns.push(c);
     setupHostConn(c);
   });
-
   peer.on('error', e=>{
     console.error('Host error:', e);
-    if (e.type==='unavailable-id' && hostRetry<5){
-      hostRetry++;
-      try{ peer.destroy(); }catch(_){}
-      openHost();
-    } else if (e.type==='network'){
-      setStatus('menuStatus','Jaringan bermasalah.', true);
-    } else {
-      setStatus('menuStatus','Gagal membuat room: '+e.type, true);
-    }
+    if (e.type==='unavailable-id' && hostRetry<5){ hostRetry++; try{ peer.destroy(); }catch(_){} openHost(); }
+    else if (e.type==='network') setStatus('menuStatus','Jaringan bermasalah.', true);
+    else setStatus('menuStatus','Gagal: '+e.type, true);
   });
-
-  peer.on('disconnected', () => {
-    try { peer.reconnect(); } catch(_){}
-  });
+  peer.on('disconnected', ()=>{ try { peer.reconnect(); } catch(_){} });
 }
 
 function setupHostConn(c){
   c.on('open', ()=>{
-    console.log('Client connected:', c.peer);
     updateLobby();
-    // Kalau udah full → mulai game
-    if (peerConns.length + 1 === maxPlayers){
-      setTimeout(startGameHost, 500);
-    }
+    if (peerConns.length + 1 === maxPlayers) setTimeout(startGameHost, 500);
   });
-
   c.on('data', data=>{
     if (!data) return;
     if (data.type === 'submit'){
-      // Client submit gambar
-      playersData[c.peer] = { grid: data.grid, img: data.img };
-      // Relay ke semua client lain
-      peerConns.forEach(pc => {
-        if (pc !== c && pc.open){
-          try { pc.send({type:'update', playerId: c.peer, grid: data.grid, img: data.img}); } catch(_){}
-        }
+      playersData[c.peer] = { grid: data.grid, img: data.img, features: data.features };
+      peerConns.forEach(pc=>{
+        if (pc !== c && pc.open) try {
+          pc.send({type:'update', playerId:c.peer, grid:data.grid, img:data.img, features:data.features});
+        } catch(_){}
       });
-      broadcastWaiting();
       checkAllSubmitted();
     }
     else if (data.type === 'rematch'){
       if (!gameActive) playAgainHost();
     }
   });
-
   c.on('close', ()=>{
-    console.log('Client disconnected:', c.peer);
-    if (gameActive){
-      alert('Pemain terputus 😢 Game dibatalkan.');
-      location.reload();
-    } else {
-      // Buang dari array
-      peerConns = peerConns.filter(x => x !== c);
-      updateLobby();
-    }
+    if (gameActive){ alert('Pemain terputus 😢'); location.reload(); }
+    else { peerConns = peerConns.filter(x => x !== c); updateLobby(); }
   });
-
   c.on('error', e => console.error('Conn error:', e));
 }
 
@@ -532,21 +471,13 @@ function updateLobby(){
   list.innerHTML = '';
   const names = ['🎨 Kamu (Host)'];
   peerConns.forEach((c, i) => names.push(`🎨 Pemain ${i+2}`));
-  names.forEach(n => {
+  names.forEach(n=>{
     const d = document.createElement('div');
-    d.className = 'player-pill';
-    d.textContent = n;
+    d.className = 'player-pill'; d.textContent = n;
     list.appendChild(d);
   });
-  if (count < maxPlayers){
-    setStatus('lobbyStatus', `Menunggu pemain (${count}/${maxPlayers})...`);
-  } else {
-    setStatus('lobbyStatus', 'Semua siap! Memulai game...');
-  }
-  // Beritahu client jumlah pemain
-  peerConns.forEach(pc => {
-    if (pc.open) try { pc.send({type:'lobby', count, max: maxPlayers}); } catch(_){}
-  });
+  setStatus('lobbyStatus', count < maxPlayers ? `Menunggu pemain (${count}/${maxPlayers})...` : 'Semua siap! Memulai...');
+  peerConns.forEach(pc => { if (pc.open) try { pc.send({type:'lobby', count, max: maxPlayers}); } catch(_){} });
 }
 
 function startGameHost(){
@@ -554,40 +485,26 @@ function startGameHost(){
   const t = randomTopic();
   const rg = renderEmojiGrid(t.emoji);
   const refStr = packGrid(rg);
-
   peerConns.forEach(pc => {
-    if (pc.open) try {
-      pc.send({
-        type:'start',
-        word: t.word,
-        emoji: t.emoji,
-        refGrid: refStr,
-        playerIds: playerIds
-      });
-    } catch(_){}
+    if (pc.open) try { pc.send({type:'start', word:t.word, emoji:t.emoji, refGrid:refStr, playerIds}); } catch(_){}
   });
-
   startGame(t.word, t.emoji, rg, playerIds);
 }
 
 function playAgainHost(){
-  // Reset playersData
   playersData = {};
   playerIds = ['host', ...peerConns.map(c => c.peer)];
   const t = randomTopic();
   const rg = renderEmojiGrid(t.emoji);
   const refStr = packGrid(rg);
   peerConns.forEach(pc => {
-    if (pc.open) try {
-      pc.send({type:'start', word:t.word, emoji:t.emoji, refGrid:refStr, playerIds});
-    } catch(_){}
+    if (pc.open) try { pc.send({type:'start', word:t.word, emoji:t.emoji, refGrid:refStr, playerIds}); } catch(_){}
   });
   startGame(t.word, t.emoji, rg, playerIds);
 }
 
-/* ================== ROOM (CLIENT) ================== */
 function toggleJoin(){
-  const b=$('joinBox');
+  const b = $('joinBox');
   b.style.display = b.style.display==='none'?'block':'none';
   if (b.style.display==='block') $('joinCode').focus();
 }
@@ -595,49 +512,38 @@ function toggleJoin(){
 function joinRoom(){
   const code = $('joinCode').value.trim().toUpperCase();
   if (code.length!==6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
-  roomCode = code;
-  isHost = false;
-  peerConns = [];
-  playersData = {};
-  setStatus('menuStatus','Menghubungkan ke room...');
-
+  roomCode = code; isHost = false; peerConns = []; playersData = {};
+  setStatus('menuStatus','Menghubungkan...');
   try { if (peer) peer.destroy(); } catch(_){}
   peer = new Peer(PEER_CONFIG);
-
   peer.on('open', ()=>{
     myId = peer.id;
-    setStatus('menuStatus','Mencari host...');
     const conn = peer.connect('dbattle-'+code, { reliable: true });
     peerConns = [conn];
-
     clearTimeout(connectTimeout);
     connectTimeout = setTimeout(()=>{
       if (!conn.open){
-        setStatus('menuStatus','Gagal terhubung (timeout). Cek kode / jaringan.', true);
+        setStatus('menuStatus','Timeout. Cek kode / jaringan.', true);
         try { conn.close(); peer.destroy(); } catch(_){}
       }
     }, 20000);
-
     conn.on('open', ()=>{
       clearTimeout(connectTimeout);
-      setStatus('menuStatus','Terhubung! Menunggu host...');
+      setStatus('menuStatus','Terhubung! ✅');
       showScreen('lobby');
       $('roomCodeDisplay').textContent = code;
       setStatus('lobbyStatus','Menunggu host memulai...');
       $('playerCount').textContent = '👥 ? / ?';
       updateClientPlayersList(['🎨 Kamu']);
     });
-
     conn.on('data', handleData);
     conn.on('close', ()=>{
       if (gameActive || $('lobby').classList.contains('active')){
-        alert('Host terputus 😢');
-        location.reload();
+        alert('Host terputus 😢'); location.reload();
       }
     });
     conn.on('error', e => console.error('Conn error:', e));
   });
-
   peer.on('error', e=>{
     console.error('Join error:', e);
     clearTimeout(connectTimeout);
@@ -645,24 +551,19 @@ function joinRoom(){
     else if (e.type==='network') setStatus('menuStatus','Jaringan bermasalah.',true);
     else setStatus('menuStatus','Error: '+e.type, true);
   });
-
-  peer.on('disconnected', () => {
-    try { peer.reconnect(); } catch(_){}
-  });
+  peer.on('disconnected', ()=>{ try { peer.reconnect(); } catch(_){} });
 }
 
 function updateClientPlayersList(names){
   const list = $('playersList');
   list.innerHTML = '';
-  names.forEach(n => {
+  names.forEach(n=>{
     const d = document.createElement('div');
-    d.className = 'player-pill';
-    d.textContent = n;
+    d.className = 'player-pill'; d.textContent = n;
     list.appendChild(d);
   });
 }
 
-/* ================== HANDLE DATA ================== */
 function handleData(data){
   if (!data) return;
   if (data.type === 'full'){
@@ -673,12 +574,7 @@ function handleData(data){
   if (data.type === 'lobby'){
     $('playerCount').textContent = `👥 ${data.count} / ${data.max}`;
     const names = [];
-    // Kita nggak tau pasti siapa yang join, jadi pake placeholder
-    for (let i = 0; i < data.count; i++){
-      names.push(i === 0 ? '🎨 Host' : `🎨 Pemain ${i+1}`);
-    }
-    // Ganti diri sendiri
-    const myIdx = 1; // asumsi client selalu player #2 atau #3
+    for (let i=0; i<data.count; i++) names.push(i===0?'🎨 Host':`🎨 Pemain ${i+1}`);
     if (names[1]) names[1] = '🎨 Kamu';
     updateClientPlayersList(names);
     setStatus('lobbyStatus', `Menunggu pemain (${data.count}/${data.max})...`);
@@ -690,7 +586,7 @@ function handleData(data){
     startGame(data.word, data.emoji, refGrid, playerIds);
   }
   if (data.type === 'update'){
-    playersData[data.playerId] = { grid: data.grid, img: data.img };
+    playersData[data.playerId] = { grid: data.grid, img: data.img, features: data.features };
     updateWaitingList();
     checkAllSubmitted();
   }
@@ -701,8 +597,7 @@ function startGame(word, emoji, rg, pIds){
   promptTopic = {word, emoji};
   refGrid = rg;
   if (pIds) playerIds = pIds;
-  playersData = {};
-  resultShown = false;
+  playersData = {}; resultShown = false;
   clearTimeout(connectTimeout);
 
   $('promptText').textContent = word;
@@ -710,12 +605,12 @@ function startGame(word, emoji, rg, pIds){
   $('refEmoji').textContent = emoji;
   $('refWord').textContent = word;
   $('compare').innerHTML = '';
+  $('breakdown').innerHTML = '';
   $('winnerBox').textContent = '-';
   $('winnerBox').className = 'winner';
   $('verdict').textContent = '';
   setStatus('resultStatus','');
 
-  // Reset tools
   currentColor = '#111111'; isEraser = false; isBucket = false;
   document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel', x.dataset.color==='#111111'));
   $('eraserBtn').classList.remove('sel');
@@ -727,9 +622,7 @@ function startGame(word, emoji, rg, pIds){
 
   clearCanvas(false);
   showScreen('game');
-
-  history = [];
-  historyIndex = -1;
+  history = []; historyIndex = -1;
   pushHistory();
 
   gameActive = true;
@@ -745,12 +638,9 @@ function startGame(word, emoji, rg, pIds){
 
 function updateTimerUI(){
   const t = Math.max(0, timeLeft);
-  const m = Math.floor(t/60);
-  const s = t%60;
-  $('timerNum').textContent = m + ':' + String(s).padStart(2,'0');
-  const pct = (timeLeft / DRAW_TIME) * 100;
+  $('timerNum').textContent = Math.floor(t/60) + ':' + String(t%60).padStart(2,'0');
   const el = $('timerEl');
-  el.style.setProperty('--p', pct+'%');
+  el.style.setProperty('--p', (timeLeft / DRAW_TIME) * 100 + '%');
   el.classList.toggle('danger', timeLeft <= 20);
 }
 
@@ -760,28 +650,24 @@ function submitDrawing(){
   clearInterval(timerId);
 
   const myGrid = toGrid(canvas);
-  const myImg  = canvasToThumb(canvas, 320);
+  const myImg = canvasToThumb(canvas, 320);
   const myGridStr = packGrid(myGrid);
+  const features = extractFeatures(canvas);
 
-  // Simpan punya sendiri
-  playersData[myId] = { grid: myGridStr, img: myImg };
+  playersData[myId] = { grid: myGridStr, img: myImg, features };
 
   if (isHost){
-    // Broadcast ke semua client
     peerConns.forEach(pc => {
-      if (pc.open) try {
-        pc.send({type:'update', playerId: myId, grid: myGridStr, img: myImg});
-      } catch(_){}
+      if (pc.open) try { pc.send({type:'update', playerId:myId, grid:myGridStr, img:myImg, features}); } catch(_){}
     });
   } else {
-    // Kirim ke host
     if (peerConns[0] && peerConns[0].open){
-      try { peerConns[0].send({type:'submit', grid: myGridStr, img: myImg}); } catch(_){}
+      try { peerConns[0].send({type:'submit', grid:myGridStr, img:myImg, features}); } catch(_){}
     }
   }
 
   showScreen('waiting');
-  setStatus('waitStatus','Menunggu pemain lain menyelesaikan gambarnya...');
+  setStatus('waitStatus','Menunggu pemain lain...');
   updateWaitingList();
   checkAllSubmitted();
 }
@@ -792,33 +678,28 @@ function updateWaitingList(){
   list.innerHTML = '';
   playerIds.forEach(id => {
     const done = !!playersData[id];
-    const label = getPlayerLabel(id);
     const d = document.createElement('div');
     d.className = 'player-pill';
     d.style.opacity = done ? 1 : 0.4;
-    d.textContent = (done ? '✅ ' : '⏳ ') + label;
+    d.textContent = (done ? '✅ ' : '⏳ ') + getPlayerLabel(id);
     list.appendChild(d);
   });
-}
-
-function broadcastWaiting(){
-  // Host: kabari semua client siapa yang udah selesai
-  // (simple: client update lewat 'update' data yang di-relay)
-  // Tidak perlu action tambahan
 }
 
 function checkAllSubmitted(){
   if (resultShown) return;
   if (playerIds.length === 0) return;
-  // Cek apakah semua pemain udah submit
   for (const id of playerIds){
-    if (!playersData[id]) return;
+    if (!playersData[id] || !playersData[id].features) return;
   }
   resultShown = true;
-  // Hitung skor tiap pemain
+
   const scores = playerIds.map(id => {
-    const gridArr = unpackGrid(playersData[id].grid);
-    return { id, score: similarity(gridArr, refGrid) };
+    const p = playersData[id];
+    const gridArr = unpackGrid(p.grid);
+    const f1 = similarity(gridArr, refGrid);
+    const breakdown = computeScore(p.features, f1);
+    return { id, ...breakdown };
   });
   showResult(scores);
 }
@@ -831,14 +712,158 @@ function getPlayerLabel(id){
   return 'Pemain ' + (idx + 1);
 }
 
+/* ================== SCORING 4 KRITERIA ================== */
+/* Bobot total 100:
+   - Teknik & Pewarnaan 35
+   - Komposisi & Tata Letak 30
+   - Ide & Kreativitas 25
+   - Kerapian & Finishing 10
+   
+   F1 (kemiripan topik) disebar ke 3 kriteria = 60% bobot
+*/
+function computeScore(f, f1){
+  const fn = f1 / 100; // 0-1
+
+  // === 1. TEKNIK & PEWARNAAN (max 35) ===
+  // 20: F1 (kemiripan dengan referensi)
+  // 10: variasi warna (min 6 warna untuk full)
+  // 5: fill solid (coverage >= 15%)
+  const tech = Math.min(35,
+    fn * 20 +
+    Math.min(f.colors / 6, 1) * 10 +
+    Math.min(f.coverage / 0.15, 1) * 5
+  );
+
+  // === 2. KOMPOSISI & TATA LETAK (max 30) ===
+  // 20: F1 (kemiripan)
+  // 5: center of mass di tengah
+  // 5: coverage ideal (15%-75%)
+  const distFromCenter = Math.sqrt(Math.pow(f.centerX - 0.5, 2) + Math.pow(f.centerY - 0.5, 2));
+  const centerScore = Math.max(0, 5 - distFromCenter * 10);
+  const cov = f.coverage;
+  let covScore;
+  if (cov < 0.15) covScore = (cov / 0.15) * 5;
+  else if (cov > 0.75) covScore = Math.max(0, 5 - (cov - 0.75) * 20);
+  else covScore = 5;
+  const comp = Math.min(30, fn * 20 + centerScore + covScore);
+
+  // === 3. IDE & KREATIVITAS (max 25) ===
+  // 15: F1 (kemiripan)
+  // 10: level detail (edges, min 400 untuk full)
+  const cre = Math.min(25,
+    fn * 15 +
+    Math.min(f.edges / 400, 1) * 10
+  );
+
+  // === 4. KERAPIAN & FINISHING (max 10) ===
+  // 5: nggak coret di border canvas (10% terluar)
+  // 5: nggak ada stray pixel (region kecil <20px)
+  const neatBorder = Math.max(0, 5 - f.borderRatio * 25);
+  const neatStray = f.strays <= 1 ? 5 : Math.max(0, 5 - (f.strays - 1));
+  const neat = neatBorder + neatStray;
+
+  const total = tech + comp + cre + neat;
+  return {
+    technique: Math.round(tech),
+    composition: Math.round(comp),
+    creativity: Math.round(cre),
+    neatness: Math.round(neat),
+    total: Math.round(total)
+  };
+}
+
+function getGrade(total){
+  if (total >= 90) return 'S';
+  if (total >= 80) return 'A';
+  if (total >= 70) return 'B';
+  if (total >= 60) return 'C';
+  if (total >= 50) return 'D';
+  return 'E';
+}
+
+/* ================== EXTRACT FEATURES ================== */
+function extractFeatures(canvasEl){
+  const tmp = document.createElement('canvas');
+  tmp.width = GRID; tmp.height = GRID;
+  const tc = tmp.getContext('2d', {willReadFrequently:true});
+  tc.fillStyle = '#fff'; tc.fillRect(0,0,GRID,GRID);
+  tc.drawImage(canvasEl, 0, 0, GRID, GRID);
+  const data = tc.getImageData(0,0,GRID,GRID).data;
+
+  const colors = new Set();
+  let drawn = 0, sx = 0, sy = 0, borderCount = 0;
+  const BORDER = Math.floor(GRID * 0.1);
+  const binary = new Uint8Array(GRID * GRID);
+
+  for (let y=0; y<GRID; y++){
+    for (let x=0; x<GRID; x++){
+      const i = (y*GRID + x) * 4;
+      const r = data[i], g = data[i+1], b = data[i+2];
+      const dist = Math.abs(255-r) + Math.abs(255-g) + Math.abs(255-b);
+      if (dist > DRAW_THRESHOLD){
+        drawn++; sx += x; sy += y;
+        const qr = Math.round(r/50)*50, qg = Math.round(g/50)*50, qb = Math.round(b/50)*50;
+        colors.add(qr+','+qg+','+qb);
+        binary[y*GRID + x] = 1;
+        if (x < BORDER || x >= GRID-BORDER || y < BORDER || y >= GRID-BORDER) borderCount++;
+      }
+    }
+  }
+
+  const coverage = drawn / (GRID * GRID);
+  const centerX = drawn > 0 ? sx / drawn / GRID : 0.5;
+  const centerY = drawn > 0 ? sy / drawn / GRID : 0.5;
+  const borderRatio = drawn > 0 ? borderCount / drawn : 0;
+
+  // Edge detection
+  let edges = 0;
+  for (let y=1; y<GRID-1; y++){
+    for (let x=1; x<GRID-1; x++){
+      const v = binary[y*GRID + x];
+      if (v !== binary[(y-1)*GRID + x] || v !== binary[y*GRID + x-1]) edges++;
+    }
+  }
+
+  // Connected components — hitung stray (region kecil)
+  const visited = new Uint8Array(GRID*GRID);
+  let strays = 0;
+  const stack = [];
+  for (let i=0; i<binary.length; i++){
+    if (!binary[i] || visited[i]) continue;
+    let size = 0;
+    stack.push(i);
+    while (stack.length){
+      const idx = stack.pop();
+      if (visited[idx] || !binary[idx]) continue;
+      visited[idx] = 1; size++;
+      const x = idx % GRID, y = Math.floor(idx / GRID);
+      if (x > 0) stack.push(idx - 1);
+      if (x < GRID-1) stack.push(idx + 1);
+      if (y > 0) stack.push(idx - GRID);
+      if (y < GRID-1) stack.push(idx + GRID);
+    }
+    if (size < 20) strays++;
+  }
+
+  return {
+    colors: colors.size,
+    coverage: Math.round(coverage * 1000) / 1000,
+    centerX: Math.round(centerX * 1000) / 1000,
+    centerY: Math.round(centerY * 1000) / 1000,
+    edges, borderRatio: Math.round(borderRatio * 1000) / 1000,
+    strays
+  };
+}
+
+/* ================== SHOW RESULT ================== */
 function showResult(scores){
   showScreen('result');
 
-  const sorted = [...scores].sort((a,b) => b.score - a.score);
-  const maxScore = sorted[0].score;
-  const winners = sorted.filter(s => s.score === maxScore);
+  const sorted = [...scores].sort((a,b) => b.total - a.total);
+  const top = sorted[0].total;
+  const winners = sorted.filter(s => s.total === top);
 
-  // Render compare dinamis
+  // Compare grid
   const cmp = $('compare');
   cmp.innerHTML = '';
   cmp.style.gridTemplateColumns = `repeat(${scores.length}, 1fr)`;
@@ -850,15 +875,19 @@ function showResult(scores){
     if (s.id === winners[0].id && winners.length === 1) el.classList.add('winner-col');
     const label = getPlayerLabel(s.id);
     const img = playersData[s.id].img || '';
+    const grade = getGrade(s.total);
     el.innerHTML = `
       <h4>${label}</h4>
       <img src="${img}" alt="${label}">
-      <div class="pct">${s.score}%</div>
+      <div class="pct">${s.total}<span class="grade">${grade}</span></div>
     `;
     cmp.appendChild(el);
   });
 
-  // Winner box
+  // Breakdown table
+  renderBreakdown(scores, winners);
+
+  // Winner banner
   const box = $('winnerBox');
   if (winners.length > 1){
     box.textContent = '🤝 SERI!';
@@ -872,11 +901,11 @@ function showResult(scores){
   }
 
   // Verdict
-  const myScore = scores.find(s => s.id === myId).score;
-  const diff = myScore - maxScore;
+  const myScore = scores.find(s => s.id === myId).total;
+  const diff = myScore - top;
   let v = '';
   if (winners.length > 1) v = '🔥 Skornya sama kuat!';
-  else if (diff === 0) v = '🎯 Gambarmu paling mirip dengan topiknya!';
+  else if (diff === 0) v = '🎯 Gambarmu dinilai paling bagus!';
   else if (diff >= -5) v = '😱 Ketat banget, beda tipis!';
   else if (diff >= -15) v = '😮 Lumayan deket nih!';
   else if (diff >= -30) v = '😅 Masih ada selisih...';
@@ -884,13 +913,59 @@ function showResult(scores){
   $('verdict').textContent = v;
 }
 
+function renderBreakdown(scores, winners){
+  const bd = $('breakdown');
+  bd.innerHTML = '';
+
+  const criterionNames = [
+    { key: 'technique', label: '🎨 Teknik & Pewarnaan', max: 35, cls: 't1' },
+    { key: 'composition', label: '📐 Komposisi & Tata Letak', max: 30, cls: 't2' },
+    { key: 'creativity', label: '💡 Ide & Kreativitas', max: 25, cls: 't3' },
+    { key: 'neatness', label: '✨ Kerapian & Finishing', max: 10, cls: 't4' }
+  ];
+
+  // Urut skor tertinggi dulu
+  const ordered = [...scores].sort((a,b) => b.total - a.total);
+
+  ordered.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'bd-card';
+    if (s.id === myId) card.classList.add('me');
+    if (winners.length === 1 && s.id === winners[0].id) card.classList.add('win-row');
+
+    const label = getPlayerLabel(s.id);
+    const grade = getGrade(s.total);
+    const isMe = s.id === myId;
+    const medal = winners.length === 1 && s.id === winners[0].id ? '🥇 ' : (isMe ? '👤 ' : '👥 ');
+    
+    let html = `
+      <div class="bd-head">
+        <h4>${medal}${label} <span class="grade">${grade}</span></h4>
+        <div class="tot">${s.total}<span style="font-size:.9rem;opacity:.6">/100</span></div>
+      </div>
+    `;
+
+    criterionNames.forEach(c => {
+      const val = s[c.key];
+      const pct = (val / c.max) * 100;
+      html += `
+        <div class="bd-row">
+          <span class="label">${c.label}</span>
+          <span class="val">${val}<small>/${c.max}</small></span>
+          <div class="bd-bar"><div class="bd-bar-inner ${c.cls}" style="width:${pct}%"></div></div>
+        </div>
+      `;
+    });
+
+    card.innerHTML = html;
+    bd.appendChild(card);
+  });
+}
+
 function playAgain(){
-  if (isHost){
-    playAgainHost();
-  } else {
-    if (peerConns[0] && peerConns[0].open){
-      try { peerConns[0].send({type:'rematch'}); } catch(_){}
-    }
+  if (isHost) playAgainHost();
+  else {
+    if (peerConns[0] && peerConns[0].open) try { peerConns[0].send({type:'rematch'}); } catch(_){}
     setStatus('resultStatus','Menunggu host memulai ulang...');
   }
 }
@@ -901,7 +976,6 @@ const ctx = canvas.getContext('2d', {willReadFrequently:true});
 let drawing=false, lastPt=null;
 
 function snapshot(){ return canvas.toDataURL('image/png'); }
-
 function pushHistory(){
   if (isRestoring) return;
   history = history.slice(0, historyIndex + 1);
@@ -910,21 +984,14 @@ function pushHistory(){
   historyIndex = history.length - 1;
   updateUndoRedoUI();
 }
-
 function restoreFromHistory(){
   if (historyIndex < 0 || historyIndex >= history.length) return;
   isRestoring = true;
-  const dataURL = history[historyIndex];
   const img = new Image();
-  img.onload = ()=>{
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(img, 0, 0);
-    isRestoring = false;
-  };
-  img.src = dataURL;
+  img.onload = ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); isRestoring = false; };
+  img.src = history[historyIndex];
   updateUndoRedoUI();
 }
-
 function undo(){ if (historyIndex <= 0) return; historyIndex--; restoreFromHistory(); }
 function redo(){ if (historyIndex >= history.length-1) return; historyIndex++; restoreFromHistory(); }
 function updateUndoRedoUI(){
@@ -951,12 +1018,7 @@ function activeColor(){ return isEraser ? '#ffffff' : currentColor; }
 canvas.addEventListener('pointerdown', e=>{
   if (!gameActive) return;
   e.preventDefault();
-  if (isBucket){
-    pushHistory();
-    const p = getPos(e);
-    floodFill(p.x, p.y, currentColor);
-    return;
-  }
+  if (isBucket){ pushHistory(); const p = getPos(e); floodFill(p.x, p.y, currentColor); return; }
   pushHistory();
   drawing = true;
   canvas.setPointerCapture(e.pointerId);
@@ -967,7 +1029,6 @@ canvas.addEventListener('pointerdown', e=>{
   ctx.fillStyle = activeColor();
   ctx.fill();
 });
-
 canvas.addEventListener('pointermove', e=>{
   if (!drawing || !gameActive) return;
   e.preventDefault();
@@ -982,7 +1043,6 @@ canvas.addEventListener('pointermove', e=>{
   ctx.stroke();
   lastPt = p;
 });
-
 ['pointerup','pointercancel','pointerleave'].forEach(ev =>
   canvas.addEventListener(ev, ()=>{ drawing=false; lastPt=null; })
 );
@@ -994,7 +1054,6 @@ document.querySelectorAll('.tool[data-size]').forEach(t=>{
     brushSize = parseInt(t.dataset.size);
   });
 });
-
 document.querySelectorAll('.color[data-color]').forEach(c=>{
   c.addEventListener('click', ()=>{
     document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
@@ -1002,14 +1061,9 @@ document.querySelectorAll('.color[data-color]').forEach(c=>{
     currentColor = c.dataset.color;
     isEraser = false;
     $('eraserBtn').classList.remove('sel');
-    if (isBucket){
-      isBucket = false;
-      $('bucketBtn').classList.remove('sel');
-      canvas.classList.remove('bucket-mode');
-    }
+    if (isBucket){ isBucket = false; $('bucketBtn').classList.remove('sel'); canvas.classList.remove('bucket-mode'); }
   });
 });
-
 $('customColorInput').addEventListener('input', e=>{
   currentColor = e.target.value;
   document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
@@ -1017,52 +1071,33 @@ $('customColorInput').addEventListener('input', e=>{
   $('customColorBtn').style.background = currentColor;
   isEraser = false;
   $('eraserBtn').classList.remove('sel');
-  if (isBucket){
-    isBucket = false;
-    $('bucketBtn').classList.remove('sel');
-    canvas.classList.remove('bucket-mode');
-  }
+  if (isBucket){ isBucket = false; $('bucketBtn').classList.remove('sel'); canvas.classList.remove('bucket-mode'); }
 });
-
 function toggleEraser(){
   isEraser = !isEraser;
   $('eraserBtn').classList.toggle('sel', isEraser);
   isBucket = false;
   $('bucketBtn').classList.remove('sel');
   canvas.classList.remove('bucket-mode');
-  if (isEraser){
-    document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
-  } else {
-    document.querySelectorAll('.color').forEach(x=>{
-      if (x.dataset.color === currentColor) x.classList.add('sel');
-    });
-  }
+  if (isEraser) document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
+  else document.querySelectorAll('.color').forEach(x=>{ if (x.dataset.color === currentColor) x.classList.add('sel'); });
 }
-
 function toggleBucket(){
   isBucket = !isBucket;
   $('bucketBtn').classList.toggle('sel', isBucket);
   canvas.classList.toggle('bucket-mode', isBucket);
   isEraser = false;
   $('eraserBtn').classList.remove('sel');
-  if (isBucket){
-    document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
-  } else {
-    document.querySelectorAll('.color').forEach(x=>{
-      if (x.dataset.color === currentColor) x.classList.add('sel');
-    });
-  }
+  if (isBucket) document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));
+  else document.querySelectorAll('.color').forEach(x=>{ if (x.dataset.color === currentColor) x.classList.add('sel'); });
 }
-
 document.addEventListener('keydown', e => {
   if (!gameActive) return;
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){
     e.preventDefault();
     if (e.shiftKey) redo(); else undo();
   }
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y'){
-    e.preventDefault(); redo();
-  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y'){ e.preventDefault(); redo(); }
 });
 
 /* ================== FLOOD FILL ================== */
@@ -1070,76 +1105,43 @@ function floodFill(startX, startY, fillColor){
   const w = canvas.width, h = canvas.height;
   const sx = Math.floor(startX), sy = Math.floor(startY);
   if (sx < 0 || sy < 0 || sx >= w || sy >= h) return;
-
   const imgData = ctx.getImageData(0, 0, w, h);
   const data = imgData.data;
-  const startIdx = (sy * w + sx) * 4;
-  const targetR = data[startIdx], targetG = data[startIdx+1];
-  const targetB = data[startIdx+2], targetA = data[startIdx+3];
-
-  const fr = parseInt(fillColor.slice(1,3), 16);
-  const fg = parseInt(fillColor.slice(3,5), 16);
-  const fb = parseInt(fillColor.slice(5,7), 16);
-
-  if (Math.abs(targetR-fr) < 8 && Math.abs(targetG-fg) < 8 &&
-      Math.abs(targetB-fb) < 8 && targetA === 255) return;
-
+  const startIdx = (sy*w+sx)*4;
+  const tR = data[startIdx], tG = data[startIdx+1], tB = data[startIdx+2], tA = data[startIdx+3];
+  const fr = parseInt(fillColor.slice(1,3),16), fg = parseInt(fillColor.slice(3,5),16), fb = parseInt(fillColor.slice(5,7),16);
+  if (Math.abs(tR-fr)<8 && Math.abs(tG-fg)<8 && Math.abs(tB-fb)<8 && tA===255) return;
   const tol = 60;
-  function matches(i){
-    const dr = data[i]-targetR, dg = data[i+1]-targetG;
-    const db = data[i+2]-targetB, da = data[i+3]-targetA;
-    return (Math.abs(dr)+Math.abs(dg)+Math.abs(db)+Math.abs(da)) <= tol;
-  }
-
+  const matches = i => (Math.abs(data[i]-tR)+Math.abs(data[i+1]-tG)+Math.abs(data[i+2]-tB)+Math.abs(data[i+3]-tA)) <= tol;
   const stack = [[sx, sy]];
   while (stack.length){
     const [x0, y0] = stack.pop();
     if (y0 < 0 || y0 >= h) continue;
     const rowStart = y0 * w;
-    let xL = x0;
-    while (xL >= 0 && matches((rowStart + xL) * 4)) xL--;
-    xL++;
-    let xR = x0;
-    while (xR < w && matches((rowStart + xR) * 4)) xR++;
-    xR--;
+    let xL = x0; while (xL >= 0 && matches((rowStart+xL)*4)) xL--; xL++;
+    let xR = x0; while (xR < w && matches((rowStart+xR)*4)) xR++; xR--;
     if (xL > xR) continue;
-
-    for (let x = xL; x <= xR; x++){
-      const pi = (rowStart + x) * 4;
-      data[pi]=fr; data[pi+1]=fg; data[pi+2]=fb; data[pi+3]=255;
-    }
+    for (let x=xL; x<=xR; x++){ const pi = (rowStart+x)*4; data[pi]=fr; data[pi+1]=fg; data[pi+2]=fb; data[pi+3]=255; }
     if (y0 > 0){
-      const upStart = (y0 - 1) * w;
-      let inSpan = false;
-      for (let x = xL; x <= xR; x++){
-        const m = matches((upStart + x) * 4);
-        if (m && !inSpan){ stack.push([x, y0-1]); inSpan = true; }
-        else if (!m) inSpan = false;
-      }
+      const upStart = (y0-1)*w; let inSpan=false;
+      for (let x=xL; x<=xR; x++){ const m = matches((upStart+x)*4); if (m && !inSpan){ stack.push([x, y0-1]); inSpan=true; } else if (!m) inSpan=false; }
     }
-    if (y0 < h - 1){
-      const dnStart = (y0 + 1) * w;
-      let inSpan = false;
-      for (let x = xL; x <= xR; x++){
-        const m = matches((dnStart + x) * 4);
-        if (m && !inSpan){ stack.push([x, y0+1]); inSpan = true; }
-        else if (!m) inSpan = false;
-      }
+    if (y0 < h-1){
+      const dnStart = (y0+1)*w; let inSpan=false;
+      for (let x=xL; x<=xR; x++){ const m = matches((dnStart+x)*4); if (m && !inSpan){ stack.push([x, y0+1]); inSpan=true; } else if (!m) inSpan=false; }
     }
   }
   ctx.putImageData(imgData, 0, 0);
 }
 
-/* ================== KONVERSI GAMBAR ================== */
+/* ================== KONVERSI ================== */
 function canvasToThumb(canvasEl, maxSize){
   const scale = Math.min(1, maxSize / canvasEl.width);
-  const w = Math.round(canvasEl.width * scale);
-  const h = Math.round(canvasEl.height * scale);
+  const w = Math.round(canvasEl.width * scale), h = Math.round(canvasEl.height * scale);
   const tmp = document.createElement('canvas');
   tmp.width = w; tmp.height = h;
   const tc = tmp.getContext('2d', {willReadFrequently:true});
-  tc.fillStyle = '#ffffff';
-  tc.fillRect(0, 0, w, h);
+  tc.fillStyle = '#ffffff'; tc.fillRect(0,0,w,h);
   tc.drawImage(canvasEl, 0, 0, w, h);
   return tmp.toDataURL('image/jpeg', 0.6);
 }
@@ -1151,41 +1153,35 @@ function copyCode(){
   );
 }
 
-/* ================== PERBANDINGAN GAMBAR ================== */
 function toGrid(canvasEl){
   const tmp = document.createElement('canvas');
   tmp.width = GRID; tmp.height = GRID;
   const tc = tmp.getContext('2d', {willReadFrequently:true});
-  tc.fillStyle = '#fff';
-  tc.fillRect(0,0,GRID,GRID);
+  tc.fillStyle = '#fff'; tc.fillRect(0,0,GRID,GRID);
   tc.drawImage(canvasEl, 0, 0, GRID, GRID);
   const d = tc.getImageData(0,0,GRID,GRID).data;
   const arr = new Uint8Array(GRID*GRID);
-  for (let i=0, j=0; i<d.length; i+=4, j++){
+  for (let i=0,j=0; i<d.length; i+=4,j++){
     const dist = Math.abs(255-d[i]) + Math.abs(255-d[i+1]) + Math.abs(255-d[i+2]);
-    arr[j] = dist > 100 ? 1 : 0;
+    arr[j] = dist > DRAW_THRESHOLD ? 1 : 0;
   }
   return arr;
 }
-
 function packGrid(arr){ return Array.from(arr).join(''); }
 function unpackGrid(str){
   const a = new Uint8Array(str.length);
   for (let i=0;i<str.length;i++) a[i] = str.charCodeAt(i)===49 ? 1 : 0;
   return a;
 }
-
 function dilate(arr, r){
   const out = new Uint8Array(arr.length);
   for (let y=0; y<GRID; y++){
     for (let x=0; x<GRID; x++){
       let v = 0;
       for (let dy=-r; dy<=r && !v; dy++){
-        const ny = y+dy;
-        if (ny<0 || ny>=GRID) continue;
+        const ny = y+dy; if (ny<0 || ny>=GRID) continue;
         for (let dx=-r; dx<=r; dx++){
-          const nx = x+dx;
-          if (nx<0 || nx>=GRID) continue;
+          const nx = x+dx; if (nx<0 || nx>=GRID) continue;
           if (arr[ny*GRID + nx]){ v=1; break; }
         }
       }
@@ -1194,34 +1190,23 @@ function dilate(arr, r){
   }
   return out;
 }
-
 function similarity(a, b){
-  let ra = 0, rb = 0;
-  for (let i = 0; i < a.length; i++){
-    if (a[i]) ra++;
-    if (b[i]) rb++;
-  }
+  let ra=0, rb=0;
+  for (let i=0; i<a.length; i++){ if (a[i]) ra++; if (b[i]) rb++; }
   const minPixels = Math.floor(GRID * GRID * 0.01);
   if (ra < minPixels || rb < minPixels) return 0;
-
-  const da = dilate(a, DILATE_R);
-  const db = dilate(b, DILATE_R);
-  let areaA = 0, areaB = 0, inter = 0;
-  for (let i = 0; i < a.length; i++){
-    const A = da[i], B = db[i];
-    if (A) areaA++;
-    if (B) areaB++;
-    if (A && B) inter++;
+  const da = dilate(a, DILATE_R), db = dilate(b, DILATE_R);
+  let areaA=0, areaB=0, inter=0;
+  for (let i=0; i<a.length; i++){
+    const A=da[i], B=db[i];
+    if (A) areaA++; if (B) areaB++; if (A && B) inter++;
   }
-  if (areaA === 0 || areaB === 0) return 0;
-
-  const p = inter / areaA;
-  const r = inter / areaB;
+  if (areaA===0 || areaB===0) return 0;
+  const p = inter/areaA, r = inter/areaB;
   if (p + r === 0) return 0;
-  const f1 = 2 * p * r / (p + r);
+  const f1 = 2*p*r/(p+r);
   const sizeRatio = Math.min(areaA, areaB) / Math.max(areaA, areaB);
-  const score = f1 * (0.85 + 0.15 * sizeRatio);
-  return Math.round(score * 100);
+  return Math.round(f1 * (0.85 + 0.15 * sizeRatio) * 100);
 }
 </script>
 </body>
