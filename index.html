@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#141a35">
 <title>Draw Battle 🎨</title>
-<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Draw%20Battle%22%2C%22short_name%22%3A%22DrawBattle%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141a35%22%2C%22theme_color%22%3A%22%23141a35%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%253D%25270%25200%2520100%2520100%2527%253E%253Ctext%2520y%253D%2527.9em%2527%2520font-size%253D%252790%2527%253E%25F0%259F%258E%25A8%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Draw%20Battle%22%2C%22short_name%22%3A%22DrawBattle%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23141a35%22%2C%22theme_color%22%3A%22%23141a35%22%7D">
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <style>
   :root{
@@ -94,7 +94,6 @@
          touch-action:none;cursor:crosshair}
   canvas.bucket-mode{cursor:cell}
   canvas.spray-mode{cursor:crosshair}
-  canvas.shape-mode{cursor:crosshair}
   
   .colors{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:10px;
     background:rgba(0,0,0,.25);padding:8px;border-radius:14px;}
@@ -123,7 +122,7 @@
   .tool.clear{width:auto;padding:0 14px;font-size:.8rem;font-weight:600;gap:6px}
   .tool.eraser.sel{border-color:#fbbf24;background:rgba(251,191,36,.25)}
   .tool.bucket.sel{border-color:#41d8ff;background:rgba(65,216,255,.25)}
-  .tool.brush.sel{border-color:#f472b6;background:rgba(244,114,182,.25)}
+  .tool.pencil.sel{border-color:#f472b6;background:rgba(244,114,182,.25)}
   .tool.spray.sel{border-color:#a78bfa;background:rgba(167,139,250,.25)}
   .tool.shape.sel{border-color:#34d399;background:rgba(52,211,153,.25)}
   .tool.sticker.sel{border-color:#fbbf24;background:rgba(251,191,36,.25)}
@@ -159,7 +158,6 @@
     -webkit-background-clip:text;background-clip:text;}
   .compare .item.winner-col{border-color:rgba(251,191,36,.6);box-shadow:0 0 20px rgba(251,191,36,.2)}
   .compare .item.me h4{color:#7cf3d0}
-  .compare .stars{margin-top:6px;font-size:.9rem;letter-spacing:1px}
   .grade{display:inline-block;font-size:.7rem;padding:2px 7px;border-radius:10px;
     background:rgba(124,243,208,.2);color:#7cf3d0;margin-left:6px;font-weight:700;}
   
@@ -197,7 +195,6 @@
   .player-pill{background:rgba(124,243,208,.15);border:1px solid rgba(124,243,208,.4);
     border-radius:20px;padding:6px 14px;font-size:.8rem;font-weight:600;color:#7cf3d0}
   
-  /* Reactions */
   .reactions-bar{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
   .reaction-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);
     border:none;font-size:1.2rem;cursor:pointer;padding:0;margin:0;transition:.15s;}
@@ -206,7 +203,6 @@
     animation:floatUp 2s ease-out forwards;}
   @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-200px) scale(1.5);opacity:0}}
   
-  /* Sticker picker */
   .sticker-picker{display:none;position:absolute;background:rgba(0,0,0,.9);
     border-radius:14px;padding:8px;gap:4px;grid-template-columns:repeat(5,1fr);
     border:1px solid rgba(255,255,255,.2);z-index:10;}
@@ -214,19 +210,13 @@
   .sticker-picker span{font-size:1.6rem;cursor:pointer;padding:4px;border-radius:6px;text-align:center;}
   .sticker-picker span:hover{background:rgba(255,255,255,.15)}
   
-  /* Progress bar */
   .progress-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;
     overflow:hidden;margin-top:8px;}
   .progress-bar-inner{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));
     transition:width .3s ease;border-radius:3px}
   .progress-text{font-size:.75rem;opacity:.7;text-align:center;margin-top:4px}
   
-  /* Hint overlay */
-  .hint-overlay{position:absolute;inset:0;display:grid;place-items:center;
-    pointer-events:none;opacity:.15;font-size:20rem;z-index:1}
-  
-  /* Reveal animation */
-  .reveal-stage{text-align:center;padding:20px}
+  .reveal-stage{text-align:center;padding:20px;position:relative;z-index:2}
   .reveal-badge{display:inline-block;font-size:1rem;letter-spacing:.2em;
     opacity:.6;text-transform:uppercase;margin-bottom:10px}
   .reveal-place{font-size:5rem;font-weight:900;line-height:1;
@@ -245,10 +235,88 @@
     transition:.15s;}
   .music-toggle:hover{background:rgba(255,255,255,.2)}
   
-  .bd-hidden{display:none}
+  /* 🌑 DRAMATIC CHAMPION REVEAL */
+  #darkOverlay{
+    position:fixed;inset:0;background:#000;z-index:9997;
+    opacity:0;pointer-events:none;transition:opacity .6s ease;
+  }
+  #darkOverlay.show{opacity:0.92;}
+  
+  #spotlight{
+    position:fixed;inset:0;z-index:9998;pointer-events:none;
+    opacity:0;transition:opacity .8s ease;
+    background:radial-gradient(circle at 50% 45%, rgba(255,220,100,.4) 0%, rgba(255,220,100,.1) 25%, transparent 55%);
+  }
+  #spotlight.show{opacity:1;}
+  
+  .reveal-stage.dramatic{
+    position:relative;z-index:9999;
+    background:transparent;
+    animation:dramaticIn 1.2s ease-out;
+  }
+  @keyframes dramaticIn{
+    0%{transform:scale(.5);opacity:0;filter:brightness(3);}
+    50%{transform:scale(1.08);opacity:1;filter:brightness(1.5);}
+    100%{transform:scale(1);opacity:1;filter:brightness(1);}
+  }
+  .reveal-stage.dramatic .reveal-place{
+    font-size:7rem;
+    text-shadow:0 0 40px rgba(251,191,36,.9), 0 0 80px rgba(251,191,36,.5);
+    animation:championPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes championPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.06);}
+  }
+  .reveal-stage.dramatic .reveal-player{
+    font-size:2rem;color:#fbbf24;
+    text-shadow:0 0 20px rgba(251,191,36,.8);
+  }
+  .reveal-stage.dramatic .reveal-img{
+    box-shadow:0 0 60px rgba(251,191,36,.9), 0 0 120px rgba(251,191,36,.5);
+    animation:imgReveal 1s ease-out;
+    width:220px;height:220px;
+  }
+  @keyframes imgReveal{
+    0%{transform:scale(0) rotate(-10deg);opacity:0;}
+    60%{transform:scale(1.1) rotate(3deg);opacity:1;}
+    100%{transform:scale(1) rotate(0);opacity:1;}
+  }
+  
+  .flash-effect{
+    position:fixed;inset:0;background:radial-gradient(circle,#fff 0%,transparent 60%);
+    z-index:10000;pointer-events:none;
+    animation:flashOut .9s ease-out forwards;
+  }
+  @keyframes flashOut{
+    0%{opacity:0;}
+    15%{opacity:1;}
+    100%{opacity:0;}
+  }
+  
+  .confetti-burst{
+    position:fixed;top:50%;left:50%;font-size:2rem;pointer-events:none;z-index:10001;
+    animation:burst 1.6s ease-out forwards;
+  }
+  @keyframes burst{
+    0%{transform:translate(-50%,-50%) scale(0) rotate(0);opacity:1;}
+    100%{transform:translate(calc(-50% + var(--bx,0px)), calc(-50% + var(--by,0px))) scale(1.6) rotate(360deg);opacity:0;}
+  }
+  
+  .confetti-fall{
+    position:fixed;font-size:1.8rem;pointer-events:none;z-index:10001;
+    animation:fallDown 3s linear forwards;
+  }
+  @keyframes fallDown{
+    0%{transform:translateY(-100px) rotate(0);opacity:1;}
+    100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+  }
 </style>
 </head>
 <body class="theme-dark">
+
+<div id="darkOverlay"></div>
+<div id="spotlight"></div>
 
 <button class="music-toggle" id="musicBtn" onclick="toggleSound()" title="Sound">🔊</button>
 
@@ -261,9 +329,9 @@
     <div style="text-align:center;font-size:.72rem;letter-spacing:.2em;opacity:.6;
       text-transform:uppercase;margin:12px 0 8px;font-weight:600" id="timeLabel">⏱️ Waktu Melukis</div>
     <div class="time-picker">
-      <div class="time-opt" data-time="180"><div class="num">3</div><div class="lbl" id="lblMin1">Menit</div></div>
-      <div class="time-opt sel" data-time="300"><div class="num">5</div><div class="lbl" id="lblMin2">Menit</div></div>
-      <div class="time-opt" data-time="600"><div class="num">10</div><div class="lbl" id="lblMin3">Menit</div></div>
+      <div class="time-opt" data-time="180"><div class="num">3</div><div class="lbl">Menit</div></div>
+      <div class="time-opt sel" data-time="300"><div class="num">5</div><div class="lbl">Menit</div></div>
+      <div class="time-opt" data-time="600"><div class="num">10</div><div class="lbl">Menit</div></div>
     </div>
 
     <div style="text-align:center;font-size:.72rem;letter-spacing:.2em;opacity:.6;
@@ -373,7 +441,7 @@
   <div class="tools-row">
     <div class="tool undo disabled" id="undoBtn" onclick="undo()">↶</div>
     <div class="tool redo disabled" id="redoBtn" onclick="redo()">↷</div>
-    <div class="tool brush sel" id="brushBtn" onclick="setMode('brush')" title="Kuas">🖌️</div>
+    <div class="tool pencil sel" id="brushBtn" onclick="setMode('brush')" title="Pensil">✏️</div>
     <div class="tool spray" id="sprayBtn" onclick="setMode('spray')" title="Spray">💨</div>
     <div class="tool shape" id="shapeBtn" onclick="cycleShape()" title="Bentuk">⬜</div>
     <div class="tool sticker" id="stickerBtn" onclick="toggleSticker()" title="Stiker">😀</div>
@@ -431,7 +499,7 @@
       <div class="ref-label" id="revealLabel">Topik</div>
       <div class="ref-word" id="revealWord">-</div>
     </div>
-    <div class="reveal-stage">
+    <div class="reveal-stage" id="revealStage">
       <div class="reveal-badge" id="revealBadge">JUARA</div>
       <div class="reveal-place" id="revealPlace">3</div>
       <img class="reveal-img" id="revealImg" src="" alt="">
@@ -473,8 +541,7 @@ const GRID = 160;
 const DILATE_R = 2;
 const MAX_HISTORY = 30;
 const DRAW_THRESHOLD = 60;
-const VOTE_TIME = 30; // detik buat voting
-const TOTAL_ROUNDS = 3; // best of 3
+const TOTAL_ROUNDS = 3;
 
 let DRAW_TIME = 300;
 
@@ -637,31 +704,22 @@ let timerId=null, timeLeft=DRAW_TIME, gameActive=false;
 let currentColor='#111111', currentMode='brush', brushSize=3;
 let resultShown=false, connectTimeout=null;
 let history=[], historyIndex=-1, isRestoring=false;
-let lastMid=null, lastVelocity=0;
+let lastMid=null;
 let sprayTimer=null, sprayPos=null;
 let symmetry=false;
-let currentShape='none'; // 'none' | 'line' | 'rect' | 'circle'
+let currentShape='none';
 let shapeStart=null;
 let shapePreviewImage=null;
 let stickerMode=false;
 let currentSticker=null;
 
-// Game rounds
 let currentRound=1;
-let roundScores={}; // {playerId: [scores]}
-let cumulativeScores={};
+let roundScores={};
+let myVotes={}, allVotes={}, votedThisRound=false;
 
-// Voting
-let myVotes={};
-let allVotes={};
-let votedThisRound=false;
-
-// Rate limit
 let lastSubmitTime=0;
 const MIN_SUBMIT_INTERVAL = 30000;
 
-// Reconnect
-let reconnectTimer=null;
 let pausedGame=false;
 
 /* ================== UTIL ================== */
@@ -682,9 +740,6 @@ const setStatus = (el,msg,err) => {
 /* ================== i18n & THEME ================== */
 function changeLang(lang){
   LANG = lang;
-  const ids = ['titleText','subText','timeLabel','settingLabel','btn1v1','btn3p','btnJoin','btnJoinGo',
-    'lobbyTitle','lobbySub','lblCode','btnCopy','promptLabel','btnSubmit','waitTitle','waitSub',
-    'btnPlayAgain','btnDownload','btnShare','refLabel','bdTitle','revealLabel','revealBadge'];
   $('titleText').textContent = t('title');
   $('subText').textContent = t('sub');
   $('timeLabel').textContent = t('timeLabel');
@@ -708,10 +763,6 @@ function changeLang(lang){
   $('refLabel').textContent = t('refLabel');
   $('bdTitle').textContent = t('bdTitle');
   $('revealLabel').textContent = t('revealLabel');
-  $('revealBadge').textContent = t('revealBadge');
-  document.querySelectorAll('.time-opt .lbl').forEach((el,i)=>{
-    el.textContent = t('min');
-  });
 }
 function changeTheme(theme){
   document.body.className = 'theme-' + theme;
@@ -749,14 +800,8 @@ function showFloatingReaction(emoji){
 }
 
 /* ================== STATS ================== */
-function loadStats(){
-  try {
-    return JSON.parse(localStorage.getItem('db_stats') || '{}');
-  } catch(_){ return {}; }
-}
-function saveStats(s){
-  try { localStorage.setItem('db_stats', JSON.stringify(s)); } catch(_){}
-}
+function loadStats(){ try { return JSON.parse(localStorage.getItem('db_stats') || '{}'); } catch(_){ return {}; } }
+function saveStats(s){ try { localStorage.setItem('db_stats', JSON.stringify(s)); } catch(_){} }
 function recordGame(won, score){
   const s = loadStats();
   s.games = (s.games || 0) + 1;
@@ -789,7 +834,7 @@ let hostRetry = 0;
 function createRoom(mode){
   initAudio(); soundClick();
   isHost = true; hostRetry = 0; maxPlayers = mode; myId = 'host';
-  peerConns = []; playersData = {}; currentRound = 1; roundScores = {}; cumulativeScores = {};
+  peerConns = []; playersData = {}; currentRound = 1; roundScores = {};
   openHost();
 }
 function openHost(){
@@ -840,43 +885,28 @@ function setupHostConn(c){
       showFloatingReaction(data.emoji);
       peerConns.forEach(pc=>{ if (pc !== c && pc.open) try { pc.send({type:'reaction', emoji:data.emoji}); } catch(_){} });
     }
-    else if (data.type === 'vote'){
-      allVotes[c.peer] = data.votes;
-      checkVotingDone();
-    }
     else if (data.type === 'rematch'){
       if (!gameActive) playAgainHost();
     }
   });
   c.on('close', ()=>{
     if (gameActive){
-      // Coba reconnect / pause
       pausedGame = true;
-      showPauseModal();
+      const resume = confirm('Pemain terputus! Tunggu 30 detik? Klik OK untuk tunggu, Cancel untuk keluar.');
+      if (resume){
+        setTimeout(()=>{
+          if (peerConns.some(x => x.open)){ pausedGame = false; alert('Pemain kembali! Lanjutkan.'); }
+          else { alert('Pemain tidak kembali. Keluar.'); location.reload(); }
+        }, 30000);
+      } else {
+        location.reload();
+      }
     } else {
       peerConns = peerConns.filter(x => x !== c);
       updateLobby();
     }
   });
   c.on('error', e => console.error('Conn error:', e));
-}
-
-function showPauseModal(){
-  // Simple pause: tampilkan alert
-  const resume = confirm('Pemain terputus! Tunggu 30 detik? Klik OK untuk tunggu, Cancel untuk keluar.');
-  if (resume){
-    setTimeout(()=>{
-      if (peerConns.some(c => c.open)){
-        pausedGame = false;
-        alert('Pemain kembali! Lanjutkan.');
-      } else {
-        alert('Pemain tidak kembali. Keluar.');
-        location.reload();
-      }
-    }, 30000);
-  } else {
-    location.reload();
-  }
 }
 
 function updateLobby(){
@@ -901,11 +931,10 @@ function startRoundHost(){
   const topic = randomTopic();
   const rg = renderEmojiGrid(topic.emoji);
   const refStr = packGrid(rg);
-  const startTime = Date.now();
   peerConns.forEach(pc => {
-    if (pc.open) try { pc.send({type:'start', word:topic.word, emoji:topic.emoji, refGrid:refStr, playerIds, time:DRAW_TIME, round:currentRound, startTime}); } catch(_){}
+    if (pc.open) try { pc.send({type:'start', word:topic.word, emoji:topic.emoji, refGrid:refStr, playerIds, time:DRAW_TIME, round:currentRound}); } catch(_){}
   });
-  startCountdown(topic.word, topic.emoji, rg, playerIds, startTime);
+  startCountdown(topic.word, topic.emoji, rg, playerIds);
 }
 
 function playAgainHost(){
@@ -931,7 +960,7 @@ function joinRoom(){
   const code = $('joinCode').value.trim().toUpperCase();
   if (code.length!==6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
   roomCode = code; isHost = false; peerConns = []; playersData = {};
-  currentRound = 1; roundScores = {}; cumulativeScores = {};
+  currentRound = 1; roundScores = {};
   setStatus('menuStatus','Menghubungkan...');
   try { if (peer) peer.destroy(); } catch(_){}
   peer = new Peer(PEER_CONFIG);
@@ -959,7 +988,7 @@ function joinRoom(){
     conn.on('close', ()=>{
       if (gameActive){
         pausedGame = true;
-        showPauseModal();
+        alert('Host terputus! Menunggu reconnect...');
       } else if ($('lobby').classList.contains('active')){
         alert('Host terputus 😢'); location.reload();
       }
@@ -1009,7 +1038,7 @@ function handleData(data){
     if (data.time) DRAW_TIME = data.time;
     if (data.round) currentRound = data.round;
     refGrid = unpackGrid(data.refGrid);
-    startCountdown(data.word, data.emoji, refGrid, playerIds, data.startTime || Date.now());
+    startCountdown(data.word, data.emoji, refGrid, playerIds);
   }
   if (data.type === 'update'){
     playersData[data.playerId] = { grid: data.grid, img: data.img, features: data.features };
@@ -1018,35 +1047,27 @@ function handleData(data){
   }
   if (data.type === 'reaction'){
     showFloatingReaction(data.emoji);
-    // Relay ke yang lain (kalau bukan dari host)
     peerConns.forEach(pc=>{ if (pc.open) try { pc.send({type:'reaction', emoji:data.emoji}); } catch(_){} });
   }
-  if (data.type === 'vote'){
-    allVotes[data.playerId] = data.votes;
-    checkVotingDone();
-  }
   if (data.type === 'reveal'){
-    showRevealScreen(data);
-  }
-  if (data.type === 'pause'){
-    pausedGame = true;
-    setStatus('waitStatus', '⏸️ Pemain terputus. Menunggu reconnect...');
-  }
-  if (data.type === 'resume'){
-    pausedGame = false;
-    setStatus('waitStatus', '▶️ Lanjut!');
+    if (data.place === 1){
+      playChampionReveal(data);
+    } else {
+      showRevealScreen(data);
+    }
   }
 }
 
 /* ================== COUNTDOWN ================== */
 let countdownInterval = null;
-function startCountdown(word, emoji, rg, pIds, startTime){
+function startCountdown(word, emoji, rg, pIds){
   promptTopic = {word, emoji};
   refGrid = rg;
   if (pIds) playerIds = pIds;
   playersData = {}; resultShown = false; votedThisRound = false;
   myVotes = {}; allVotes = {};
   clearTimeout(connectTimeout);
+  hideDarkOverlay();
   showScreen('countdown');
   let count = 3;
   $('countdownNum').textContent = count;
@@ -1093,7 +1114,6 @@ function startGame(word, emoji, rg, pIds){
   $('myProgress').style.width = '0%';
   setStatus('resultStatus','');
 
-  // Reset tools
   currentColor = '#111111'; currentMode = 'brush'; brushSize = 3;
   symmetry = false; currentShape = 'none'; stickerMode = false;
   document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel', x.dataset.color==='#111111'));
@@ -1102,10 +1122,12 @@ function startGame(word, emoji, rg, pIds){
   $('bucketBtn').classList.remove('sel');
   $('sprayBtn').classList.remove('sel');
   $('shapeBtn').classList.remove('sel');
+  $('shapeBtn').textContent = '⬜';
   $('stickerBtn').classList.remove('sel');
+  $('stickerBtn').textContent = '😀';
   $('brushBtn').classList.add('sel');
   $('symBtn').classList.remove('sel');
-  canvas.classList.remove('bucket-mode','spray-mode','shape-mode');
+  canvas.classList.remove('bucket-mode','spray-mode');
   $('customColorBtn').classList.remove('sel');
   $('customColorBtn').style.background = '';
   $('customColorInput').value = '#111111';
@@ -1192,7 +1214,6 @@ function checkAllSubmitted(){
     if (!playersData[id] || !playersData[id].features) return;
   }
   resultShown = true;
-  // Hitung skor & reveal
   const scores = playerIds.map(id => {
     const p = playersData[id];
     const gridArr = unpackGrid(p.grid);
@@ -1200,7 +1221,6 @@ function checkAllSubmitted(){
     const breakdown = computeScore(p.features, f1);
     return { id, ...breakdown };
   });
-  // Simpan skor ronde ini
   scores.forEach(s => {
     if (!roundScores[s.id]) roundScores[s.id] = [];
     roundScores[s.id].push(s.total);
@@ -1216,12 +1236,11 @@ function getPlayerLabel(id){
   return 'Pemain ' + (idx + 1);
 }
 
-/* ================== REVEAL JUARA 3-2-1 ================== */
+/* ================== REVEAL 3-2-1 ================== */
 let revealQueue = [];
 let revealIndex = 0;
 
 function startReveal(scores){
-  // Urut dari terendah ke tertinggi (biar reveal juara 3 dulu)
   const sorted = [...scores].sort((a,b) => a.total - b.total);
   revealQueue = sorted;
   revealIndex = 0;
@@ -1231,25 +1250,19 @@ function startReveal(scores){
 
 function playRevealNext(){
   if (revealIndex >= revealQueue.length){
-    // Selesai → tampilkan hasil lengkap
     setTimeout(()=>{
-      const scores = revealQueue;
-      showResult(scores);
-    }, 1500);
+      hideDarkOverlay();
+      showResult(revealQueue);
+    }, 2000);
     return;
   }
   const player = revealQueue[revealIndex];
   const totalPlayers = revealQueue.length;
-  const place = totalPlayers - revealIndex; // 3, 2, 1
-
-  // Cek seri
-  const isTie = revealQueue.some((p, i) => i !== revealIndex && p.total === player.total && p.id !== player.id);
+  const place = totalPlayers - revealIndex;
 
   const label = getPlayerLabel(player.id);
   const badge = place === 1 ? '🥇 JUARA 1' : place === 2 ? '🥈 JUARA 2' : place === 3 ? '🥉 JUARA 3' : `JUARA ${place}`;
-  const emoji = place === 1 ? '🏆' : place === 2 ? '🎉' : place === 3 ? '👏' : '🎊';
 
-  // Broadcast ke client
   if (isHost){
     peerConns.forEach(pc => {
       if (pc.open) try {
@@ -1257,59 +1270,136 @@ function playRevealNext(){
       } catch(_){}
     });
   }
-  showRevealScreen({
-    place, playerId:player.id, label, total:player.total, badge, img:playersData[player.id].img, totalPlayers
-  });
 
-  // Sound effect
-  if (place === 1){ beep(523,0.15); setTimeout(()=>beep(659,0.15),150); setTimeout(()=>beep(784,0.3),300); setTimeout(()=>beep(1047,0.4),450); }
-  else if (place === 2){ beep(440,0.15); setTimeout(()=>beep(554,0.2),150); }
-  else if (place === 3){ beep(349,0.15); setTimeout(()=>beep(440,0.2),150); }
-
-  // Confetti di juara 1
-  if (place === 1) launchConfetti();
+  if (place === 1){
+    playChampionReveal({
+      place, playerId:player.id, label, total:player.total, badge, img:playersData[player.id].img, totalPlayers
+    });
+  } else {
+    showRevealScreen({
+      place, playerId:player.id, label, total:player.total, badge, img:playersData[player.id].img, totalPlayers
+    });
+    if (place === 2){ beep(440,0.15); setTimeout(()=>beep(554,0.2),150); }
+    else if (place === 3){ beep(349,0.15); setTimeout(()=>beep(440,0.2),150); }
+  }
 
   revealIndex++;
-  // Delay 3 detik sebelum lanjut ke juara berikutnya
-  setTimeout(playRevealNext, place === 1 ? 4000 : 3200);
+  setTimeout(playRevealNext, place === 1 ? 6500 : 3200);
 }
 
 function showRevealScreen(data){
+  const stage = $('revealStage');
+  stage.classList.remove('dramatic');
   $('revealPlace').textContent = data.place;
   $('revealBadge').textContent = data.badge || `JUARA ${data.place}`;
   $('revealPlayer').textContent = data.label;
   $('revealScore').textContent = `Skor: ${data.total} / 100`;
   $('revealImg').src = data.img || '';
-  // Re-trigger animation
   const el = $('revealPlace');
   el.style.animation = 'none';
   void el.offsetWidth;
   el.style.animation = 'popIn .6s cubic-bezier(.5,1.8,.5,1)';
 }
 
-function launchConfetti(){
-  for (let i = 0; i < 40; i++){
+/* 🏆 DRAMATIC CHAMPION REVEAL */
+function playChampionReveal(data){
+  const overlay = $('darkOverlay');
+  const spot = $('spotlight');
+  const stage = $('revealStage');
+
+  // Show reveal screen tapi dengan stage normal dulu
+  showScreen('reveal');
+  stage.classList.remove('dramatic');
+
+  // 1. Fade ke gelap
+  overlay.classList.add('show');
+
+  // 2. Setelah 800ms, spotlight muncul + sound dramatis
+  setTimeout(()=>{
+    spot.classList.add('show');
+    beep(220, 0.3, 'sine', 0.15);
+    setTimeout(()=>beep(330, 0.3, 'sine', 0.15), 200);
+    setTimeout(()=>beep(440, 0.4, 'sine', 0.18), 400);
+
+    // 3. Setelah 1.2s, tampilkan gambar juara 1 dramatis
     setTimeout(()=>{
-      const c = document.createElement('div');
-      c.textContent = ['🎉','🎊','✨','⭐','🏆','💫'][Math.floor(Math.random()*6)];
-      c.style.position = 'fixed';
-      c.style.left = Math.random() * 100 + '%';
-      c.style.top = '-50px';
-      c.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
-      c.style.zIndex = 9999;
-      c.style.pointerEvents = 'none';
-      c.style.transition = 'transform 3s linear, opacity 3s';
-      document.body.appendChild(c);
+      stage.classList.add('dramatic');
+
+      $('revealPlace').textContent = data.place;
+      $('revealBadge').textContent = data.badge;
+      $('revealPlayer').textContent = data.label;
+      $('revealScore').textContent = `Skor: ${data.total} / 100`;
+      $('revealImg').src = data.img || '';
+
+      // Flash effect pas gambar muncul
+      const flash = document.createElement('div');
+      flash.className = 'flash-effect';
+      document.body.appendChild(flash);
+      setTimeout(()=>flash.remove(), 900);
+
+      // Fanfare sound
       setTimeout(()=>{
-        c.style.transform = `translateY(${window.innerHeight + 100}px) rotate(${Math.random()*720 - 360}deg)`;
-        c.style.opacity = '0';
-      }, 50);
-      setTimeout(()=>c.remove(), 3100);
-    }, i * 40);
+        beep(523,0.15);
+        setTimeout(()=>beep(659,0.15),150);
+        setTimeout(()=>beep(784,0.2),300);
+        setTimeout(()=>beep(1047,0.5),500);
+        setTimeout(()=>beep(1318,0.6),700);
+      }, 300);
+
+      // Confetti meletup dari tengah + hujan confetti
+      setTimeout(()=>{
+        launchConfettiBurst();
+        launchConfettiFall();
+      }, 600);
+    }, 1200);
+  }, 800);
+}
+
+function launchConfettiBurst(){
+  const emojis = ['🎉','🎊','✨','⭐','🏆','💫','🌟','💥','🎇'];
+  for (let i = 0; i < 30; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti-burst';
+    c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    const angle = (Math.PI * 2 * i) / 30;
+    const dist = 200 + Math.random() * 400;
+    c.style.setProperty('--bx', Math.cos(angle) * dist + 'px');
+    c.style.setProperty('--by', Math.sin(angle) * dist + 'px');
+    c.style.animationDelay = (i * 15) + 'ms';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 2200);
   }
 }
 
-/* ================== SCORING (STRICT) ================== */
+function launchConfettiFall(){
+  const emojis = ['🎉','🎊','✨','⭐','🏆','💫','🌟','🎇'];
+  for (let i = 0; i < 40; i++){
+    setTimeout(()=>{
+      const c = document.createElement('div');
+      c.className = 'confetti-fall';
+      c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      c.style.left = Math.random() * 100 + '%';
+      c.style.top = '-50px';
+      c.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+      c.style.animationDuration = (2.5 + Math.random() * 1.5) + 's';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 4500);
+    }, i * 60);
+  }
+}
+
+function launchConfetti(){
+  launchConfettiFall();
+}
+
+function hideDarkOverlay(){
+  $('darkOverlay').classList.remove('show');
+  $('spotlight').classList.remove('show');
+  const stage = $('revealStage');
+  if (stage) stage.classList.remove('dramatic');
+}
+
+/* ================== SCORING ================== */
 function computeScore(f, f1){
   const fn = Math.pow(f1 / 100, 1.4);
   const tech = Math.min(35, fn * 20 + Math.min(f.colors / 8, 1) * 10 + Math.min(f.coverage / 0.20, 1) * 5);
@@ -1415,6 +1505,7 @@ function extractFeatures(canvasEl){
 
 /* ================== SHOW RESULT ================== */
 function showResult(scores){
+  hideDarkOverlay();
   showScreen('result');
   const sorted = [...scores].sort((a,b) => b.total - a.total);
   const top = sorted[0].total;
@@ -1445,19 +1536,16 @@ function showResult(scores){
   else if (winners[0].id === myId){ box.textContent = '🏆 KAMU MENANG!'; box.className = 'winner win'; soundSuccess(); }
   else { box.textContent = `😢 ${getPlayerLabel(winners[0].id).toUpperCase()} MENANG`; box.className = 'winner lose'; soundFail(); }
 
-  // Record stats
   const myTotal = scores.find(s => s.id === myId).total;
   recordGame(winners.length === 1 && winners[0].id === myId, myTotal);
 
-  // Update round info
   if (currentRound < TOTAL_ROUNDS){
     $('resultStatus').textContent = `${t('roundInfo')} ${currentRound} / ${TOTAL_ROUNDS}`;
   } else {
     $('resultStatus').textContent = `Final! 🏆`;
   }
 
-  const myScore = myTotal;
-  const diff = myScore - top;
+  const diff = myTotal - top;
   let v = '';
   if (winners.length > 1) v = '🔥 Skornya sama kuat!';
   else if (diff === 0) v = '🎯 Gambarmu dinilai paling bagus!';
@@ -1509,26 +1597,23 @@ function renderBreakdown(scores, winners){
 }
 
 function showFinalResults(){
-  // Gabung skor semua ronde
   const totals = {};
   playerIds.forEach(id => {
     const arr = roundScores[id] || [];
     totals[id] = arr.reduce((a,b) => a + b, 0);
   });
-  // Konversi ke format skor
   const finalScores = playerIds.map(id => ({
     id,
     total: Math.round(totals[id] / Math.max(1, (roundScores[id] || []).length)),
     cumulative: totals[id]
   }));
-  // Update winner box
   const sorted = [...finalScores].sort((a,b) => b.cumulative - a.cumulative);
   const top = sorted[0];
+  hideDarkOverlay();
   showScreen('result');
   $('winnerBox').textContent = `🏆 JUARA UMUM: ${getPlayerLabel(top.id)}`;
   $('winnerBox').className = 'winner win';
   launchConfetti();
-  // Update compare
   const cmp = $('compare');
   cmp.innerHTML = '';
   cmp.style.gridTemplateColumns = `repeat(finalScores.length, 1fr)`;
@@ -1557,15 +1642,12 @@ function downloadResult(){
   cx.fillText('🎨 Draw Battle Result', 400, 60);
   cx.font = '24px sans-serif';
   cx.fillText(`Topik: ${promptTopic?.emoji || ''} ${promptTopic?.word || ''}`, 400, 100);
-  // Draw each image
   const imgs = cmp.querySelectorAll('img');
   const pcts = cmp.querySelectorAll('.pct');
   const startX = 400 - (imgs.length * 200) / 2;
   imgs.forEach((img, i) => {
     const x = startX + i * 200;
-    try {
-      cx.drawImage(img, x + 20, 150, 160, 160);
-    } catch(_){}
+    try { cx.drawImage(img, x + 20, 150, 160, 160); } catch(_){}
     cx.fillStyle = '#fff'; cx.font = 'bold 28px sans-serif';
     cx.fillText(pcts[i]?.textContent || '', x + 100, 360);
   });
@@ -1637,38 +1719,24 @@ function getPos(e){
 }
 function activeColor(){ return currentMode === 'eraser' ? '#ffffff' : currentColor; }
 
-/* 🖌️ BRUSH */
+/* ✏️ PENCIL — smooth quadratic */
 function drawBrushSegment(x0, y0, x1, y1, color){
-  const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
-  const dx = x1 - x0, dy = y1 - y0;
-  const velocity = Math.sqrt(dx*dx + dy*dy);
-  lastVelocity = lastVelocity * 0.7 + velocity * 0.3;
-  const pressure = Math.max(0.6, Math.min(1.15, 1.15 - lastVelocity / 60));
-  const w = brushSize * pressure;
+  const mx = (x0 + x1) / 2;
+  const my = (y0 + y1) / 2;
   ctx.beginPath();
-  ctx.moveTo(lastMid ? (lastMid.x + x0)/2 : x0, lastMid ? (lastMid.y + y0)/2 : y0);
-  ctx.quadraticCurveTo(x0, y0, mx, my);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = w;
-  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  ctx.stroke();
-  if (brushSize >= 6 && currentMode === 'brush'){
-    ctx.beginPath();
-    ctx.moveTo(lastMid ? (lastMid.x + x0)/2 : x0, lastMid ? (lastMid.y + y0)/2 : y0);
+  if (lastMid){
+    ctx.moveTo(lastMid.x, lastMid.y);
     ctx.quadraticCurveTo(x0, y0, mx, my);
-    ctx.strokeStyle = lightenColor(color, 0.15);
-    ctx.lineWidth = w * 0.4;
-    ctx.stroke();
+  } else {
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(mx, my);
   }
+  ctx.strokeStyle = color;
+  ctx.lineWidth = brushSize;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
   lastMid = { x: mx, y: my };
-}
-function lightenColor(hex, amount){
-  if (hex === '#ffffff') return '#ffffff';
-  let r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
-  r = Math.min(255, Math.round(r + (255-r) * amount));
-  g = Math.min(255, Math.round(g + (255-g) * amount));
-  b = Math.min(255, Math.round(b + (255-b) * amount));
-  return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
 }
 
 /* 💨 SPRAY */
@@ -1721,18 +1789,6 @@ function savePreviewImage(){
   shapePreviewImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-/* ✨ SYMMETRY helper */
-function withSymmetry(fn){
-  fn(0, 0);
-  if (symmetry){
-    ctx.save();
-    ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
-    fn(0, 0);
-    ctx.restore();
-  }
-}
-
-/* CANVAS EVENTS */
 canvas.addEventListener('pointerdown', e=>{
   if (!gameActive) return;
   e.preventDefault();
@@ -1744,7 +1800,6 @@ canvas.addEventListener('pointerdown', e=>{
     return;
   }
 
-  // Sticker
   if (stickerMode && currentSticker){
     pushHistory();
     const p = getPos(e);
@@ -1755,7 +1810,6 @@ canvas.addEventListener('pointerdown', e=>{
     return;
   }
 
-  // Shape
   if (currentShape !== 'none'){
     pushHistory();
     savePreviewImage();
@@ -1773,7 +1827,6 @@ canvas.addEventListener('pointerdown', e=>{
   const p = getPos(e);
   lastPt = p;
   lastMid = null;
-  lastVelocity = 0;
 
   if (currentMode === 'spray'){
     sprayPos = p;
@@ -1797,14 +1850,13 @@ canvas.addEventListener('pointerdown', e=>{
     return;
   }
 
-  // Brush / Eraser
   if (symmetry){
-    ctx.beginPath(); ctx.arc(p.x, p.y, brushSize * 0.55, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(p.x, p.y, brushSize / 2, 0, Math.PI*2);
     ctx.fillStyle = activeColor(); ctx.fill();
-    ctx.beginPath(); ctx.arc(canvas.width - p.x, p.y, brushSize * 0.55, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(canvas.width - p.x, p.y, brushSize / 2, 0, Math.PI*2);
     ctx.fillStyle = activeColor(); ctx.fill();
   } else {
-    ctx.beginPath(); ctx.arc(p.x, p.y, brushSize * 0.55, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(p.x, p.y, brushSize / 2, 0, Math.PI*2);
     ctx.fillStyle = activeColor(); ctx.fill();
   }
 });
@@ -1819,7 +1871,6 @@ canvas.addEventListener('pointermove', e=>{
     return;
   }
 
-  // Shape preview
   if (currentShape !== 'none' && shapeStart){
     ctx.putImageData(shapePreviewImage, 0, 0);
     if (symmetry){
@@ -1859,7 +1910,6 @@ canvas.addEventListener('pointermove', e=>{
   })
 );
 
-/* TOOLS */
 document.querySelectorAll('.tool[data-size]').forEach(t=>{
   t.addEventListener('click', ()=>{
     document.querySelectorAll('.tool[data-size]').forEach(x=>x.classList.remove('sel'));
