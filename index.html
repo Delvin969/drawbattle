@@ -316,6 +316,78 @@
     0%{transform:translateY(-100px) rotate(0);opacity:1;}
     100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
   }
+  
+  /* 🎁 BONUS SPLASH */
+  #bonusSplash .bonus-card{
+    background:linear-gradient(135deg,rgba(251,191,36,.25),rgba(236,72,153,.25));
+    border:2px solid rgba(251,191,36,.7);
+    box-shadow:0 0 80px rgba(251,191,36,.5), inset 0 0 40px rgba(236,72,153,.15);
+    animation:bonusIn .5s cubic-bezier(.5,1.8,.5,1);
+  }
+  @keyframes bonusIn{
+    0%{transform:scale(.3) rotate(-10deg);opacity:0;}
+    60%{transform:scale(1.08) rotate(3deg);opacity:1;}
+    100%{transform:scale(1) rotate(0);opacity:1;}
+  }
+  .bonus-gift{
+    font-size:5.5rem;line-height:1;
+    animation:bonusBounce .7s ease-in-out infinite alternate;
+    filter:drop-shadow(0 0 30px rgba(251,191,36,.8));
+  }
+  @keyframes bonusBounce{
+    from{transform:translateY(0) scale(1);}
+    to{transform:translateY(-12px) scale(1.08);}
+  }
+  .bonus-title{
+    font-size:2.3rem;font-weight:900;line-height:1;
+    background:linear-gradient(90deg,#fbbf24,#ec4899,#8b5cf6,#fbbf24);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin:10px 0 6px;
+    background-size:200% 100%;
+    animation:bonusShine 2s linear infinite;
+  }
+  @keyframes bonusShine{
+    0%{background-position:0% 50%;}
+    100%{background-position:200% 50%;}
+  }
+  .bonus-reward-box{
+    background:linear-gradient(135deg,#fbbf24,#d97706);
+    padding:12px 16px;border-radius:14px;
+    font-weight:800;font-size:.92rem;color:#1a1f3a;
+    line-height:1.6;margin:14px 0 10px;
+    box-shadow:0 6px 20px rgba(251,191,36,.4);
+    text-align:left;
+  }
+  .bonus-countdown{
+    font-size:3.5rem;font-weight:900;color:#fbbf24;
+    text-shadow:0 0 30px rgba(251,191,36,.9);
+    animation:bonusTick .9s ease-in-out infinite;
+  }
+  @keyframes bonusTick{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+  }
+  .bonus-flash{
+    position:fixed;inset:0;background:radial-gradient(circle,#fbbf24 0%,transparent 70%);
+    z-index:10002;pointer-events:none;
+    animation:bonusFlash 1.2s ease-out forwards;
+  }
+  @keyframes bonusFlash{
+    0%{opacity:0;}
+    20%{opacity:1;}
+    100%{opacity:0;}
+  }
+  .bonus-points-tag{
+    display:inline-block;background:linear-gradient(135deg,#fbbf24,#ec4899);
+    color:#fff;font-weight:800;font-size:.72rem;padding:3px 8px;
+    border-radius:12px;margin-left:6px;box-shadow:0 3px 10px rgba(251,191,36,.5);
+    animation:bonusTagPulse 1.2s ease-in-out infinite;
+    vertical-align:middle;
+  }
+  @keyframes bonusTagPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+  }
 </style>
 </head>
 <body class="theme-dark">
@@ -363,6 +435,9 @@
       <button class="green" onclick="joinRoom()" id="btnJoinGo">🚀 Gabung</button>
     </div>
     <div id="menuStatus" class="status"></div>
+    <div style="text-align:center;font-size:.7rem;opacity:.5;margin-top:12px;line-height:1.5">
+      🎁 Ada kesempatan <strong>Bonus Round</strong> (tema pemandangan + poin ekstra) dengan chance 1/10!
+    </div>
   </div>
 </div>
 
@@ -387,6 +462,33 @@
   </div>
 </div>
 
+<!-- ============ BONUS SPLASH ============ -->
+<div id="bonusSplash" class="screen">
+  <div class="card bonus-card" style="text-align:center;padding:30px 22px">
+    <div class="bonus-gift">🎁</div>
+    <div class="bonus-title">BONUS ROUND!</div>
+    <p style="font-size:1rem;opacity:.9;margin-bottom:14px;font-weight:600">Tema Spesial: <strong style="color:#fbbf24">PEMANDANGAN</strong> 🌄</p>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+      <div style="background:rgba(0,0,0,.35);border-radius:12px;padding:10px 18px;min-width:110px">
+        <div style="font-size:.65rem;opacity:.6;letter-spacing:.15em;text-transform:uppercase">Tema</div>
+        <div style="font-size:2rem;line-height:1;margin:4px 0" id="bonusTopicEmoji">🏞️</div>
+        <div style="font-size:.9rem;font-weight:700" id="bonusTopicWord">-</div>
+      </div>
+      <div style="background:rgba(0,0,0,.35);border-radius:12px;padding:10px 18px;min-width:110px">
+        <div style="font-size:.65rem;opacity:.6;letter-spacing:.15em;text-transform:uppercase">Waktu</div>
+        <div style="font-size:1.8rem;line-height:1;margin:4px 0">⏱️</div>
+        <div style="font-size:.9rem;font-weight:700"><span id="bonusTime">90</span> detik</div>
+      </div>
+    </div>
+    <div class="bonus-reward-box">
+      🏆 Skor ≥ 85 → <strong>+40 poin bonus</strong><br>
+      🥈 Skor ≥ 70 → <strong>+25 poin bonus</strong><br>
+      🥉 Skor ≥ 55 → <strong>+15 poin bonus</strong>
+    </div>
+    <div class="bonus-countdown" id="bonusCountdown">3</div>
+  </div>
+</div>
+
 <!-- ============ COUNTDOWN ============ -->
 <div id="countdown" class="screen">
   <div class="card" style="text-align:center;padding:60px 22px">
@@ -401,7 +503,7 @@
 <!-- ============ GAME ============ -->
 <div id="game" class="screen">
   <div class="topbar">
-    <div class="prompt-chip">
+    <div class="prompt-chip" id="promptChip">
       <div class="txt">
         <small id="promptLabel">TEMA GAMBAR</small>
         <div class="word" id="promptText">-</div>
@@ -410,6 +512,12 @@
       <div class="emoji" id="promptEmoji">🎨</div>
     </div>
     <div class="timer" id="timerEl"><span id="timerNum">5:00</span></div>
+  </div>
+  <div id="bonusGameBanner" style="display:none;background:linear-gradient(135deg,#fbbf24,#ec4899);
+    color:#fff;font-weight:800;text-align:center;padding:8px;border-radius:12px;
+    margin-bottom:10px;box-shadow:0 4px 14px rgba(251,191,36,.5);
+    animation:bonusTagPulse 1.2s ease-in-out infinite;font-size:.85rem">
+    🎁 BONUS ROUND — Tema Pemandangan! Poin ekstra!
   </div>
   <div class="canvas-wrap" id="canvasWrap">
     <canvas id="canvas" width="600" height="600"></canvas>
@@ -547,8 +655,11 @@ const DILATE_R = 2;
 const MAX_HISTORY = 30;
 const DRAW_THRESHOLD = 60;
 const TOTAL_ROUNDS = 3;
+const BONUS_TIME = 90;
+const BONUS_CHANCE = 0.1;
 
 let DRAW_TIME = 300;
+window._currentDRAW_TIME = 300;
 
 const PEER_CONFIG = {
   debug: 2,
@@ -673,6 +784,28 @@ const TOPICS = TOPICS_RAW.map(s => {
   return { word, emoji };
 });
 
+/* 🌄 BONUS TOPICS — khusus pemandangan */
+const BONUS_TOPICS_RAW = [
+  'Gunung dan Danau|🏞️',
+  'Pantai Sunset|🌅',
+  'Hutan Pinus|🌲',
+  'Air Terjun|💧',
+  'Sawah Hijau|🌾',
+  'Kota Malam|🌃',
+  'Padang Rumput|🌿',
+  'Pulau Tropis|🏝️',
+  'Bukit Hijau|⛰️',
+  'Galaksi Bintang|🌌',
+  'Pegunungan Salju|🏔️',
+  'Pantai Tropis|🏖️',
+  'Danau Tenang|🛶',
+  'Matahari Terbit|🌄'
+];
+const BONUS_TOPICS = BONUS_TOPICS_RAW.map(s => {
+  const [word, emoji] = s.split('|');
+  return { word, emoji };
+});
+
 /* ================== SOUND ================== */
 let soundOn = true;
 let audioCtx = null;
@@ -727,14 +860,17 @@ const MIN_SUBMIT_INTERVAL = 30000;
 
 let pausedGame=false;
 
+let bonusRoundActive = false;
+let bonusPoints = {};
+
 /* ================== UTIL ================== */
 const showScreen = id => {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $(id).classList.add('active');
-  // Scroll ke atas tiap ganti screen
   window.scrollTo({top:0, behavior:'instant'});
 };
 const randomTopic = () => TOPICS[Math.floor(Math.random()*TOPICS.length)];
+const randomBonusTopic = () => BONUS_TOPICS[Math.floor(Math.random()*BONUS_TOPICS.length)];
 const genCode = () => {
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s=''; for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
@@ -782,6 +918,7 @@ document.querySelectorAll('.time-opt').forEach(t => {
     document.querySelectorAll('.time-opt').forEach(x => x.classList.remove('sel'));
     t.classList.add('sel');
     DRAW_TIME = parseInt(t.dataset.time);
+    window._currentDRAW_TIME = DRAW_TIME;
     soundClick();
   });
 });
@@ -842,6 +979,7 @@ function createRoom(mode){
   initAudio(); soundClick();
   isHost = true; hostRetry = 0; maxPlayers = mode; myId = 'host';
   peerConns = []; playersData = {}; currentRound = 1; roundScores = {};
+  bonusRoundActive = false; bonusPoints = {};
   openHost();
 }
 function openHost(){
@@ -936,26 +1074,55 @@ function updateLobby(){
 
 function startRoundHost(){
   playerIds = ['host', ...peerConns.map(c => c.peer)];
-  const topic = randomTopic();
-  const rg = renderEmojiGrid(topic.emoji);
-  const refStr = packGrid(rg);
-  peerConns.forEach(pc => {
-    if (pc.open) try { pc.send({type:'start', word:topic.word, emoji:topic.emoji, refGrid:refStr, playerIds, time:DRAW_TIME, round:currentRound}); } catch(_){}
-  });
-  startCountdown(topic.word, topic.emoji, rg, playerIds);
+
+  // 🎁 Cek bonus (hanya ronde 2+, chance 1/10, nggak bisa 2x beruntun)
+  const isBonus = (currentRound >= 2) && !bonusRoundActive && (Math.random() < BONUS_CHANCE);
+
+  if (isBonus){
+    bonusRoundActive = true;
+    const topic = randomBonusTopic();
+    const rg = renderEmojiGrid(topic.emoji);
+    const refStr = packGrid(rg);
+    console.log('🎁 BONUS ROUND TRIGGERED!', topic.word);
+    peerConns.forEach(pc => {
+      if (pc.open) try {
+        pc.send({
+          type:'bonus-start',
+          word: topic.word,
+          emoji: topic.emoji,
+          refGrid: refStr,
+          playerIds,
+          time: BONUS_TIME,
+          round: currentRound
+        });
+      } catch(_){}
+    });
+    showBonusSplash(topic.word, topic.emoji, BONUS_TIME, () => {
+      startCountdown(topic.word, topic.emoji, rg, playerIds, BONUS_TIME);
+    });
+  } else {
+    bonusRoundActive = false;
+    const topic = randomTopic();
+    const rg = renderEmojiGrid(topic.emoji);
+    const refStr = packGrid(rg);
+    peerConns.forEach(pc => {
+      if (pc.open) try {
+        pc.send({type:'start', word:topic.word, emoji:topic.emoji, refGrid:refStr, playerIds, time:DRAW_TIME, round:currentRound});
+      } catch(_){}
+    });
+    startCountdown(topic.word, topic.emoji, rg, playerIds, DRAW_TIME);
+  }
 }
 
 /* ================== PLAY AGAIN — FIXED ================== */
 function handlePlayAgain(){
   console.log('[handlePlayAgain] currentRound:', currentRound, '/', TOTAL_ROUNDS);
 
-  // Kalau ronde terakhir udah selesai (juara umum udah tampil)
   if (currentRound > TOTAL_ROUNDS){
     console.log('→ Reset total, main dari ronde 1');
     resetAndRestart();
     return;
   }
-  // Kalau masih di ronde 1 atau 2 → lanjut ke ronde berikutnya
   if (currentRound < TOTAL_ROUNDS){
     currentRound++;
     console.log('→ Lanjut ke ronde', currentRound);
@@ -963,7 +1130,7 @@ function handlePlayAgain(){
     startRoundHost();
     return;
   }
-  // currentRound === TOTAL_ROUNDS (ronde terakhir baru selesai) → tampil juara umum
+  // Ronde terakhir baru selesai → tampil juara umum
   console.log('→ Tampil juara umum');
   currentRound = TOTAL_ROUNDS + 1;
   showFinalResults();
@@ -976,7 +1143,8 @@ function resetAndRestart(){
   myVotes = {};
   allVotes = {};
   votedThisRound = false;
-  // Beritahu semua client untuk reset juga
+  bonusRoundActive = false;
+  bonusPoints = {};
   peerConns.forEach(pc => {
     if (pc.open) try { pc.send({type:'reset'}); } catch(_){}
   });
@@ -999,6 +1167,7 @@ function joinRoom(){
   if (code.length!==6){ setStatus('menuStatus','Kode harus 6 karakter!',true); return; }
   roomCode = code; isHost = false; peerConns = []; playersData = {};
   currentRound = 1; roundScores = {};
+  bonusRoundActive = false; bonusPoints = {};
   setStatus('menuStatus','Menghubungkan...');
   try { if (peer) peer.destroy(); } catch(_){}
   peer = new Peer(PEER_CONFIG);
@@ -1062,7 +1231,7 @@ function handleData(data){
   }
   if (data.type === 'lobby'){
     $('playerCount').textContent = `👥 ${data.count} / ${data.max}`;
-    if (data.time){ DRAW_TIME = data.time; $('lobbyTime').textContent = (data.time/60) + ' ' + t('min'); }
+    if (data.time){ DRAW_TIME = data.time; window._currentDRAW_TIME = data.time; $('lobbyTime').textContent = (data.time/60) + ' ' + t('min'); }
     if (data.round) currentRound = data.round;
     const names = [];
     for (let i=0; i<data.count; i++) names.push(i===0?'🎨 Host':`🎨 Pemain ${i+1}`);
@@ -1075,8 +1244,19 @@ function handleData(data){
     playerIds = data.playerIds || [];
     if (data.time) DRAW_TIME = data.time;
     if (data.round) currentRound = data.round;
+    bonusRoundActive = false;
     refGrid = unpackGrid(data.refGrid);
-    startCountdown(data.word, data.emoji, refGrid, playerIds);
+    startCountdown(data.word, data.emoji, refGrid, playerIds, data.time);
+  }
+  if (data.type === 'bonus-start'){
+    clearTimeout(connectTimeout);
+    playerIds = data.playerIds || [];
+    currentRound = data.round || currentRound;
+    bonusRoundActive = true;
+    refGrid = unpackGrid(data.refGrid);
+    showBonusSplash(data.word, data.emoji, data.time || BONUS_TIME, () => {
+      startCountdown(data.word, data.emoji, refGrid, playerIds, data.time || BONUS_TIME);
+    });
   }
   if (data.type === 'update'){
     playersData[data.playerId] = { grid: data.grid, img: data.img, features: data.features };
@@ -1094,6 +1274,8 @@ function handleData(data){
     myVotes = {};
     allVotes = {};
     votedThisRound = false;
+    bonusRoundActive = false;
+    bonusPoints = {};
     return;
   }
   if (data.type === 'reveal'){
@@ -1105,9 +1287,42 @@ function handleData(data){
   }
 }
 
+/* ================== BONUS SPLASH ================== */
+function showBonusSplash(word, emoji, time, callback){
+  showScreen('bonusSplash');
+  $('bonusTopicEmoji').textContent = emoji;
+  $('bonusTopicWord').textContent = word;
+  $('bonusTime').textContent = time;
+  $('bonusCountdown').textContent = '3';
+
+  // Sound dramatis
+  beep(523, 0.15); setTimeout(()=>beep(659,0.15), 150);
+  setTimeout(()=>beep(784,0.2), 300);
+  setTimeout(()=>beep(1047,0.3), 500);
+
+  // Flash keemasan
+  const flash = document.createElement('div');
+  flash.className = 'bonus-flash';
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(), 1300);
+
+  // Countdown 3 → 2 → 1
+  let c = 3;
+  const iv = setInterval(()=>{
+    c--;
+    if (c <= 0){
+      clearInterval(iv);
+      callback();
+      return;
+    }
+    $('bonusCountdown').textContent = c;
+    soundTick();
+  }, 1000);
+}
+
 /* ================== COUNTDOWN ================== */
 let countdownInterval = null;
-function startCountdown(word, emoji, rg, pIds){
+function startCountdown(word, emoji, rg, pIds, customTime){
   promptTopic = {word, emoji};
   refGrid = rg;
   if (pIds) playerIds = pIds;
@@ -1131,14 +1346,14 @@ function startCountdown(word, emoji, rg, pIds){
       beep(880, 0.3);
       setTimeout(()=>{
         clearInterval(countdownInterval);
-        startGame(word, emoji, rg, playerIds);
+        startGame(word, emoji, rg, playerIds, customTime);
       }, 600);
     }
   }, 1000);
 }
 
 /* ================== GAME FLOW ================== */
-function startGame(word, emoji, rg, pIds){
+function startGame(word, emoji, rg, pIds, customTime){
   promptTopic = {word, emoji};
   refGrid = rg;
   if (pIds) playerIds = pIds;
@@ -1161,6 +1376,16 @@ function startGame(word, emoji, rg, pIds){
   $('myProgress').style.width = '0%';
   setStatus('resultStatus','');
 
+  // 🎁 Bonus banner di game
+  if (bonusRoundActive){
+    $('bonusGameBanner').style.display = 'block';
+    $('promptChip').style.background = 'linear-gradient(135deg,#fbbf24,#ec4899)';
+  } else {
+    $('bonusGameBanner').style.display = 'none';
+    $('promptChip').style.background = 'linear-gradient(135deg,#ff5f6d,var(--accent))';
+  }
+
+  // Reset tools
   currentColor = '#111111'; currentMode = 'brush'; brushSize = 3;
   symmetry = false; currentShape = 'none'; stickerMode = false;
   document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel', x.dataset.color==='#111111'));
@@ -1186,7 +1411,9 @@ function startGame(word, emoji, rg, pIds){
   pushHistory();
 
   gameActive = true;
-  timeLeft = DRAW_TIME;
+  const activeTime = customTime || DRAW_TIME;
+  timeLeft = activeTime;
+  window._currentDRAW_TIME = activeTime;
   updateTimerUI();
   clearInterval(timerId);
   timerId = setInterval(()=>{
@@ -1199,10 +1426,11 @@ function startGame(word, emoji, rg, pIds){
 
 function updateTimerUI(){
   const tt = Math.max(0, timeLeft);
+  const maxTime = window._currentDRAW_TIME || DRAW_TIME;
   $('timerNum').textContent = Math.floor(tt/60) + ':' + String(tt%60).padStart(2,'0');
   const el = $('timerEl');
-  el.style.setProperty('--p', (timeLeft / DRAW_TIME) * 100 + '%');
-  el.classList.toggle('danger', timeLeft <= Math.min(20, DRAW_TIME * 0.15));
+  el.style.setProperty('--p', (timeLeft / maxTime) * 100 + '%');
+  el.classList.toggle('danger', timeLeft <= Math.min(20, maxTime * 0.15));
 }
 
 function submitDrawing(){
@@ -1261,16 +1489,30 @@ function checkAllSubmitted(){
     if (!playersData[id] || !playersData[id].features) return;
   }
   resultShown = true;
+
   const scores = playerIds.map(id => {
     const p = playersData[id];
     const gridArr = unpackGrid(p.grid);
     const f1 = similarity(gridArr, refGrid);
     const breakdown = computeScore(p.features, f1);
-    return { id, ...breakdown };
+
+    // 🎁 Bonus points
+    let bPoints = 0;
+    if (bonusRoundActive){
+      if (breakdown.total >= 85) bPoints = 40;
+      else if (breakdown.total >= 70) bPoints = 25;
+      else if (breakdown.total >= 55) bPoints = 15;
+      if (bPoints > 0){
+        bonusPoints[id] = (bonusPoints[id] || 0) + bPoints;
+      }
+    }
+    return { id, ...breakdown, bonusPoints: bPoints };
   });
+
   scores.forEach(s => {
     if (!roundScores[s.id]) roundScores[s.id] = [];
-    roundScores[s.id].push(s.total);
+    // Simpan total + bonus
+    roundScores[s.id].push(s.total + s.bonusPoints);
   });
   startReveal(scores);
 }
@@ -1355,7 +1597,6 @@ function playChampionReveal(data){
 
   showScreen('reveal');
   stage.classList.remove('dramatic');
-
   overlay.classList.add('show');
 
   setTimeout(()=>{
@@ -1543,9 +1784,24 @@ function extractFeatures(canvasEl){
 function showResult(scores){
   hideDarkOverlay();
   showScreen('result');
-  const sorted = [...scores].sort((a,b) => b.total - a.total);
-  const top = sorted[0].total;
-  const winners = sorted.filter(s => s.total === top);
+  const sorted = [...scores].sort((a,b) => (b.total + (b.bonusPoints||0)) - (a.total + (a.bonusPoints||0)));
+  const top = sorted[0].total + (sorted[0].bonusPoints||0);
+  const winners = sorted.filter(s => (s.total + (s.bonusPoints||0)) === top);
+
+  // Banner bonus kalau aktif
+  const refBox = document.querySelector('#result .ref-box');
+  let bonusBanner = document.getElementById('bonusBanner');
+  if (bonusRoundActive){
+    if (!bonusBanner){
+      bonusBanner = document.createElement('div');
+      bonusBanner.id = 'bonusBanner';
+      bonusBanner.style.cssText = 'background:linear-gradient(135deg,#fbbf24,#ec4899);color:#fff;font-weight:800;text-align:center;padding:10px;border-radius:14px;margin-bottom:12px;box-shadow:0 6px 20px rgba(251,191,36,.5);animation:bonusTagPulse 1.2s ease-in-out infinite';
+      refBox.parentNode.insertBefore(bonusBanner, refBox.nextSibling);
+    }
+    bonusBanner.innerHTML = '🎁 BONUS ROUND! Poin ekstra udah ditambahkan ke total';
+  } else if (bonusBanner){
+    bonusBanner.remove();
+  }
 
   const cmp = $('compare');
   cmp.innerHTML = '';
@@ -1554,14 +1810,17 @@ function showResult(scores){
     const el = document.createElement('div');
     el.className = 'item';
     if (s.id === myId) el.classList.add('me');
-    if (s.id === winners[0].id && winners.length === 1) el.classList.add('winner-col');
+    if (winners[0].id === s.id && winners.length === 1) el.classList.add('winner-col');
     const label = getPlayerLabel(s.id);
     const img = playersData[s.id].img || '';
-    const grade = getGrade(s.total);
+    const finalScore = s.total + (s.bonusPoints || 0);
+    const grade = getGrade(finalScore);
+    const bonusTag = s.bonusPoints > 0 ? `<span class="bonus-points-tag">+${s.bonusPoints} 🎁</span>` : '';
     el.innerHTML = `
       <h4>${label}</h4>
       <img src="${img}" alt="${label}">
-      <div class="pct">${s.total}<span class="grade">${grade}</span></div>
+      <div class="pct">${finalScore}${bonusTag}<span class="grade">${grade}</span></div>
+      ${s.bonusPoints > 0 ? `<div style="font-size:.7rem;opacity:.7;margin-top:2px">Skor: ${s.total} + Bonus: ${s.bonusPoints}</div>` : ''}
     `;
     cmp.appendChild(el);
   });
@@ -1572,10 +1831,10 @@ function showResult(scores){
   else if (winners[0].id === myId){ box.textContent = '🏆 KAMU MENANG!'; box.className = 'winner win'; soundSuccess(); }
   else { box.textContent = `😢 ${getPlayerLabel(winners[0].id).toUpperCase()} MENANG`; box.className = 'winner lose'; soundFail(); }
 
-  const myTotal = scores.find(s => s.id === myId).total;
+  const myScoreObj = scores.find(s => s.id === myId);
+  const myTotal = myScoreObj.total + (myScoreObj.bonusPoints || 0);
   recordGame(winners.length === 1 && winners[0].id === myId, myTotal);
 
-  // Update tombol Main Lagi biar user tau apa yang bakal terjadi
   const btn = $('btnPlayAgain');
   if (currentRound >= TOTAL_ROUNDS){
     btn.textContent = '🏆 Lihat Juara Umum';
@@ -1591,7 +1850,8 @@ function showResult(scores){
 
   const diff = myTotal - top;
   let v = '';
-  if (winners.length > 1) v = '🔥 Skornya sama kuat!';
+  if (bonusRoundActive) v = '🎁 Ronde bonus! Poin ekstra diperhitungkan!';
+  else if (winners.length > 1) v = '🔥 Skornya sama kuat!';
   else if (diff === 0) v = '🎯 Gambarmu dinilai paling bagus!';
   else if (diff >= -5) v = '😱 Ketat banget, beda tipis!';
   else if (diff >= -15) v = '😮 Lumayan deket nih!';
@@ -1609,19 +1869,21 @@ function renderBreakdown(scores, winners){
     { key: 'creativity', label: '💡 Ide & Kreativitas', max: 25, cls: 't3' },
     { key: 'neatness', label: '✨ Kerapian & Finishing', max: 10, cls: 't4' }
   ];
-  const ordered = [...scores].sort((a,b) => b.total - a.total);
+  const ordered = [...scores].sort((a,b) => (b.total + (b.bonusPoints||0)) - (a.total + (a.bonusPoints||0)));
   ordered.forEach(s => {
     const card = document.createElement('div');
     card.className = 'bd-card';
     if (s.id === myId) card.classList.add('me');
     if (winners.length === 1 && s.id === winners[0].id) card.classList.add('win-row');
     const label = getPlayerLabel(s.id);
-    const grade = getGrade(s.total);
+    const finalScore = s.total + (s.bonusPoints || 0);
+    const grade = getGrade(finalScore);
     const medal = winners.length === 1 && s.id === winners[0].id ? '🥇 ' : (s.id === myId ? '👤 ' : '👥 ');
+    const bonusTag = s.bonusPoints > 0 ? `<span class="bonus-points-tag">+${s.bonusPoints} 🎁</span>` : '';
     let html = `
       <div class="bd-head">
-        <h4>${medal}${label} <span class="grade">${grade}</span></h4>
-        <div class="tot">${s.total}<span style="font-size:.85rem;opacity:.6">/100</span></div>
+        <h4>${medal}${label} ${bonusTag} <span class="grade">${grade}</span></h4>
+        <div class="tot">${finalScore}<span style="font-size:.85rem;opacity:.6">/100</span></div>
       </div>
     `;
     names.forEach(c => {
@@ -1649,7 +1911,8 @@ function showFinalResults(){
   const finalScores = playerIds.map(id => ({
     id,
     total: Math.round(totals[id] / Math.max(1, (roundScores[id] || []).length)),
-    cumulative: totals[id]
+    cumulative: totals[id],
+    bonus: bonusPoints[id] || 0
   }));
   const sorted = [...finalScores].sort((a,b) => b.cumulative - a.cumulative);
   const top = sorted[0];
@@ -1659,6 +1922,18 @@ function showFinalResults(){
   $('winnerBox').className = 'winner win';
   launchConfetti();
 
+  // Banner bonus
+  const refBox = document.querySelector('#result .ref-box');
+  let bonusBanner = document.getElementById('bonusBanner');
+  if (bonusBanner) bonusBanner.remove();
+  if (Object.values(bonusPoints).some(v => v > 0)){
+    bonusBanner = document.createElement('div');
+    bonusBanner.id = 'bonusBanner';
+    bonusBanner.style.cssText = 'background:linear-gradient(135deg,#fbbf24,#ec4899);color:#fff;font-weight:800;text-align:center;padding:10px;border-radius:14px;margin-bottom:12px;box-shadow:0 6px 20px rgba(251,191,36,.5)';
+    bonusBanner.innerHTML = '🎁 Total poin bonus sudah masuk ke skor akhir!';
+    refBox.parentNode.insertBefore(bonusBanner, refBox.nextSibling);
+  }
+
   const cmp = $('compare');
   cmp.innerHTML = '';
   cmp.style.gridTemplateColumns = `repeat(finalScores.length, 1fr)`;
@@ -1667,19 +1942,18 @@ function showFinalResults(){
     el.className = 'item';
     if (s.id === myId) el.classList.add('me');
     if (s.id === top.id) el.classList.add('winner-col');
+    const bonusTag = s.bonus > 0 ? `<span class="bonus-points-tag">+${s.bonus} 🎁</span>` : '';
     el.innerHTML = `
       <h4>${getPlayerLabel(s.id)}</h4>
       <img src="${playersData[s.id]?.img || ''}" alt="">
-      <div class="pct">${s.cumulative}<span class="grade">total</span></div>
+      <div class="pct">${s.cumulative}${bonusTag}<span class="grade">total</span></div>
     `;
     cmp.appendChild(el);
   });
   $('verdict').textContent = `Rata-rata: ${Math.round(top.cumulative / TOTAL_ROUNDS)}/100 per ronde`;
 
-  // Reset tombol → sekarang jadi "Main Lagi" beneran
   const btn = $('btnPlayAgain');
   btn.textContent = '🔄 Main Lagi (Reset)';
-
   $('resultStatus').textContent = 'Klik "Main Lagi" untuk mulai turnamen baru! 🎉';
 }
 
