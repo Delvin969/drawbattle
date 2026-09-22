@@ -17,12 +17,15 @@
   body.theme-neon{--bg1:#0a0a1a;--bg2:#050510;--bg3:#000;--accent:#ff00ff;--accent2:#00ffcc;}
   body.theme-retro{--bg1:#3a2817;--bg2:#1d1409;--bg3:#0a0704;--accent:#f59e0b;--accent2:#facc15;}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{min-height:100%;}
   body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
     background:radial-gradient(circle at 20% 0%,var(--bg1) 0%,var(--bg2) 45%,var(--bg3) 100%);
-    color:var(--txt);min-height:100vh;display:flex;align-items:center;justify-content:center;
-    padding:14px;overflow-x:hidden;transition:background .4s;}
-  .screen{display:none;width:100%;max-width:760px;animation:fade .3s ease}
-  .screen.active{display:block}
+    background-attachment:fixed;
+    color:var(--txt);min-height:100vh;display:flex;flex-direction:column;
+    padding:14px;overflow-x:hidden;overflow-y:auto;transition:background .4s;
+    -webkit-overflow-scrolling:touch;}
+  .screen{display:none;width:100%;max-width:760px;margin:0 auto;animation:fade .3s ease}
+  .screen.active{display:block;margin:auto auto;padding:10px 0}
   @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .card{background:var(--card);border:1px solid var(--card-bd);
     border-radius:22px;padding:26px 22px;backdrop-filter:blur(12px);
@@ -34,7 +37,8 @@
   button{font-family:inherit;font-size:1rem;font-weight:600;border:none;border-radius:14px;
     padding:14px 18px;cursor:pointer;width:100%;margin-bottom:10px;color:#fff;
     background:linear-gradient(135deg,#4f6cff,var(--accent));transition:.18s;
-    box-shadow:0 6px 18px rgba(79,108,255,.35);}
+    box-shadow:0 6px 18px rgba(79,108,255,.35);
+    touch-action:manipulation;-webkit-user-select:none;user-select:none;}
   button:hover{transform:translateY(-2px);filter:brightness(1.1)}
   button:active{transform:scale(.97)}
   button.ghost{background:rgba(255,255,255,.1);box-shadow:none;border:1px solid rgba(255,255,255,.16)}
@@ -115,7 +119,8 @@
   .tools-row{display:flex;gap:6px;align-items:center;margin-top:6px;justify-content:center;flex-wrap:wrap}
   .tool{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.1);
     border:2px solid transparent;display:grid;place-items:center;cursor:pointer;
-    transition:.15s;font-size:1.1rem;user-select:none;position:relative;}
+    transition:.15s;font-size:1.1rem;user-select:none;position:relative;
+    touch-action:manipulation;}
   .tool:hover{background:rgba(255,255,255,.18)}
   .tool.sel{border-color:#7c8cff;background:rgba(124,140,255,.3)}
   .tool .dot{background:#fff;border-radius:50%}
@@ -726,6 +731,8 @@ let pausedGame=false;
 const showScreen = id => {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $(id).classList.add('active');
+  // Scroll ke atas tiap ganti screen
+  window.scrollTo({top:0, behavior:'instant'});
 };
 const randomTopic = () => TOPICS[Math.floor(Math.random()*TOPICS.length)];
 const genCode = () => {
@@ -886,7 +893,7 @@ function setupHostConn(c){
       peerConns.forEach(pc=>{ if (pc !== c && pc.open) try { pc.send({type:'reaction', emoji:data.emoji}); } catch(_){} });
     }
     else if (data.type === 'rematch'){
-      if (!gameActive) playAgainHost();
+      if (!gameActive) handlePlayAgain();
     }
   });
   c.on('close', ()=>{
@@ -922,7 +929,8 @@ function updateLobby(){
     list.appendChild(d);
   });
   setStatus('lobbyStatus', count < maxPlayers ? `Menunggu pemain (${count}/${maxPlayers})...` : 'Semua siap! Memulai...');
-  if (currentRound > 1) $('roundInfo').textContent = `${t('roundInfo')} ${currentRound} / ${TOTAL_ROUNDS}`;
+  if (currentRound > 1 && currentRound <= TOTAL_ROUNDS) $('roundInfo').textContent = `${t('roundInfo')} ${currentRound} / ${TOTAL_ROUNDS}`;
+  else $('roundInfo').textContent = '';
   peerConns.forEach(pc => { if (pc.open) try { pc.send({type:'lobby', count, max: maxPlayers, time: DRAW_TIME, round: currentRound}); } catch(_){} });
 }
 
@@ -937,15 +945,45 @@ function startRoundHost(){
   startCountdown(topic.word, topic.emoji, rg, playerIds);
 }
 
-function playAgainHost(){
-  currentRound++;
-  playersData = {}; myVotes = {}; allVotes = {}; votedThisRound = false;
+/* ================== PLAY AGAIN — FIXED ================== */
+function handlePlayAgain(){
+  console.log('[handlePlayAgain] currentRound:', currentRound, '/', TOTAL_ROUNDS);
+
+  // Kalau ronde terakhir udah selesai (juara umum udah tampil)
   if (currentRound > TOTAL_ROUNDS){
-    showFinalResults();
+    console.log('→ Reset total, main dari ronde 1');
+    resetAndRestart();
     return;
   }
+  // Kalau masih di ronde 1 atau 2 → lanjut ke ronde berikutnya
+  if (currentRound < TOTAL_ROUNDS){
+    currentRound++;
+    console.log('→ Lanjut ke ronde', currentRound);
+    playersData = {}; myVotes = {}; allVotes = {}; votedThisRound = false;
+    startRoundHost();
+    return;
+  }
+  // currentRound === TOTAL_ROUNDS (ronde terakhir baru selesai) → tampil juara umum
+  console.log('→ Tampil juara umum');
+  currentRound = TOTAL_ROUNDS + 1;
+  showFinalResults();
+}
+
+function resetAndRestart(){
+  currentRound = 1;
+  roundScores = {};
+  playersData = {};
+  myVotes = {};
+  allVotes = {};
+  votedThisRound = false;
+  // Beritahu semua client untuk reset juga
+  peerConns.forEach(pc => {
+    if (pc.open) try { pc.send({type:'reset'}); } catch(_){}
+  });
   startRoundHost();
 }
+
+function playAgainHost(){ handlePlayAgain(); }
 
 /* ================== ROOM (CLIENT) ================== */
 function toggleJoin(){
@@ -1048,6 +1086,15 @@ function handleData(data){
   if (data.type === 'reaction'){
     showFloatingReaction(data.emoji);
     peerConns.forEach(pc=>{ if (pc.open) try { pc.send({type:'reaction', emoji:data.emoji}); } catch(_){} });
+  }
+  if (data.type === 'reset'){
+    currentRound = 1;
+    roundScores = {};
+    playersData = {};
+    myVotes = {};
+    allVotes = {};
+    votedThisRound = false;
+    return;
   }
   if (data.type === 'reveal'){
     if (data.place === 1){
@@ -1301,43 +1348,35 @@ function showRevealScreen(data){
   el.style.animation = 'popIn .6s cubic-bezier(.5,1.8,.5,1)';
 }
 
-/* 🏆 DRAMATIC CHAMPION REVEAL */
 function playChampionReveal(data){
   const overlay = $('darkOverlay');
   const spot = $('spotlight');
   const stage = $('revealStage');
 
-  // Show reveal screen tapi dengan stage normal dulu
   showScreen('reveal');
   stage.classList.remove('dramatic');
 
-  // 1. Fade ke gelap
   overlay.classList.add('show');
 
-  // 2. Setelah 800ms, spotlight muncul + sound dramatis
   setTimeout(()=>{
     spot.classList.add('show');
     beep(220, 0.3, 'sine', 0.15);
     setTimeout(()=>beep(330, 0.3, 'sine', 0.15), 200);
     setTimeout(()=>beep(440, 0.4, 'sine', 0.18), 400);
 
-    // 3. Setelah 1.2s, tampilkan gambar juara 1 dramatis
     setTimeout(()=>{
       stage.classList.add('dramatic');
-
       $('revealPlace').textContent = data.place;
       $('revealBadge').textContent = data.badge;
       $('revealPlayer').textContent = data.label;
       $('revealScore').textContent = `Skor: ${data.total} / 100`;
       $('revealImg').src = data.img || '';
 
-      // Flash effect pas gambar muncul
       const flash = document.createElement('div');
       flash.className = 'flash-effect';
       document.body.appendChild(flash);
       setTimeout(()=>flash.remove(), 900);
 
-      // Fanfare sound
       setTimeout(()=>{
         beep(523,0.15);
         setTimeout(()=>beep(659,0.15),150);
@@ -1346,7 +1385,6 @@ function playChampionReveal(data){
         setTimeout(()=>beep(1318,0.6),700);
       }, 300);
 
-      // Confetti meletup dari tengah + hujan confetti
       setTimeout(()=>{
         launchConfettiBurst();
         launchConfettiFall();
@@ -1388,9 +1426,7 @@ function launchConfettiFall(){
   }
 }
 
-function launchConfetti(){
-  launchConfettiFall();
-}
+function launchConfetti(){ launchConfettiFall(); }
 
 function hideDarkOverlay(){
   $('darkOverlay').classList.remove('show');
@@ -1539,10 +1575,18 @@ function showResult(scores){
   const myTotal = scores.find(s => s.id === myId).total;
   recordGame(winners.length === 1 && winners[0].id === myId, myTotal);
 
+  // Update tombol Main Lagi biar user tau apa yang bakal terjadi
+  const btn = $('btnPlayAgain');
+  if (currentRound >= TOTAL_ROUNDS){
+    btn.textContent = '🏆 Lihat Juara Umum';
+  } else {
+    btn.textContent = `🔄 Ronde ${currentRound + 1} / ${TOTAL_ROUNDS}`;
+  }
+
   if (currentRound < TOTAL_ROUNDS){
     $('resultStatus').textContent = `${t('roundInfo')} ${currentRound} / ${TOTAL_ROUNDS}`;
   } else {
-    $('resultStatus').textContent = `Final! 🏆`;
+    $('resultStatus').textContent = `Selesai! Klik "Lihat Juara Umum" 🏆`;
   }
 
   const diff = myTotal - top;
@@ -1614,6 +1658,7 @@ function showFinalResults(){
   $('winnerBox').textContent = `🏆 JUARA UMUM: ${getPlayerLabel(top.id)}`;
   $('winnerBox').className = 'winner win';
   launchConfetti();
+
   const cmp = $('compare');
   cmp.innerHTML = '';
   cmp.style.gridTemplateColumns = `repeat(finalScores.length, 1fr)`;
@@ -1621,6 +1666,7 @@ function showFinalResults(){
     const el = document.createElement('div');
     el.className = 'item';
     if (s.id === myId) el.classList.add('me');
+    if (s.id === top.id) el.classList.add('winner-col');
     el.innerHTML = `
       <h4>${getPlayerLabel(s.id)}</h4>
       <img src="${playersData[s.id]?.img || ''}" alt="">
@@ -1629,6 +1675,12 @@ function showFinalResults(){
     cmp.appendChild(el);
   });
   $('verdict').textContent = `Rata-rata: ${Math.round(top.cumulative / TOTAL_ROUNDS)}/100 per ronde`;
+
+  // Reset tombol → sekarang jadi "Main Lagi" beneran
+  const btn = $('btnPlayAgain');
+  btn.textContent = '🔄 Main Lagi (Reset)';
+
+  $('resultStatus').textContent = 'Klik "Main Lagi" untuk mulai turnamen baru! 🎉';
 }
 
 /* ================== DOWNLOAD / SHARE ================== */
@@ -1719,7 +1771,6 @@ function getPos(e){
 }
 function activeColor(){ return currentMode === 'eraser' ? '#ffffff' : currentColor; }
 
-/* ✏️ PENCIL — smooth quadratic */
 function drawBrushSegment(x0, y0, x1, y1, color){
   const mx = (x0 + x1) / 2;
   const my = (y0 + y1) / 2;
@@ -1739,7 +1790,6 @@ function drawBrushSegment(x0, y0, x1, y1, color){
   lastMid = { x: mx, y: my };
 }
 
-/* 💨 SPRAY */
 function sprayAt(x, y){
   const radius = brushSize * 3.5;
   const density = Math.max(8, Math.floor(brushSize * 3));
@@ -1762,7 +1812,6 @@ function sprayAt(x, y){
   }
 }
 
-/* 🔷 SHAPE */
 function drawShape(x0, y0, x1, y1){
   ctx.save();
   if (shapePreviewImage) ctx.putImageData(shapePreviewImage, 0, 0);
